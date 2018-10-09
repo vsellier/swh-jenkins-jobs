@@ -6,7 +6,8 @@
           url: http://forge.softwareheritage.org/source/swh-jenkins-dockerfiles.git
           wipe-workspace: false
     triggers:
-      - pollscm: ""
+      - pollscm:
+          cron: "*/30 * * * *"
       - timed: "0 4 * * *"
     logrotate:
       numToKeep: 50
