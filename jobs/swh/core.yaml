@@ -1,6 +1,6 @@
 - project:
     name: core
     jobs:
-      - swh-tests-{name}
-      - swh-metrics-{name}
-      - swh-build-{name}
+      - swh-{name}/tests
+      - swh-{name}/metrics
+      - swh-{name}/build

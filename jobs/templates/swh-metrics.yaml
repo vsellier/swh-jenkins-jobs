@@ -1,5 +1,5 @@
 - job-template:
-    name: swh-metrics-{name}
+    name: swh-{name}/metrics
     node: swh-tox
 
     parameters:
