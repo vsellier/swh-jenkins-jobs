@@ -38,10 +38,10 @@
           fi
       - shell: >
           python3 -m tox -e py3 --
-           --with-coverage --cover-xml
-           --cover-xml-file=./reports/covergage.xml
-           --cover-package=swh.{name}
-           --with-xunit --xunit-file=./reports/test-results.xml
+          --with-coverage --cover-xml
+          --cover-xml-file=./reports/covergage.xml
+          --cover-package=swh.{name}
+          --with-xunit --xunit-file=./reports/test-results.xml
       - shell: python3 -m coverage xml -o ./reports/coverage.xml
 
     publishers:
