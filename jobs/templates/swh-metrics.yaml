@@ -36,6 +36,12 @@
       - shell: mkdir -p reports
       - shell: python3 -m tox -e flake8
 
-      - shell: python3 -m radon raw --json swh/ > reports/radon_raw.json
-      - shell: python3 -m radon cc --json swh/ > reports/radon_cc.json
-      - shell: python3 -m radon mi --json swh/ > reports/radon_mi.json
+      - shell: radon raw --json swh/ > reports/radon_raw.json
+      - shell: radon cc --json swh/ > reports/radon_cc.json
+      - shell: radon mi --json swh/ > reports/radon_mi.json
+
+    publishers:
+      - archive:
+          artifacts: "reports/*"
+          allow-empty: "true"
+          fingerprint: "true"
