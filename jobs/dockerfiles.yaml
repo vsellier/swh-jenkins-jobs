@@ -9,8 +9,8 @@
       - pollscm:
           cron: "*/30 * * * *"
       - timed: "0 4 * * *"
-    logrotate:
-      numToKeep: 50
+    build-discarder:
+      num-to-keep: 50
     wrappers:
       - timestamps
       - ansicolor
