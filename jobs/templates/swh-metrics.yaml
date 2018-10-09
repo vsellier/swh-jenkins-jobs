@@ -21,6 +21,18 @@
       - timestamps
 
     builders:
+      - shell: |
+          if [ ! -f tox.ini ]
+          then cat >tox.ini <<EOF
+          [tox]
+          envlist=flake8
+          [testenv:flake8]
+          deps =
+            flake8
+          commands =
+            {{envpython}} -m flake8 {{posargs}}
+          EOF
+          fi
       - shell: mkdir -p reports
       - shell: python3 -m tox -e flake8
 
