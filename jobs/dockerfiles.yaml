@@ -1,6 +1,6 @@
 - job:
     name: swh-jenkins-dockerfiles
-    node: build
+    node: master
     scm:
       - git:
           url: http://forge.softwareheritage.org/source/swh-jenkins-dockerfiles.git
