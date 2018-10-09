@@ -1,0 +1,3 @@
+- job-template:
+    name: 'swh-{name}'
+    project-type: folder
