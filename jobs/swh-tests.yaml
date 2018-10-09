@@ -1,0 +1,47 @@
+- job-template:
+    name: swh-tests-{name}
+    node: swh-tox
+
+    parameters:
+      - string:
+          name: BRANCH
+          default: '{branch|master}'
+    scm:
+      - git:
+          refspec: 'refs/heads/{branch|master}'
+          url: https://forge.softwareheritage.org/source/swh-{name}.git
+
+    numToKeep: 20
+
+    triggers:
+      - pollscm:
+          cron: "0 */3 0 0 0"
+
+    wrappers:
+      - timestamps
+
+    builders:
+      - shell: mkdir -p reports
+      - shell: python3 -m tox -e py3 -- --with-coverage --cover-xml --cover-xml-file=./reports/covergage.xml --cover-package=swh.{name} --with-xunit --xunit-file=./reports/test-results.xml
+      - shell: python3 -m coverage xml -o ./reports/coverage.xml
+
+    publishers:
+      - junit:
+          results: "reports/test-results.xml"
+      - cobertura:
+          report-file: "reports/coverage.xml"
+          fail-no-reports: "false"
+          fail-unhealthy: "false"
+          fail-unstable: "false"
+          only-stable: "false"
+          source-encoding: "UTF_8"
+          zoom-coverage-chart: "false"
+          targets:
+            - files:
+                healthy: 10
+                unhealthy: 20
+                failing: 30
+            - method:
+                healthy: 50
+                unhealthy: 40
+                failing: 30

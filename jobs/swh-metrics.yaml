@@ -1,0 +1,29 @@
+- job-template:
+    name: swh-metrics-{name}
+    node: swh-tox
+
+    parameters:
+      - string:
+          name: BRANCH
+          default: '{branch|master}'
+    scm:
+      - git:
+          refspec: 'refs/heads/{branch|master}'
+          url: https://forge.softwareheritage.org/source/swh-{name}.git
+
+    numToKeep: 20
+
+    triggers:
+      - pollscm:
+          cron: "0 */3 0 0 0"
+
+    wrappers:
+      - timestamps
+
+    builders:
+      - shell: mkdir -p reports
+      - shell: python3 -m tox -e flake8
+
+      - shell: python3 -m radon raw --json swh/ > reports/radon_raw.json
+      - shell: python3 -m radon cc --json swh/ > reports/radon_cc.json
+      - shell: python3 -m radon mi --json swh/ > reports/radon_mi.json

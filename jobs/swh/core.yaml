@@ -1,0 +1,6 @@
+- project:
+    name: core
+    jobs:
+      - swh-tests-{name}
+      - swh-metrics-{name}
+      - swh-build-{name}

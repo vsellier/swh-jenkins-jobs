@@ -1,0 +1,30 @@
+- job-template:
+    name: swh-build-{name}
+    node: swh-tox
+
+    parameters:
+      - string:
+          name: BRANCH
+          default: '{branch|master}'
+    scm:
+      - git:
+          refspec: 'refs/heads/{branch|master}'
+          url: https://forge.softwareheritage.org/source/swh-{name}.git
+
+    numToKeep: 20
+
+    triggers:
+      - pollscm:
+          cron: "0 */3 0 0 0"
+
+    wrappers:
+      - timestamps
+
+    builders:
+      - shell: python3 setup.py sdist bdist_wheel
+
+    publishers:
+      - archive:
+          artifacts: "dist/*"
+          allow-empty: "true"
+          fingerprint: "true"
