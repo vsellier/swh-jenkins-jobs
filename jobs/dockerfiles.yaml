@@ -7,8 +7,7 @@
           wipe-workspace: false
     triggers:
       - pollscm:
-          cron: "*/30 * * * *"
-      - timed: "0 4 * * *"
+          cron: "H/30 * * * *"
     build-discarder:
       num-to-keep: 50
     wrappers:
