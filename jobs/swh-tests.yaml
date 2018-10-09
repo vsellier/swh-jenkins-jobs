@@ -33,7 +33,7 @@
             nose
             coverage
           commands =
-            pifpaf run postgresql -- nosetests {posargs}
+            pifpaf run postgresql -- nosetests {{posargs}}
           EOF
           fi
       - shell: >
