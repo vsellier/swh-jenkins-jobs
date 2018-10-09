@@ -1,0 +1,17 @@
+- job:
+    name: swh-jenkins-dockerfiles
+    node: build
+    scm:
+      - git:
+          url: http://forge.softwareheritage.org/source/swh-jenkins-dockerfiles.git
+          wipe-workspace: false
+    triggers:
+      - pollscm: ""
+      - timed: "0 4 * * *"
+    logrotate:
+      numToKeep: 50
+    wrappers:
+      - timestamps
+      - ansicolor
+    builders:
+      - shell: make checkrebuild all
