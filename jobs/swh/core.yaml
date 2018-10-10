@@ -5,3 +5,4 @@
       - swh-{name}/tests
       - swh-{name}/metrics
       - swh-{name}/build
+      - swh-{name}/static

@@ -1,0 +1,94 @@
+- job-template:
+    name: swh-{name}/static
+    node: swh-tox
+    project-type: pipeline
+
+    parameters:
+      - string:
+          name: BRANCH
+          default: '{branch|master}'
+    scm:
+      - git:
+          refspec: 'refs/heads/{branch|master}'
+          url: https://forge.softwareheritage.org/source/swh-{name}.git
+
+    numToKeep: 20
+
+    triggers:
+      - pollscm:
+          cron: "H */3 * * *"
+
+    wrappers:
+      - timestamps
+
+    dsl: |
+      pipeline {{
+      parameters {{
+        string(name: 'BRANCH',
+               defaultValue: 'master',
+               description: 'branch to checkout from the repository')
+        }}
+      stages {{
+        stage('Checkout') {{
+          steps {{
+            checkout scm
+          }}
+        }}
+        stage('Static analysis') {{
+          steps {{
+            echo "flake8"
+            sh '''python3 -m tox -e flake8'''
+
+            echo "radon"
+            sh  '''
+            mkdir -p reports
+            radon raw --json swh/ > reports/raw_report.json
+            radon cc  --json swh/ > reports/cc_report.json
+            radon mi  --json swh/ > reports/mi_report.json
+            radon hal --json swh/ > reports/hal_report.json
+            radon cc  --xml  swh/ > reports/cc_report.xml
+            '''
+          }}
+        }}
+        stage('Unit tests') {{
+          steps {{
+            echo "nose with cov"
+            sh  '''
+            mkdir reports
+            python3 -m tox -e py3 -- --with-coverage --cover-xml \
+            --cover-xml-file=./reports/covergage.xml --cover-package=swh.core \
+            --with-xunit --xunit-file=./reports/test-results.xml
+            python3 -m coverage xml -o ./reports/coverage.xml
+            '''
+          }}
+          post {{
+            always {{
+              step([$class: 'CoberturaPublisher',
+                    autoUpdateHealth: false,
+                    autoUpdateStability: false,
+                    coberturaReportFile: 'reports/coverage.xml',
+                    failNoReports: false,
+                    failUnhealthy: false,
+                    failUnstable: false,
+                    maxNumberOfBuilds: 10,
+                    onlyStable: false,
+                    sourceEncoding: 'ASCII',
+                    zoomCoverageChart: false])
+              junit allowEmptyResults: true, testResults: 'reports/test-results.xml'
+              recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
+            }}
+          }}
+        }}
+      }}
+      }}
+
+- job-group:
+    name: '{name}-tests'
+    jobs:
+      - '{name}-unit-tests':
+          isay: 'hello'
+
+- project:
+    name: project-name
+    jobs:
+    - '{name}-tests'
