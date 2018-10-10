@@ -23,7 +23,7 @@
         stage('Static analysis') {{
           steps {{
             echo "flake8"
-            sh '''python3 -m tox -e flake8'''
+            sh '''python3 -m flake8'''
 
             echo "radon"
             sh  '''
@@ -39,9 +39,23 @@
         }}
         stage('Unit tests') {{
           steps {{
-            echo "nose with cov"
             sh  '''
-            mkdir reports
+if [ ! -f tox.ini ]
+then cat >tox.ini <<EOF
+[tox]
+envlist=py3
+[testenv:py3]
+deps =
+  pifpaf
+  nose
+  coverage
+commands =
+  pifpaf run postgresql -- nosetests {{posargs}}
+EOF
+fi
+'''
+            sh '''
+            mkdir -p reports
             python3 -m tox -e py3 -- --with-coverage --cover-xml \
             --cover-xml-file=./reports/coverage.xml --cover-package=swh.${{modname}} \
             --cover-inclusive \
