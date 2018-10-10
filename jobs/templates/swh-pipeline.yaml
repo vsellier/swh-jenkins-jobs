@@ -1,11 +1,10 @@
 - job-template:
-    name: swh-{name}/static
+    name: swh-{name}/tests
     project-type: pipeline
     sandbox: true
     numToKeep: 20
 
     dsl: |
-      def modname = '{name}'.replace('-', '.')
       pipeline {{
       agent {{ label 'swh-tox' }}
 
@@ -40,8 +39,7 @@
         stage('Unit tests') {{
           steps {{
             sh  '''
-      if [ ! -f tox.ini ]
-      then cat >tox.ini <<EOF
+      cat >tox4jenkins.ini <<EOF
       [tox]
       envlist=py3
       [testenv:py3]
@@ -52,12 +50,12 @@
       commands =
         pifpaf run postgresql -- nosetests {{posargs}}
       EOF
-      fi
             '''
             sh '''
             mkdir -p reports
             python3 -m tox -e py3 -- --with-coverage --cover-xml \
-            --cover-xml-file=./reports/coverage.xml --cover-package=swh.${{modname}} \
+            --cover-xml-file=./reports/coverage.xml \
+            --cover-package=swh.`echo {name} | tr - .` \
             --cover-inclusive \
             --with-xunit --xunit-file=./reports/test-results.xml
             '''
@@ -78,19 +76,9 @@
               junit allowEmptyResults: true, testResults: 'reports/test-results.xml'
               // disabled for now, reauires the plugin Warning v5 (still in RC)
               //recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
+              archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*,tox*.ini', fingerprint: true
             }}
           }}
         }}
       }}
       }}
-
-- job-group:
-    name: '{name}-tests'
-    jobs:
-      - '{name}-unit-tests':
-          isay: 'hello'
-
-- project:
-    name: project-name
-    jobs:
-    - '{name}-tests'
