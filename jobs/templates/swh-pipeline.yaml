@@ -22,7 +22,11 @@
       - timestamps
 
     dsl: |
+      def modname = {name}.replace('-', '.')
+
       pipeline {{
+      agent {{ label 'swh-tox' }}
+
       parameters {{
         string(name: 'BRANCH',
                defaultValue: 'master',
@@ -42,11 +46,12 @@
             echo "radon"
             sh  '''
             mkdir -p reports
-            radon raw --json swh/ > reports/raw_report.json
-            radon cc  --json swh/ > reports/cc_report.json
-            radon mi  --json swh/ > reports/mi_report.json
-            radon hal --json swh/ > reports/hal_report.json
-            radon cc  --xml  swh/ > reports/cc_report.xml
+            python3 -m pip install --user --upgrade https://github.com/douardda/radon/archive/main-module.zip
+            python3 -m radon raw --json swh/ > reports/raw_report.json
+            python3 -m radon cc  --json swh/ > reports/cc_report.json
+            python3 -m radon mi  --json swh/ > reports/mi_report.json
+            python3 -m radon hal --json swh/ > reports/hal_report.json
+            python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
             '''
           }}
         }}
@@ -56,9 +61,9 @@
             sh  '''
             mkdir reports
             python3 -m tox -e py3 -- --with-coverage --cover-xml \
-            --cover-xml-file=./reports/covergage.xml --cover-package=swh.core \
+            --cover-xml-file=./reports/coverage.xml --cover-package=swh.${{modname}} \
+            --cover-inclusive \
             --with-xunit --xunit-file=./reports/test-results.xml
-            python3 -m coverage xml -o ./reports/coverage.xml
             '''
           }}
           post {{
@@ -75,7 +80,8 @@
                     sourceEncoding: 'ASCII',
                     zoomCoverageChart: false])
               junit allowEmptyResults: true, testResults: 'reports/test-results.xml'
-              recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
+              // disabled for now, reauires the plugin Warning v5 (still in RC)
+              //recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
             }}
           }}
         }}
