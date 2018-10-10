@@ -1,7 +1,7 @@
 - job-template:
     name: swh-{name}/static
     project-type: pipeline
-
+    sandbox: true
     numToKeep: 20
 
     dsl: |
