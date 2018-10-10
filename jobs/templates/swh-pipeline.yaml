@@ -1,29 +1,11 @@
 - job-template:
     name: swh-{name}/static
-    node: swh-tox
     project-type: pipeline
-
-    parameters:
-      - string:
-          name: BRANCH
-          default: '{branch|master}'
-    scm:
-      - git:
-          refspec: 'refs/heads/{branch|master}'
-          url: https://forge.softwareheritage.org/source/swh-{name}.git
 
     numToKeep: 20
 
-    triggers:
-      - pollscm:
-          cron: "H */3 * * *"
-
-    wrappers:
-      - timestamps
-
     dsl: |
-      def modname = {name}.replace('-', '.')
-
+      def modname = '{name}'.replace('-', '.')
       pipeline {{
       agent {{ label 'swh-tox' }}
 
@@ -35,7 +17,7 @@
       stages {{
         stage('Checkout') {{
           steps {{
-            checkout scm
+            git branch: "${{params.BRANCH}}", url: 'https://forge.softwareheritage.org/source/swh-{name}.git'
           }}
         }}
         stage('Static analysis') {{
