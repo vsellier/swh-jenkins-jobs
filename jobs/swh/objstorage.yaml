@@ -1,0 +1,7 @@
+- project:
+    name: objstorage
+    pkg: objstorage
+    jobs:
+      - swh-{name}
+      - swh-{name}/tests
+      - swh-{name}/build

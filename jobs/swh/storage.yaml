@@ -1,0 +1,7 @@
+- project:
+    name: storage
+    pkg: storage
+    jobs:
+      - swh-{name}
+      - swh-{name}/tests
+      - swh-{name}/build
