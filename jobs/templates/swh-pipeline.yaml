@@ -44,7 +44,7 @@
       envlist=py3
       [testenv:py3]
       deps =
-        -r requirement-test.txt
+        -r requirements-test.txt
         pifpaf
         pytest
         pytest-cov
@@ -72,7 +72,7 @@
                     onlyStable: false,
                     sourceEncoding: 'ASCII',
                     zoomCoverageChart: false])
-              junit allowEmptyResults: true, testResults: test-results.xml'
+              junit allowEmptyResults: true, testResults: 'test-results.xml'
               // disabled for now, reauires the plugin Warning v5 (still in RC)
               //recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
               archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*,*.xml,tox*.ini', fingerprint: true
