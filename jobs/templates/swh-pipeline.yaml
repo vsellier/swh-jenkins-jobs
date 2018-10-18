@@ -44,20 +44,19 @@
       envlist=py3
       [testenv:py3]
       deps =
+        -r requirement-test.txt
         pifpaf
-        nose
-        coverage
+        pytest
+        pytest-cov
       commands =
-        pifpaf run postgresql -- nosetests {{posargs}}
+        pifpaf run postgresql -- pytest {{posargs}}
       EOF
             '''
             sh '''
             mkdir -p reports
-            python3 -m tox -e py3 -- --with-coverage --cover-xml \
-            --cover-xml-file=./reports/coverage.xml \
-            --cover-package=swh.`echo {name} | tr - .` \
-            --cover-inclusive \
-            --with-xunit --xunit-file=./reports/test-results.xml
+            python3 -m tox -c tox4jenkins.ini -- \
+              --cov=swh --cov-report=xml --cov-branch \
+              --junit-xml=test-results.xml
             '''
           }}
           post {{
@@ -65,7 +64,7 @@
               step([$class: 'CoberturaPublisher',
                     autoUpdateHealth: false,
                     autoUpdateStability: false,
-                    coberturaReportFile: 'reports/coverage.xml',
+                    coberturaReportFile: 'coverage.xml',
                     failNoReports: false,
                     failUnhealthy: false,
                     failUnstable: false,
@@ -73,10 +72,10 @@
                     onlyStable: false,
                     sourceEncoding: 'ASCII',
                     zoomCoverageChart: false])
-              junit allowEmptyResults: true, testResults: 'reports/test-results.xml'
+              junit allowEmptyResults: true, testResults: test-results.xml'
               // disabled for now, reauires the plugin Warning v5 (still in RC)
               //recordIssues enabledForFailure: true, tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
-              archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*,tox*.ini', fingerprint: true
+              archiveArtifacts allowEmptyArchive: true, artifacts: 'reports/*,*.xml,tox*.ini', fingerprint: true
             }}
           }}
         }}
