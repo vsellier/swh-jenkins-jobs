@@ -1,6 +1,7 @@
 - project:
-    name: sandbox
+    name: TSBX
+    display-name: swh-sandbox
     pkg: sandbox
     jobs:
-      - swh-{name}
-      - swh-{name}/tox
+      - "{name}"
+      - "{name}/tox"

@@ -1,7 +1,9 @@
 - project:
-    name: scheduler
+    name: DSCH
+    display-name: swh-scheduler
     pkg: scheduler
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

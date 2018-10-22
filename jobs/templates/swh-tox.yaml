@@ -1,5 +1,5 @@
 - job-template:
-    name: swh-{name}/tox
+    name: '{name}/tox'
     node: swh-tox
     auth-token: ph4br1cat0r
     parameters:
@@ -9,9 +9,6 @@
       - string:
           name: PHID
           description: PHID of the Target object
-      - string:
-          name: URI
-          description: URI of the repo
       - string:
           name: COMMIT
           description: commit ID to test, if any
@@ -28,7 +25,13 @@
 
     builders:
       - shell: |
-          if [ -n $COMMIT ]; then
+          echo "Run tox for:"
+          echo "  REPO=$REPO"
+          echo "  PHID=$PHID"
+          echo "  COMMIT=$COMMIT"
+          echo "  DIFF_ID=$DIFF_ID"
+      - shell: |
+          if [ -n "$COMMIT" ]; then
           echo "Checkout commit $COMMIT"
           git checkout $COMMIT
           fi
@@ -37,4 +40,4 @@
     publishers:
       - phabricator:
           uberalls-enabled: false
-          comment-with-console-link-on-failure: true
+          comment-with-console-link-on-failure: false

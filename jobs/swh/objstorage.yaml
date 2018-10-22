@@ -1,7 +1,9 @@
 - project:
-    name: objstorage
+    name: DOBJS
+    display-name: swh-objstorage
     pkg: objstorage
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

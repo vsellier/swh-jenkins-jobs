@@ -1,5 +1,5 @@
 - job-template:
-    name: swh-{name}/tests
+    name: "{name}/tests"
     project-type: pipeline
     sandbox: true
     numToKeep: 20

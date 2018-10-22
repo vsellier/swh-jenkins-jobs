@@ -1,5 +1,5 @@
 - job-template:
-    name: swh-{name}/build
+    name: "{name}/build"
     node: swh-tox
 
     parameters:

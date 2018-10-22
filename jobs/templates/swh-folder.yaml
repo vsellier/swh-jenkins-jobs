@@ -1,3 +1,4 @@
 - job-template:
-    name: 'swh-{name}'
+    name: '{name}'
+    display-name: '{display-name}'
     project-type: folder

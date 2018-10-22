@@ -1,7 +1,9 @@
 - project:
-    name: core
+    name: DCORE
+    display-name: swh-core
     pkg: core
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

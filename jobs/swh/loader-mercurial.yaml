@@ -1,6 +1,9 @@
 - project:
-    name: loader-mercurial
+    name: DLDHG
+    display-name: loader-mercurial
+    pkg: loader.mercurial
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

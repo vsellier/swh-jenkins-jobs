@@ -1,7 +1,9 @@
 - project:
-    name: model
+    name: DMOD
+    display-name: swh-model
     pkg: model
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

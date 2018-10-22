@@ -1,7 +1,9 @@
 - project:
-    name: storage
+    name: DSTO
+    display-name: swh-storage
     pkg: storage
     jobs:
-      - swh-{name}
-      - swh-{name}/tests
-      - swh-{name}/build
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"
