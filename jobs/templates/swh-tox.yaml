@@ -17,7 +17,7 @@
           description: ID of the Diff patch to apply, if any
     scm:
       - git:
-          url: https://forge.softwareheritage.org/source/swh-{name}.git
+          url: https://forge.softwareheritage.org/source/{display-name}.git
 
     wrappers:
       - phabricator-differential
