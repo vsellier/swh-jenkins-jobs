@@ -1,0 +1,6 @@
+- project:
+    name: sandbox
+    pkg: sandbox
+    jobs:
+      - swh-{name}
+      - swh-{name}/tox
