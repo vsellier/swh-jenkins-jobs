@@ -1,0 +1,9 @@
+- job:
+    name: jenkins-tools/clean docker images
+    node: master
+
+    triggers:
+      - timed: "@midnight"
+
+    builders:
+      - shell: docker images  | grep '<none>' | awk '{print $3}' | xargs docker rmi
