@@ -1,5 +1,5 @@
 - job:
-    name: swh-jenkins-dockerfiles
+    name: jenkins-tools/swh-jenkins-dockerfiles
     node: master
     scm:
       - git:
@@ -14,4 +14,4 @@
       - timestamps
       - ansicolor
     builders:
-      - shell: make checkrebuild all
+      - shell: make all
