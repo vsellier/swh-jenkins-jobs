@@ -1,0 +1,9 @@
+- project:
+    name: DARC
+    display-name: swh-archiver
+    pkg: archiver
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"
