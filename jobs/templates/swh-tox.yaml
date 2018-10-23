@@ -35,9 +35,11 @@
           echo "Checkout commit $COMMIT"
           git checkout $COMMIT
           fi
-      - shell: python3 -m tox
+      - shell: python3 -m tox --result-json tox-results.json
 
     publishers:
+      - archive:
+          artifacts: "*.json,.coverage"
       - phabricator:
           uberalls-enabled: false
           comment-with-console-link-on-failure: false
