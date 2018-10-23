@@ -1,0 +1,9 @@
+- project:
+    name: DCIDX
+    display-name: swh-indexer
+    pkg: indexer
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

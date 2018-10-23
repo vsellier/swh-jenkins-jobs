@@ -1,0 +1,9 @@
+- project:
+    name: DVAU
+    display-name: swh-vault
+    pkg: vault
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

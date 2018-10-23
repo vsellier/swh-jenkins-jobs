@@ -1,0 +1,9 @@
+- project:
+    name: DDEP
+    display-name: swh-deposit
+    pkg: deposit
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

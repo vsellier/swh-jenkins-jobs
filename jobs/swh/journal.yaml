@@ -1,0 +1,9 @@
+- project:
+    name: DJNL
+    display-name: swh-journal
+    pkg: journal
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"
