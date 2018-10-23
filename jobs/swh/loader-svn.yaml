@@ -1,0 +1,9 @@
+- project:
+    name: DLDSVN
+    display-name: loader-svn
+    pkg: loader.svn
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

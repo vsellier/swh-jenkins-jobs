@@ -1,0 +1,9 @@
+- project:
+    name: DLDDIR
+    display-name: loader-dir
+    pkg: loader.dir
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

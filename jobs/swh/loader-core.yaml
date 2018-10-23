@@ -1,0 +1,9 @@
+- project:
+    name: DLDBASE
+    display-name: loader-core
+    pkg: loader.core
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

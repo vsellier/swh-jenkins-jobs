@@ -1,0 +1,9 @@
+- project:
+    name: DLDG
+    display-name: loader-git
+    pkg: loader.git
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

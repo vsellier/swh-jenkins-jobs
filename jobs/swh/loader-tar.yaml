@@ -1,0 +1,9 @@
+- project:
+    name: DLDTAR
+    display-name: loader-tar
+    pkg: loader.tar
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"

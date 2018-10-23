@@ -1,0 +1,9 @@
+- project:
+    name: DLDDEB
+    display-name: loader-debian
+    pkg: loader.debian
+    jobs:
+      - "{name}"
+      - "{name}/tests"
+      - "{name}/build"
+      - "{name}/tox"
