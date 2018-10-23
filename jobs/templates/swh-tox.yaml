@@ -38,8 +38,8 @@
       - shell: python3 -m tox --result-json tox-results.json
 
     publishers:
-      - archive:
-          artifacts: "*.json,.coverage"
       - phabricator:
           uberalls-enabled: false
           comment-with-console-link-on-failure: false
+      - archive:
+          artifacts: "*.json,.coverage"
