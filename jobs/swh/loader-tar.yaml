@@ -1,6 +1,6 @@
 - project:
     name: DLDTAR
-    display-name: loader-tar
+    display-name: swh-loader-tar
     pkg: loader.tar
     jobs:
       - "{name}"

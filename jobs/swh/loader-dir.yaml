@@ -1,6 +1,6 @@
 - project:
     name: DLDDIR
-    display-name: loader-dir
+    display-name: swh-loader-dir
     pkg: loader.dir
     jobs:
       - "{name}"

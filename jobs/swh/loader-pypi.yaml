@@ -1,6 +1,6 @@
 - project:
     name: DLDPY
-    display-name: loader-pypi
+    display-name: swh-loader-pypi
     pkg: loader.pypi
     jobs:
       - "{name}"

@@ -1,6 +1,6 @@
 - project:
     name: DLDHG
-    display-name: loader-mercurial
+    display-name: swh-loader-mercurial
     pkg: loader.mercurial
     jobs:
       - "{name}"

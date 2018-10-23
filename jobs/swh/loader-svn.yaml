@@ -1,6 +1,6 @@
 - project:
     name: DLDSVN
-    display-name: loader-svn
+    display-name: swh-loader-svn
     pkg: loader.svn
     jobs:
       - "{name}"

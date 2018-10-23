@@ -1,6 +1,6 @@
 - project:
     name: DLDG
-    display-name: loader-git
+    display-name: swh-loader-git
     pkg: loader.git
     jobs:
       - "{name}"

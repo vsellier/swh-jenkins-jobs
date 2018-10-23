@@ -1,6 +1,6 @@
 - project:
     name: DLDBASE
-    display-name: loader-core
+    display-name: swh-loader-core
     pkg: loader.core
     jobs:
       - "{name}"
