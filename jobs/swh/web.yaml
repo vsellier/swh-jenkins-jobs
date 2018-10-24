@@ -5,5 +5,4 @@
     jobs:
       - "{name}"
       - "{name}/tests"
-      - "{name}/build"
       - "{name}/tox"
