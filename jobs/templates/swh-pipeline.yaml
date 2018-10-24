@@ -11,7 +11,7 @@
       stages {{
         stage('Checkout') {{
           steps {{
-            git url: 'https://forge.softwareheritage.org/source/swh-{display-name}.git'
+            git url: 'https://forge.softwareheritage.org/source/{display-name}.git'
           }}
         }}
         stage('Static analysis') {{
