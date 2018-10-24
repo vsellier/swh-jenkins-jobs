@@ -2,3 +2,10 @@
     name: '{name}'
     display-name: '{display-name}'
     project-type: folder
+    raw:
+      xml: |
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+          </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>
