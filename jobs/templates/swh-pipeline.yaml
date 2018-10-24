@@ -8,15 +8,10 @@
       pipeline {{
       agent {{ label 'swh-tox' }}
 
-      parameters {{
-        string(name: 'BRANCH',
-               defaultValue: 'master',
-               description: 'branch to checkout from the repository')
-        }}
       stages {{
         stage('Checkout') {{
           steps {{
-            git branch: "${{params.BRANCH}}", url: 'https://forge.softwareheritage.org/source/swh-{name}.git'
+            git url: 'https://forge.softwareheritage.org/source/swh-{display-name}.git'
           }}
         }}
         stage('Static analysis') {{
