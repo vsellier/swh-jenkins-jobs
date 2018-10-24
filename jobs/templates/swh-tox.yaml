@@ -40,6 +40,7 @@
     publishers:
       - phabricator:
           uberalls-enabled: false
-          comment-with-console-link-on-failure: false
+          comment-on-success: true
+          comment-with-console-link-on-failure: true
       - archive:
           artifacts: "*.json,.coverage"
