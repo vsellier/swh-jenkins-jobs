@@ -28,7 +28,7 @@
           echo "  PHID=$PHID"
           echo "  DIFF_ID=$DIFF_ID"
       - shell: |
-          if (tox -a | grep -q -e '^flake8-phab$' ); then
+          if (python3 -m tox -a | grep -q -e '^flake8-phab$' ); then
               python3 -m tox -e flake8-phab
           else
               python3 -m tox -e flake8
