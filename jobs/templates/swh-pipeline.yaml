@@ -6,13 +6,13 @@
 
     dsl: |
       pipeline {{
-      agent {{ label 'swh-tox' }}
-
-      stages {{
-        stage('Checkout') {{
-          steps {{
-            git url: 'https://forge.softwareheritage.org/source/{display-name}.git'
-          }}
+        agent {{ label 'swh-tox' }}
+        parameters {{
+            gitParameter name: 'REVISION',
+                type: 'PT_REVISION',
+                defaultValue: 'master'
+            string name: 'PHID',
+                description: 'PHID of the Phabricator target object on which results will be reported.'
         }}
         stage('Static analysis') {{
           steps {{
