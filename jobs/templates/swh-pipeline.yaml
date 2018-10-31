@@ -7,6 +7,9 @@
     dsl: |
       pipeline {{
         agent {{ label 'swh-tox' }}
+        environment {{
+          PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
+        }}
         parameters {{
             gitParameter name: 'REVISION',
                 type: 'PT_REVISION',
