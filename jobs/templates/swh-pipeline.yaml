@@ -2,8 +2,10 @@
     name: "{name}/tests"
     project-type: pipeline
     sandbox: true
-    numToKeep: 20
-
+    auth-token: 'ph4br1cat0r'
+    properties:
+      - build-discarder:
+          num-to-keep: 20
     dsl: |
       pipeline {{
         agent {{ label 'swh-tox' }}
