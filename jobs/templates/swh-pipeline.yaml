@@ -6,18 +6,21 @@
     properties:
       - build-discarder:
           num-to-keep: 20
+    parameters:
+      - git-parameter:
+          name: REVISION
+          type: PT_REVISION
+          defaultValue: master
+          description: Git revision to build.
+      - string:
+          name: PHID
+          description: PHID of the Phabricator target object on which results will be reported.
+
     dsl: |
       pipeline {{
         agent {{ label 'swh-tox' }}
         environment {{
           PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
-        }}
-        parameters {{
-            gitParameter name: 'REVISION',
-                type: 'PT_REVISION',
-                defaultValue: 'master'
-            string name: 'PHID',
-                description: 'PHID of the Phabricator target object on which results will be reported.'
         }}
 
         stages {{
