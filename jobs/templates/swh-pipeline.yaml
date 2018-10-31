@@ -131,7 +131,7 @@
                         variable: 'PHAB_CONDUIT_TOKEN')]) {{
                   withEnv(["JOBSTATUS=${{currentBuild.currentResult}}"]) {{
                   sh '''
-                  if [ "${JOBSTATUS}" = "SUCCESS" ]; then
+                  if [ "$JOBSTATUS" = "SUCCESS" ]; then
                     MSGTYPE=pass
                   else
                     MSGTYPE=fail
