@@ -18,6 +18,17 @@
         stages {{
           stage('Checkout') {{
             steps {{
+                withCredentials([
+                  string(credentialsId: 'swh-public-ci',
+                         variable: 'PHAB_CONDUIT_TOKEN')]) {{
+                  sh '''
+                  python3 -m pip install --user \
+                    git+https://framagit.org/douardda/pyarcanist.git
+                  if [ -n "$PHID" ]; then
+                    python3 -m pyarcanist send-message work $PHID
+                  fi
+                  '''
+                }}
                 checkout([$class: 'GitSCM',
                           branches: [[name: "${{params.REVISION}}"]],
                           doGenerateSubmoduleConfigurations: false,
@@ -55,7 +66,7 @@
                 }}
                 steps {{
                   sh '''
-                  python3 -m tox -- \
+                  python3 -m tox -e py3 -- \
                     --cov-report=xml \
                     --junit-xml=test-results.xml
                   '''
@@ -93,7 +104,11 @@
           }}
 
           stage('Publish') {{
-            when {{ buildingTag() }}
+            when {{ expression {{
+              GITTAG=sh(returnStdout: true, script:'git describe --exact-match 2>/dev/null || true').trim()
+              return GITTAG != ''
+              }}
+            }}
             steps {{
               withCredentials([
                  usernamePassword(credentialsId: 'test.pypi.org',
@@ -111,6 +126,23 @@
             archiveArtifacts allowEmptyArchive: true,
                              artifacts: 'reports/*,*.xml,tox*.ini',
                              fingerprint: true
-          }}
+            withCredentials([
+                 string(credentialsId: 'swh-public-ci',
+                        variable: 'PHAB_CONDUIT_TOKEN')]) {{
+                  withEnv(["JOBSTATUS=${{currentBuild.currentResult}}"]) {{
+                  sh '''
+                  if [ "${JOBSTATUS}" = "SUCCESS" ]; then
+                    MSGTYPE=pass
+                  else
+                    MSGTYPE=fail
+                  fi
+                  echo "Current job status is $JOBSTATUS -> $MGSTYPE"
+                  if [ -n "$PHID" ]; then
+                    python3 -m pyarcanist send-message $MSGTYPE $PHID
+                  fi
+                  '''
+                  }} // withEnv
+                  }} // zithCredentials
+          }} // always
         }} // post
       }} // pipeline
