@@ -92,12 +92,17 @@
             }}
           }}
 
-          // stage('Publish') {{
-          //   when {{ buildingTag() }}
-          //   steps {{
-          //      TODO
-          //   }}
-          // }}
+          stage('Publish') {{
+            when {{ buildingTag() }}
+            steps {{
+              withCredentials([
+                 usernamePassword(credentialsId: 'test.pypi.org',
+                                  usernameVariable: 'TWINE_USERNAME',
+                                  passwordVariable: 'TWINE_PASSWORD')]) {{
+                sh 'python3 -m twine upload dist/*'
+              }}
+            }}
+          }}
         }} // stages
 
         post {{
