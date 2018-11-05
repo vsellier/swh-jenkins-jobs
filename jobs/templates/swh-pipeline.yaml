@@ -15,6 +15,18 @@
       - string:
           name: PHID
           description: PHID of the Phabricator target object on which results will be reported.
+      - string:
+          name: PIPY
+          description: |
+            PYPI registry to publish to when built revision is a tag. There
+            must exists a usernamePassword credential object with that name.
+            The publication endpoint is built as https://$PIPY/legagy/
+          default: test.pypi.org
+      - bool:
+          name: FORCE_UPLOAD
+          default: false
+          description: |
+            Force uploading python packages on the chosen PYPI registry.
 
     dsl: |
       pipeline {{
@@ -112,17 +124,20 @@
           }}
 
           stage('Publish') {{
-            when {{ expression {{
-              GITTAG=sh(returnStdout: true, script:'git describe --exact-match 2>/dev/null || true').trim()
-              return GITTAG != ''
+            when {{ anyOf {{
+              expression {{ return params.FORCE_UPLOAD }}
+              expression {{
+                GITTAG=sh(returnStdout: true, script:'git describe --exact-match 2>/dev/null || true').trim()
+                return GITTAG != ''
+                }}
               }}
             }}
             steps {{
               withCredentials([
-                 usernamePassword(credentialsId: 'test.pypi.org',
+                 usernamePassword(credentialsId: "${{params.PYPI}}",
                                   usernameVariable: 'TWINE_USERNAME',
                                   passwordVariable: 'TWINE_PASSWORD')]) {{
-                sh 'python3 -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*'
+                sh 'python3 -m twine upload --repository-url https://${{params.PYPI}}/legacy/ dist/*'
               }}
             }}
           }}
@@ -138,19 +153,19 @@
                  string(credentialsId: 'swh-public-ci',
                         variable: 'PHAB_CONDUIT_TOKEN')]) {{
                   withEnv(["JOBSTATUS=${{currentBuild.currentResult}}"]) {{
-                  sh '''
-                  if [ "$JOBSTATUS" = "SUCCESS" ]; then
-                    MSGTYPE=pass
-                  else
-                    MSGTYPE=fail
-                  fi
-                  echo "Current job status is $JOBSTATUS -> $MGSTYPE"
-                  if [ -n "$PHID" ]; then
-                    python3 -m pyarcanist send-message $MSGTYPE $PHID
-                  fi
-                  '''
+                    sh '''
+                    if [ "$JOBSTATUS" = "SUCCESS" ]; then
+                      MSGTYPE=pass
+                    else
+                      MSGTYPE=fail
+                    fi
+                    echo "Current job status is $JOBSTATUS -> $MGSTYPE"
+                    if [ -n "$PHID" ]; then
+                      python3 -m pyarcanist send-message $MSGTYPE $PHID
+                    fi
+                    '''
                   }} // withEnv
-                  }} // zithCredentials
+            }} // withCredentials
           }} // always
         }} // post
       }} // pipeline
