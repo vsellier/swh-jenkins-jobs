@@ -16,11 +16,11 @@
           name: PHID
           description: PHID of the Phabricator target object on which results will be reported.
       - string:
-          name: PIPY
+          name: PYPI
           description: |
             PYPI registry to publish to when built revision is a tag. There
             must exists a usernamePassword credential object with that name.
-            The publication endpoint is built as https://$PIPY/legagy/
+            The publication endpoint is built as https://$PYPI/legagy/
           default: test.pypi.org
       - bool:
           name: FORCE_UPLOAD
@@ -137,7 +137,7 @@
                  usernamePassword(credentialsId: "${{params.PYPI}}",
                                   usernameVariable: 'TWINE_USERNAME',
                                   passwordVariable: 'TWINE_PASSWORD')]) {{
-                sh 'python3 -m twine upload --repository-url https://${{params.PYPI}}/legacy/ dist/*'
+                sh 'python3 -m twine upload --repository-url https://${{PYPI}}/legacy/ dist/*'
               }}
             }}
           }}
