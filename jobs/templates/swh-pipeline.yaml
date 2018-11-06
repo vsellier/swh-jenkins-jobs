@@ -1,6 +1,8 @@
 - job-template:
     name: "{name}/tests"
     project-type: pipeline
+    triggers:
+      - timed: '@daily'
     sandbox: true
     auth-token: 'ph4br1cat0r'
     properties:
