@@ -42,8 +42,6 @@
                   string(credentialsId: 'swh-public-ci',
                          variable: 'PHAB_CONDUIT_TOKEN')]) {{
                   sh '''
-                  python3 -m pip install --user \
-                    git+https://framagit.org/douardda/pyarcanist.git
                   if [ -n "$PHID" ]; then
                     python3 -m pyarcanist send-message work $PHID
                   fi
@@ -70,7 +68,6 @@
                   echo 'radon';
                   sh  '''
                   mkdir -p reports
-                  python3 -m pip install --user radon
                   python3 -m radon raw --json swh/ > reports/raw_report.json
                   python3 -m radon cc  --json swh/ > reports/cc_report.json
                   python3 -m radon mi  --json swh/ > reports/mi_report.json
