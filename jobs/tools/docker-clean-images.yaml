@@ -1,5 +1,6 @@
 - job:
-    name: jenkins-tools/clean docker images
+    name: jenkins-tools/clean-docker-images
+    description: Clean old Docker images
     node: master
 
     triggers:
@@ -7,3 +8,14 @@
 
     builders:
       - shell: docker images  | grep '<none>' | awk '{print $3}' | xargs docker rmi
+
+- job:
+    name: jenkins-tools/clean-docker-volumes
+    description: Clean old Docker volumes
+    node: master
+
+    triggers:
+      - timed: "@midnight"
+
+    builders:
+      - shell: docker volume ls  | tail +2 | awk '{print $2}' | xargs docker volume rm
