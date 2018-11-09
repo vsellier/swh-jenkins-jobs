@@ -65,7 +65,7 @@
               stage('Static analysis') {{
                 steps {{
                   echo 'flake8'
-                  sh '''python3 -m tox -e flake8'''
+                  sh '''python3 -m tox -e flake8 --parallel--safe-build'''
 
                   echo 'radon';
                   sh  '''
@@ -85,7 +85,7 @@
                 }}
                 steps {{
                   sh '''
-                  python3 -m tox -e py3 -- \
+                  python3 -m tox -e py3 --parallel--safe-build -- \
                     --cov-report=xml \
                     --junit-xml=test-results.xml
                   '''
