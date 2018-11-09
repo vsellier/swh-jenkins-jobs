@@ -125,17 +125,12 @@
           stage('Publish') {{
             when {{ anyOf {{
               expression {{ return params.FORCE_UPLOAD }}
-              allOf {{
-                expression {{
-
-                }}
-                expression {{
-                  GITTAG=sh(returnStdout: true,
-                            script:'git describe --exact-match 2>/dev/null || true').trim()
-                  LASTV=sh(returnStdout: true,
-                           script:'curl -s https://${{params.PYPI}}/pypi/`python setup.py --name`/json | jq -r .info.version || true').trim()
-                  return ! (GITTAG in ['', 'v'+LASTV])
-                  }}
+              expression {{
+                GITTAG=sh(returnStdout: true,
+                          script:'git describe --exact-match 2>/dev/null || true').trim()
+                LASTV=sh(returnStdout: true,
+                         script:'curl -s https://${{params.PYPI}}/pypi/`python setup.py --name`/json | jq -r .info.version || true').trim()
+                return ! (GITTAG in ['', 'v'+LASTV])
                 }}
               }}
             }}
