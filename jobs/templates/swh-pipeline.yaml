@@ -1,5 +1,6 @@
 - job-template:
     name: "{name}/tests"
+    display-name: "master branch"
     project-type: pipeline
     triggers:
       - timed: '@daily'

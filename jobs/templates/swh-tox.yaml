@@ -1,5 +1,6 @@
 - job-template:
     name: '{name}/tox'
+    display-name: 'Phab. Diff'
     node: swh-tox
     auth-token: ph4br1cat0r
     parameters:
