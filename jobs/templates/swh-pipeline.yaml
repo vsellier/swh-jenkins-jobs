@@ -60,61 +60,57 @@
             }}
           }}
 
-          stage('Tests') {{
-            parallel {{
-              stage('Static analysis') {{
-                steps {{
-                  echo 'flake8'
-                  sh '''python3 -m detox -e flake8'''
+          stage('Static analysis') {{
+            steps {{
+              echo 'flake8'
+              sh '''python3 -m detox -e flake8'''
 
-                  echo 'radon';
-                  sh  '''
-                  mkdir -p reports
-                  python3 -m radon raw --json swh/ > reports/raw_report.json
-                  python3 -m radon cc  --json swh/ > reports/cc_report.json
-                  python3 -m radon mi  --json swh/ > reports/mi_report.json
-                  python3 -m radon hal --json swh/ > reports/hal_report.json
-                  python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
-                  '''
-                }}
-              }} // static analysis
+              echo 'radon';
+              sh  '''
+              mkdir -p reports
+              python3 -m radon raw --json swh/ > reports/raw_report.json
+              python3 -m radon cc  --json swh/ > reports/cc_report.json
+              python3 -m radon mi  --json swh/ > reports/mi_report.json
+              python3 -m radon hal --json swh/ > reports/hal_report.json
+              python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
+              '''
+            }}
+          }} // static analysis
 
-              stage('Unit tests') {{
-                options {{
-                  timeout(time: 5, unit: 'MINUTES')
-                }}
-                steps {{
-                  sh '''
-                  python3 -m detox -e py3 -- \
-                    --cov-report=xml \
-                    --junit-xml=test-results.xml
-                  '''
-                  }}
-                post {{
-                  always {{
-                    step([$class: 'CoberturaPublisher',
-                          autoUpdateHealth: false,
-                          autoUpdateStability: false,
-                          coberturaReportFile: 'coverage.xml',
-                          failNoReports: false,
-                          failUnhealthy: false,
-                          failUnstable: false,
-                          maxNumberOfBuilds: 10,
-                          onlyStable: false,
-                          sourceEncoding: 'ASCII',
-                          zoomCoverageChart: false])
-                    // JUnit report
-                    junit allowEmptyResults: true,
-                          testResults: 'test-results.xml'
+          stage('Unit tests') {{
+            options {{
+              timeout(time: 5, unit: 'MINUTES')
+            }}
+            steps {{
+              sh '''
+              python3 -m tox -e py3 -- \
+                --cov-report=xml \
+                --junit-xml=test-results.xml
+              '''
+              }}
+            post {{
+              always {{
+                step([$class: 'CoberturaPublisher',
+                      autoUpdateHealth: false,
+                      autoUpdateStability: false,
+                      coberturaReportFile: 'coverage.xml',
+                      failNoReports: false,
+                      failUnhealthy: false,
+                      failUnstable: false,
+                      maxNumberOfBuilds: 10,
+                      onlyStable: false,
+                      sourceEncoding: 'ASCII',
+                      zoomCoverageChart: false])
+                // JUnit report
+                junit allowEmptyResults: true,
+                      testResults: 'test-results.xml'
 
-                    // disabled for now, requires the plugin Warning v5 (still in RC)
-                    //recordIssues enabledForFailure: true,
-                    //    tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
-                  }}
-                }} // post
-              }} // unit tests
-            }} // parallel
-          }} // stage Tests
+                // disabled for now, requires the plugin Warning v5 (still in RC)
+                //recordIssues enabledForFailure: true,
+                //    tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
+              }}
+            }} // post
+          }} // unit tests
 
           stage('Build') {{
             steps {{
