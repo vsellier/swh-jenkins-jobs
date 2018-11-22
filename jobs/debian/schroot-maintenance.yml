@@ -1,0 +1,15 @@
+- job:
+    name: debian/maintenance/schroot-maintenance
+    description: 'Update sbuild chroots.<br/>Do not edit this job through the web interface, it is generated via jenkins-job-builder!'
+    project-type: matrix
+    child-workspace: .
+    execution-strategy:
+      sequential: true
+    axes:
+      - !include: axis-slave.yml.inc
+      - !include: axis-distribution.yml.inc
+      - !include: axis-architecture.yml.inc
+    triggers:
+      - timed: "H */6 * * *"
+    builders:
+      - shell: /usr/share/jenkins/debian-scripts/schroot-maintenance.sh
