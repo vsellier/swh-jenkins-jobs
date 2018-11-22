@@ -6,5 +6,5 @@
       - "{name}"
       - "{name}/tests"
       - "{name}/tox"
-      - "debian/package/{name}"
-      - "debian/package/{name}/pipeline"
+      - "debian/packages/{name}"
+      - "debian/packages/{name}/pipeline"
