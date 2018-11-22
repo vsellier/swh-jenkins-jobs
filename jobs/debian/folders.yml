@@ -1,0 +1,37 @@
+- project:
+    name: 'debian'
+    display-name: 'Debian'
+    project-type: folder
+    raw:
+      xml: |
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+          </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>
+
+- project:
+    name: 'debian/maintenance'
+    display-name: 'Debian Maintenance'
+    description: |
+      Debian package building-related maintenance jobs.
+    project-type: folder
+    raw:
+      xml: |
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+          </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>
+
+- project:
+    name: 'debian/packages'
+    display-name: 'Debian Packages'
+    project-type: folder
+    raw:
+      xml: |
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+          </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>
