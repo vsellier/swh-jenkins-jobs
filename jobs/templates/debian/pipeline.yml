@@ -1,0 +1,36 @@
+- job-template:
+    name: 'debian/packages/{name}'
+    project-type: folder
+
+- job-template:
+    name: 'debian/packages/{name}/pipeline'
+    project-type: pipeline
+    scm:
+      - git:
+          url: "https://forge.softwareheritage.org/source/{display-name}.git"
+          wipe-workspace: false
+    parameters:
+      - git-parameter:
+          name: tag
+          type: PT_TAG
+          tagFilter: origin/master/v[\d.]+
+          sortMode: DESCENDING_SMART
+          selectedValue: TOP
+    dsl: |
+      pipeline {{
+        agent {{ label 'debian' }}
+        stages {{
+          stage('Checkout') {{
+            steps {{
+                checkout([
+                $class: 'GitSCM',
+                branches: [[name: "refs/tags/$tag"]],
+                userRemoteConfigs: [[
+                  url: 'https://forge.softwareheritage.org/source/{display-name}.git',
+                  refspec: '+refs/tags/*:refs/remotes/origins/tags/*'
+                ]]
+              ])
+            }}
+          }}
+        }}
+      }}
