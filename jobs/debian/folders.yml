@@ -1,4 +1,4 @@
-- project:
+- job:
     name: 'debian'
     display-name: 'Debian'
     project-type: folder
@@ -10,7 +10,7 @@
           </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
         </healthMetrics>
 
-- project:
+- job:
     name: 'debian/maintenance'
     display-name: 'Debian Maintenance'
     description: |
@@ -24,7 +24,7 @@
           </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
         </healthMetrics>
 
-- project:
+- job:
     name: 'debian/packages'
     display-name: 'Debian Packages'
     project-type: folder
