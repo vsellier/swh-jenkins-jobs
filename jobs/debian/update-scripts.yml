@@ -1,0 +1,18 @@
+- job:
+    name: debian/maintenance/update-scripts
+    description: 'Update debian scripts from the jenkins-jobs repository'
+    project-type: matrix
+    child-workspace: .
+    axes:
+      - !include: axis-slave.yml.inc
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/swh-jenkins-jobs/
+          branches:
+            - master
+          wipe-workspace: false
+    triggers:
+      - timed: "H * * * *"
+    builders:
+      - shell: chmod go+rX -R scripts/debian/
+      - shell: rsync -az --delete scripts/debian/ /usr/share/jenkins/debian-scripts/
