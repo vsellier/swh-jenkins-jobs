@@ -1,6 +1,7 @@
 - job-template:
     name: 'debian/packages/{name}'
     project-type: folder
+    display-name: '{display-name}'
 
 - job-template:
     name: 'debian/packages/{name}/pipeline'
