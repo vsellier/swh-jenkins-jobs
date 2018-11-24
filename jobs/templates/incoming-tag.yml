@@ -1,6 +1,7 @@
 - job-template:
     name: "{name}/incoming-tag"
     display-name: Incoming tag
+    project-type: pipeline
     auth-token: 'ph4br1cat0r'
     parameters:
       - git-parameter:
