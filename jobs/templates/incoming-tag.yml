@@ -1,0 +1,12 @@
+- job-template:
+    name: "{name}/incoming-tag"
+    display-name: Incoming tag
+    auth-token: 'ph4br1cat0r'
+    parameters:
+      - git-parameter:
+          name: GIT_TAG
+          description: git tag to process
+          type: PT_TAG
+    dsl: |
+      pipeline {{
+      }}

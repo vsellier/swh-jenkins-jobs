@@ -4,5 +4,6 @@
     pkg: sandbox
     jobs:
       - "{name}"
+      - "{name}/incoming-tag"
       - "{name}/tests"
       - "{name}/tox"
