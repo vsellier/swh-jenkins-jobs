@@ -7,3 +7,5 @@
       - "{name}/incoming-tag"
       - "{name}/tests"
       - "{name}/tox"
+      - "debian/packages/{name}"
+      - "debian/packages/{name}/update-for-release"

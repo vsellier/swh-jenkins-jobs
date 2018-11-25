@@ -1,0 +1,17 @@
+- job-template:
+    name: 'debian/packages/{name}/update-for-release'
+    project-type: pipeline
+    parameters:
+      - git-parameter:
+          name: GIT_TAG
+          type: PT_TAG
+          description: git tag to process
+          sortMode: DESCENDING_SMART
+          selectedValue: TOP
+      - bool:
+          name: DRY_RUN
+          description: Don't push the resulting changes to a Debian branch
+          default: false
+    dsl:
+      !include-raw: update-for-release.groovy
+
