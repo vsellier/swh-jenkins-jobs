@@ -3,13 +3,12 @@
     display-name: Incoming tag
     project-type: pipeline
     auth-token: 'ph4br1cat0r'
-    scm:
-      - git:
-          url: "https://forge.softwareheritage.org/source/{display-name}.git"
     parameters:
       - git-parameter:
           name: GIT_TAG
           description: git tag to process
           type: PT_TAG
+          sortMode: DESCENDING_SMART
+          selectedValue: TOP
     dsl:
       !include-raw: incoming-tag.groovy
