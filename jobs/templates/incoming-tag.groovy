@@ -9,6 +9,26 @@ def job_exists(name) {{
 pipeline {{
   agent none
   stages {{
+    stage('Refresh tag list') {{
+      agent any
+      steps {{
+        checkout([
+          $class: 'GitSCM',
+          userRemoteConfigs: [[
+            name: origin,
+            url: 'https://forge.softwareheritage.org/source/{display-name}.git',
+          ]],
+          branches: [[
+            name: params.GIT_TAG,
+          ]],
+          browser: [
+            $class: 'Phabricator',
+            repo: '{display-name}',
+            repoUrl: 'https://forge.softwareheritage.org/',
+          ],
+        ])
+      }}
+    }}
     stage('Build and upload PyPI package') {{
       when {{
         expression {{ params.GIT_TAG =~ /^v\d+(.\d+)+$/ }}
