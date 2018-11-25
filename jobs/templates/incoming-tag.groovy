@@ -15,7 +15,6 @@ pipeline {{
         checkout([
           $class: 'GitSCM',
           userRemoteConfigs: [[
-            name: origin,
             url: 'https://forge.softwareheritage.org/source/{display-name}.git',
           ]],
           branches: [[
