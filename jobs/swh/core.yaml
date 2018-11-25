@@ -7,4 +7,3 @@
       - "{name}/tests"
       - "{name}/tox"
       - "debian/packages/{name}"
-      - "debian/packages/{name}/pipeline"
