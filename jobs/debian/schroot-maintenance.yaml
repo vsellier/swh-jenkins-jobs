@@ -6,9 +6,9 @@
     execution-strategy:
       sequential: true
     axes:
-      - !include: axis-slave.yml.inc
-      - !include: axis-distribution.yml.inc
-      - !include: axis-architecture.yml.inc
+      - !include: axis-slave.yaml.inc
+      - !include: axis-distribution.yaml.inc
+      - !include: axis-architecture.yaml.inc
     triggers:
       - timed: "H */6 * * *"
     builders:

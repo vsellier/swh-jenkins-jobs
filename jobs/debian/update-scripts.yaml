@@ -4,7 +4,7 @@
     project-type: matrix
     child-workspace: .
     axes:
-      - !include: axis-slave.yml.inc
+      - !include: axis-slave.yaml.inc
     scm:
       - git:
           url: https://forge.softwareheritage.org/source/swh-jenkins-jobs/
