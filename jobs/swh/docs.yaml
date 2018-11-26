@@ -1,0 +1,67 @@
+- project:
+    name: DDOC
+    display-name: swh-docs
+    jobs:
+      - "{name}"
+
+
+- job:
+    name: DDOC/publish
+    description: Build the documentation and publish it
+    node: swh-sphinx
+    auth-token: ph4br1cat0r
+
+    triggers:
+      - timed: "@midnight"
+
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/swh-environment.git
+
+    builders:
+      - shell: |
+          #!/bin/bash
+          mr -j 4 -t update
+          mr -j 4 -t run sh -c 'git checkout --detach `git describe --abbrev=0 --tags`'
+          cd swh-docs
+          git checkout master
+          tox -e sphinx
+
+    publishers:
+      - ssh:
+          target: ''
+          site: 'pergamon'
+          clean-remote: true
+          source: 'swh-docs/docs/_build/html/**'
+          remove-prefix: 'swh-docs/docs/_build/html'
+          fail-on-error: true
+          verbose: true
+
+
+- job:
+    name: DDOC/dev
+    description: Build the documentation from git repos
+    node: swh-sphinx
+    auth-token: ph4br1cat0r
+
+    triggers:
+      - timed: "H 9-22/2 * * *"
+
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/swh-environment.git
+
+    builders:
+      - shell: |
+          #!/bin/bash
+          mr -j 4 -t update
+          cd swh-docs
+          tox -e sphinx-dev
+
+    publishers:
+      - html-publisher:
+          name: 'SWH Documentation (HEAD)'
+          dir: 'swh-docs/docs/_build/html'
+          files: 'index.html'
+          keep-all: false
+          includes: '**/*'
