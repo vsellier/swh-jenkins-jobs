@@ -13,18 +13,16 @@
           type: PT_TAG
           sortMode: DESCENDING_SMART
           selectedValue: TOP
-      - string:
-          name: PYPI
+      - choice:
+          name: PYPI_HOST
           description: |
             PYPI registry to publish to when built revision is a tag. There
             must exists a usernamePassword credential object with that name.
-            The pypi JSON API endpoint is built as https://$PYPI/project/<name>/json
+            The pypi JSON API endpoint is built as https://$PYPI_HOST/project/<name>/json
+          choices:
+            - test.pypi.org
+            - pypi.org
           default: test.pypi.org
-      - string:
-          name: PYPI_UPLOAD
-          description: |
-            PYPI upload base host. If unset, defaults to $PYPI. The upload endpoint is built as
-            https://$PYPI_UPLOAD/legacy/
       - bool:
           name: FORCE_UPLOAD
           default: false
