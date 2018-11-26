@@ -1,0 +1,40 @@
+- job-template:
+    name: "{name}/pypi-upload"
+    display-name: "Upload to PyPI"
+    project-type: pipeline
+    sandbox: true
+    properties:
+      - build-discarder:
+          num-to-keep: 20
+    parameters:
+      - git-parameter:
+          name: GIT_TAG
+          description: git tag to process
+          type: PT_TAG
+          sortMode: DESCENDING_SMART
+          selectedValue: TOP
+      - string:
+          name: PYPI
+          description: |
+            PYPI registry to publish to when built revision is a tag. There
+            must exists a usernamePassword credential object with that name.
+            The pypi JSON API endpoint is built as https://$PYPI/project/<name>/json
+          default: test.pypi.org
+      - string:
+          name: PYPI_UPLOAD
+          description: |
+            PYPI upload base host. If unset, defaults to $PYPI. The upload endpoint is built as
+            https://$PYPI_UPLOAD/legacy/
+      - bool:
+          name: FORCE_UPLOAD
+          default: false
+          description: |
+            Force uploading python packages on the chosen PYPI registry, even if
+            the package already exists.
+      - bool:
+          name: IGNORE_TESTS
+          default: false
+          description: |
+            Proceed even if the tests are failing on the repository.
+    dsl:
+      !include-raw: swh-pypi.groovy

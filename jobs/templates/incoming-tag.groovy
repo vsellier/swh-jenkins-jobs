@@ -35,11 +35,10 @@ pipeline {{
       }}
       steps {{
         build(
-          job: '/{name}/pypi',
+          job: '/{name}/pypi-upload',
           parameters: [
             string(name: 'GIT_TAG', value: params.GIT_TAG),
           ],
-          wait: false,
         )
       }}
     }}
