@@ -4,5 +4,7 @@
     pkg: lister
     jobs:
       - "{name}"
+      - "{name}/incoming-tag"
+      - "{name}/pypi-upload"
       - "{name}/tests"
       - "{name}/tox"

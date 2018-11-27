@@ -5,8 +5,8 @@
     jobs:
       - "{name}"
       - "{name}/incoming-tag"
+      - "{name}/pypi-upload"
       - "{name}/tests"
       - "{name}/tox"
-      - "{name}/pypi-upload"
       - "debian/packages/{name}"
       - "debian/packages/{name}/update-for-release"
