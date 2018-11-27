@@ -1,0 +1,53 @@
+- job-template:
+    name: 'debian/packages/{name}/gbp-buildpackage'
+    description: |
+      Build Debian package
+    auth-token: 'ph4br1cat0r'
+    deb-extra-repositories: 
+    project-type: pipeline
+    parameters:
+      - string:
+          name: GIT_REVISION
+          default: debian/unstable-swh
+          description: Git revision to build
+      - string:
+          name: PHID
+          description: PHID of the phabricator target object on which results will be reported
+      - extended-choice:
+          name: EXTRA_REPOSITORIES
+          description: extra repositories needed to build this package
+          type: checkbox
+          value: !join:
+            - ','
+            -
+              - incoming
+              - backports
+              - swh
+              - ceph
+          value-description: !join:
+            - ','
+            -
+              - The buildd incoming repository (default for builds from unstable)
+              - The debian backports repository (default for builds for stable-swh)
+              - The Software Heritage debian repository (default for builds for swh branches)
+              - The ceph repository
+          default-value: '{deb-extra-repositories}'
+      - choice:
+          name: BUILD_DEP_RESOLVER
+          description: |
+            the sbuild build dependency resolver (overrides the automatic detection)
+          choices:
+            - ''
+            - apt
+            - aptitude
+      - bool:
+          name: DO_UPLOAD
+          description: upload the built package
+          default: false
+      - bool:
+          name: DO_TAG
+          description: tag the repository once the package has been built
+          default: false
+    dsl:
+      !include-raw: gbp-buildpackage.groovy
+

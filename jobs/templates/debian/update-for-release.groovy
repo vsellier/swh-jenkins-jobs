@@ -68,7 +68,7 @@ pipeline {{
             tagger_email = tagger_email.substring(1, tagger_email.length() - 1);
 
             def tagger_date = sh(
-              script: "git tag -l --format='%(${{tagger}}date)' ${{upstream_tag}}",
+              script: "git tag -l --format='%(${{tagger}}date:iso)' ${{upstream_tag}}",
               returnStdout: true,
             ).trim();
 
