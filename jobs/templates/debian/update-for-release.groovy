@@ -5,13 +5,14 @@ def python_module = repo_name.replace('-', '.')
 
 def full_environ
 
-def skip_steps = false
+def debian_upstream_tag_exists = false
 
 pipeline {{
   agent {{ label 'debian' }}
   stages {{
     stage('Checkout') {{
       steps {{
+        cleanWs()
         checkout([
           $class: 'GitSCM',
           branches: [[name: 'debian/unstable-swh'], [name: 'debian/*'], [name: 'pristine-tar']],
@@ -25,41 +26,27 @@ pipeline {{
         ])
         dir (repo_name) {{
           sh '''
-            git fetch --tags
             git checkout -B pristine-tar origin/pristine-tar
             git checkout -B debian/upstream origin/debian/upstream
             git checkout -B debian/unstable-swh origin/debian/unstable-swh
           '''
           script {{
             def tag_exists_retval = sh(
-              script: "git rev-parse debian/upstream/${{version}}",
+              script: "git rev-parse --verify debian/upstream/${{version}}",
               returnStatus: true
             )
-            skip_steps = (tag_exists_retval == 0)
+            debian_upstream_tag_exists = (tag_exists_retval == 0)
           }}
         }}
       }}
     }}
-    stage('Build sdist from tag') {{
+    stage('Get author information from tag') {{
       when {{
-        expression {{ !skip_steps }}
+        beforeAgent true
+        expression {{ !debian_upstream_tag_exists }}
       }}
-      agent {{ label 'swh-tox' }}
       steps {{
-        checkout([
-          $class: 'GitSCM',
-          branches: [[name: $upstream_tag]],
-          userRemoteConfigs: [[
-            url: "https://forge.softwareheritage.org/source/${{repo_name}}.git",
-          ]],
-          extensions: [[
-            $class: 'RelativeTargetDirectory',
-            relativeTargetDir: 'tag-export',
-          ]],
-          poll: true,
-        ])
-
-        dir ('tag-export') {{
+        dir (repo_name) {{
           // This script retrieves the author data for the tag that we're currently processing
           script {{
             // Check if the tag is annotated or not
@@ -85,40 +72,41 @@ pipeline {{
               returnStdout: true,
             ).trim();
 
+            def hostname = sh(
+              script: "hostname --fqdn",
+              returnStdout: true,
+            ).trim();
+
+            def short_hostname = hostname - '.internal.softwareheritage.org';
+
             full_environ = [
-              "DEBEMAIL=${{tagger_email}}",
-              "DEBFULLNAME=${{tagger_name}}",
-              "GIT_AUTHOR_NAME=${{tagger_name}}",
-              "GIT_AUTHOR_EMAIL=${{tagger_email}}",
-              "GIT_AUTHOR_DATE=${{tagger_date}}",
-              "GIT_COMMITTER_NAME=Jenkins for Software Heritage",
-              "GIT_COMMITTER_EMAIL=jenkins@softwareheritage.org",
-              "GIT_COMMITTER_DATE=${{tagger_date}}",
+              "DEBEMAIL=jenkins@${{hostname}}",
+              "DEBFULLNAME=Software Heritage autobuilder (on ${{short_hostname}})",
               "UPSTREAM_TAG=${{upstream_tag}}",
+              "UPSTREAM_TAGGER_NAME=${{tagger_name}}",
+              "UPSTREAM_TAGGER_EMAIL=${{tagger_email}}",
+              "UPSTREAM_TAGGER_DATE=${{tagger_date}}",
               "UPSTREAM_VERSION=${{version}}",
               "PYTHON_MODULE=${{python_module}}",
             ];
-          }}
-          sh 'python3 setup.py sdist'
-          dir ('dist') {{
-            stash(
-              name: 'sdist',
-              includes: "${{python_module}}-${{version}}.tar.gz",
-            )
           }}
         }}
       }}
     }}
     stage('gbp import-orig') {{
       when {{
-        expression {{ !skip_steps }}
+        beforeAgent true
+        expression {{ !debian_upstream_tag_exists }}
       }}
       steps {{
-        unstash(name: 'sdist')
+        copyArtifacts(
+          projectName: '/{name}/pypi-upload',
+          parameters: 'GIT_TAG=' + params.GIT_TAG,
+        )
         withEnv(full_environ) {{
           dir (repo_name) {{
             sh '''
-              gbp import-orig --merge-mode=replace --no-symlink-orig -u ${{UPSTREAM_VERSION}} ../${{PYTHON_MODULE}}-${{UPSTREAM_VERSION}}.tar.gz
+              gbp import-orig --merge-mode=replace --no-symlink-orig -u ${{UPSTREAM_VERSION}} ../dist/${{PYTHON_MODULE}}-${{UPSTREAM_VERSION}}.tar.gz
             '''
           }}
         }}
@@ -126,14 +114,15 @@ pipeline {{
     }}
     stage('unstable-swh changelog') {{
       when {{
-        expression {{ !skip_steps }}
+        beforeAgent true
+        expression {{ !debian_upstream_tag_exists }}
       }}
       steps {{
         withEnv(full_environ) {{
           dir(repo_name) {{
             sh '''
-              dch -v ${{version}}-1~swh1 ''
-              git tag -l --format='%(contents:subject)%0a%(contents:body)' ${{UPSTREAM_TAG}} | sed -E -e '/^$/d' -e 's/^ *(- *)?//' | while read line; do dch "$line"; done
+              dch -v ${{UPSTREAM_VERSION}}-1~swh1 "New upstream release ${{UPSTREAM_VERSION}}\n    - (tagged by ${{UPSTREAM_TAGGER_NAME}} <${{UPSTREAM_TAGGER_EMAIL}}> on ${{UPSTREAM_TAGGER_DATE}})"
+              dch "Upstream changes:\n$(git tag -l --format='%(contents:subject)%0a%(contents:body)' ${{UPSTREAM_TAG}} | sed -E -e '/^$/d' -e 's/^ *(- *)?//' -e 's/^/    - /')"
               dch -D unstable-swh --force-distribution ''
               git add debian/changelog
               git commit --no-verify -m "Updated debian changelog for version ${{UPSTREAM_VERSION}}"
@@ -145,11 +134,22 @@ pipeline {{
     }}
     stage('Upload changes') {{
       when {{
-        expression {{ !skip_steps }}
-        expression {{ !params.DRY_RUN }}
+        beforeAgent true
+        expression {{ !debian_upstream_tag_exists }}
       }}
       steps {{
-        echo 'Uploading'
+        dir (repo_name) {{
+          sshagent (credentials: ['jenkins-public-ci-ssh']) {{
+            script {{
+              def git_push = 'git push --follow-tags --all'
+              if (params.DRY_RUN) {{
+                git_push += ' -n'
+              }}
+
+              sh(script: git_push)
+            }}
+          }}
+        }}
       }}
     }}
   }}
