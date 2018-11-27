@@ -1,3 +1,5 @@
+def module_name = '{display-name}'.replace('-', '.')
+
 def PYPI_UPLOAD_HOST
 
 switch (params.PYPI_HOST) {{
@@ -54,7 +56,7 @@ pipeline {{
           expression {{ return params.FORCE_UPLOAD }}
           expression {{
             LASTV=sh(returnStdout: true,
-                     script:'curl -s https://${{PYPI_HOST}}/pypi/`python setup.py --name`/json | jq -r .info.version || true').trim()
+                     script:"curl -s https://${{params.PYPI_HOST}}/pypi/${{module_name}}/json | jq -r .info.version || true").trim()
             return 'v'+LASTV != params.GIT_TAG
             }}
         }}
