@@ -30,6 +30,11 @@
             Force uploading python packages on the chosen PYPI registry, even if
             the package already exists.
       - bool:
+          name: SKIP_TESTS
+          default: false
+          description: |
+            Do not run tests on the repository.
+      - bool:
           name: IGNORE_TESTS
           default: false
           description: |

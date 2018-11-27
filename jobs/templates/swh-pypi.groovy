@@ -16,6 +16,10 @@ pipeline {{
 
   stages {{
     stage('Run tests') {{
+      when {{
+        expression {{ return !params.SKIP_TESTS }}
+        beforeAgent true
+      }}
       agent none
       steps {{
         build(
