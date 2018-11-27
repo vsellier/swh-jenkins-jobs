@@ -1,0 +1,39 @@
+- job-template:
+    name: 'debian/packages/{name}/automatic-backport'
+    description: |
+      Backport Debian package to the given release
+    project-type: pipeline
+    parameters:
+      - git-parameter:
+          name: GIT_TAG
+          description: git tag to backport
+          type: PT_TAG
+          sortMode: DESCENDING_SMART
+          selectedValue: TOP
+          tagFilter: debian/.*
+      - choice:
+          name: SOURCE
+          description: check that the source branch corresponds to this before issuing the backport
+          choices:
+            - unstable-swh
+            - unstable
+            - bookworm-swh
+            - bullseye-swh
+            - buster-swh
+            - stretch-swh
+          default: unstable-swh
+      - choice:
+          name: DESTINATION
+          description: the destination branch the backport targets
+          choices:
+            - stretch-swh
+            - buster-swh
+            - bullseye-swh
+            - bookworm-swh
+          default: stretch-swh
+      - bool:
+          name: DRY_RUN
+          description: Don't push the resulting changes to a Debian branch
+          default: false
+    dsl:
+      !include-raw: automatic-backport.groovy
