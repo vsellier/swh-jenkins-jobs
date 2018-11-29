@@ -55,10 +55,13 @@
       - shell: |
           #!/bin/bash
           mr -j 4 -t update
+          mr -t run git rev-parse HEAD > revisions.txt
           cd swh-docs
-          tox -e sphinx-dev
+          SPHINXOPTS='-W -q --keep-going -w errors.log' tox -e sphinx-dev
 
     publishers:
+      - archive:
+          artifacts: "revisions.txt,swh-docs/docs/errors.log,swh-docs/.tox/log/*"
       - html-publisher:
           name: 'SWH Documentation (HEAD)'
           dir: 'swh-docs/docs/_build/html'
