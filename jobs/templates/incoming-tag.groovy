@@ -31,7 +31,7 @@ pipeline {{
     stage('Build and upload PyPI package') {{
       when {{
         expression {{ params.GIT_TAG =~ /^v\d+(.\d+)+$/ }}
-        expression {{ job_exists('/{name}/pypi') }}
+        expression {{ job_exists('/{name}/pypi-upload') }}
       }}
       steps {{
         build(
