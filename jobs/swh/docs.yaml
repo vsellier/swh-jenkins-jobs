@@ -57,7 +57,7 @@
           crudini --del .mrconfig snippets
           crudini --del .mrconfig swh-py-template
           mr -j 4 -t update
-          mr -t run git rev-parse HEAD > revisions.txt
+          mr -t run sh -c 'echo -n "`basename $PWD` " && git describe' | grep -v 'mr run' > revisions.txt
           cd swh-docs
           SPHINXOPTS='-W -q --keep-going -w errors.log' tox -e sphinx-dev
 
