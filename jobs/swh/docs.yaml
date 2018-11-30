@@ -54,6 +54,8 @@
     builders:
       - shell: |
           #!/bin/bash
+          crudini --del .mrconfig snippets
+          crudini --del .mrconfig swh-py-template
           mr -j 4 -t update
           mr -t run git rev-parse HEAD > revisions.txt
           cd swh-docs
