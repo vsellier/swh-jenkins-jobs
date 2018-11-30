@@ -2,6 +2,7 @@
     name: TSBX
     display-name: swh-sandbox
     pkg: sandbox
+    incoming-tag-auto-pypi-host: test.pypi.org
     jobs:
       - "{name}"
       - "{name}/incoming-tag"
