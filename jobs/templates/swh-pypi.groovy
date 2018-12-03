@@ -47,7 +47,13 @@ pipeline {{
 
     stage('Build') {{
       steps {{
-        sh 'python3 setup.py sdist bdist_wheel'
+        sh '''
+          if [ -f yarn.lock ]; then
+            yarn install --frozen-lockfile
+            yarn build
+          fi
+          python3 setup.py sdist bdist_wheel
+        '''
         archiveArtifacts allowEmptyArchive: true,
           artifacts: 'dist/*',
           fingerprint: true
