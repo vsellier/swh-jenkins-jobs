@@ -9,3 +9,6 @@
       - "{name}/tests"
       - "{name}/tox"
       - "debian/packages/{name}"
+      - "debian/packages/{name}/update-for-release"
+      - "debian/packages/{name}/automatic-backport"
+      - "debian/packages/{name}/gbp-buildpackage"
