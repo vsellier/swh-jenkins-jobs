@@ -163,7 +163,7 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
               build_dep_resolver = 'aptitude'
             }}
 
-            if ('ceph' in wanted_extra_repositories) {{
+            if ('ceph' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {{
               extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${{base_distribution}} main")
               extra_repository_keys.add('../keys/ceph.asc')
             }}
