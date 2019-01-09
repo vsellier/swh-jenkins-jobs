@@ -30,7 +30,7 @@ pipeline {{
     }}
     stage('Build and upload PyPI package') {{
       when {{
-        expression {{ params.GIT_TAG =~ /^v\d+(.\d+)+$/ }}
+        expression {{ params.GIT_TAG ==~ /v\d+(.\d+)+/ }}
         expression {{ job_exists('/{name}/pypi-upload') }}
       }}
       steps {{
@@ -45,7 +45,7 @@ pipeline {{
     }}
     stage('Debian packaging for new release') {{
       when {{
-        expression {{ params.GIT_TAG =~ /^v\d+(.\d+)+$/ }}
+        expression {{ params.GIT_TAG ==~ /v\d+(.\d+)+/ }}
         expression {{ job_exists('/debian/packages/{name}/update-for-release') }}
       }}
       steps {{
@@ -60,9 +60,9 @@ pipeline {{
     }}
     stage('Debian automatic backport') {{
       when {{
-        expression {{ params.GIT_TAG =~ /^debian\/.*$/ }}
-        expression {{ params.GIT_TAG !~ /^debian\/upstream\/.*$/ }}
-        expression {{ params.GIT_TAG !~ /_bpo/ }}
+        expression {{ params.GIT_TAG ==~ /debian\/.*/ }}
+        expression {{ !(params.GIT_TAG ==~ /debian\/upstream\/.*/) }}
+        expression {{ !(params.GIT_TAG =~ /_bpo/) }}
         expression {{ job_exists('/debian/packages/{name}/automatic-backport') }}
       }}
       steps {{
