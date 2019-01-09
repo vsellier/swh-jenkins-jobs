@@ -172,6 +172,15 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
               build_dep_resolver = params.BUILD_DEP_RESOLVER
             }}
 
+            def hostname = sh(
+              script: "hostname --fqdn",
+              returnStdout: true,
+            ).trim();
+
+            def short_hostname = hostname - '.internal.softwareheritage.org';
+
+            def uploader = "Software Heritage autobuilder (on ${{short_hostname}}) <jenkins@${{hostname}}>"
+
             def gbp_buildpackage = [
               'gbp buildpackage',
               '--git-builder=sbuild',
@@ -182,6 +191,7 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
               '--arch-all',
               '--source',
               '--force-orig-source',
+              "--uploader='${{uploader}}'",
             ]
 
             if (build_dep_resolver != null) {{
