@@ -1,9 +1,0 @@
-- project:
-    name: XPMK
-    display-name: python3-mirakuru
-    pkg: mirakuru
-    jobs:
-      - "debian/packages/{name}"
-      - "debian/packages/{name}/update-for-release"
-      - "debian/packages/{name}/automatic-backport"
-      - "debian/packages/{name}/gbp-buildpackage"
