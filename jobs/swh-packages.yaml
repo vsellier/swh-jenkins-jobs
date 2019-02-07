@@ -1,0 +1,165 @@
+- job-group:
+    name: 'swh-jobs-{name}'
+    jobs:
+      - "{name}"
+      - "{name}/incoming-tag"
+      - "{name}/pypi-upload"
+      - "{name}/tests"
+      - "{name}/tox"
+      - "debian/packages/{name}"
+      - "debian/packages/{name}/update-for-release"
+      - "debian/packages/{name}/automatic-backport"
+      - "debian/packages/{name}/gbp-buildpackage"
+
+- project:
+    name: DARC
+    display-name: swh-archiver
+    pkg: archiver
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DCORE
+    display-name: swh-core
+    pkg: core
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DDEP
+    display-name: swh-deposit
+    pkg: deposit
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DCIDX
+    display-name: swh-indexer
+    pkg: indexer
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DJNL
+    display-name: swh-journal
+    pkg: journal
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLS
+    display-name: swh-lister
+    pkg: lister
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDBASE
+    display-name: swh-loader-core
+    pkg: loader.core
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDDEB
+    display-name: swh-loader-debian
+    pkg: loader.debian
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDDIR
+    display-name: swh-loader-dir
+    pkg: loader.dir
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDG
+    display-name: swh-loader-git
+    pkg: loader.git
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDHG
+    display-name: swh-loader-mercurial
+    pkg: loader.mercurial
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDPY
+    display-name: swh-loader-pypi
+    pkg: loader.pypi
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDSVN
+    display-name: swh-loader-svn
+    pkg: loader.svn
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DLDTAR
+    display-name: swh-loader-tar
+    pkg: loader.tar
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DMOD
+    display-name: swh-model
+    pkg: model
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DOBJS
+    display-name: swh-objstorage
+    pkg: objstorage
+    deb-extra-repositories: ceph
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: TSBX
+    display-name: swh-sandbox
+    pkg: sandbox
+    incoming-tag-auto-pypi-host: test.pypi.org
+    jobs:
+      - "{name}"
+      - "{name}/incoming-tag"
+      - "{name}/pypi-upload"
+      - "{name}/tests"
+      - "{name}/tox"
+
+- project:
+    name: DSCH
+    display-name: swh-scheduler
+    pkg: scheduler
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DSTO
+    display-name: swh-storage
+    pkg: storage
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DVAU
+    display-name: swh-vault
+    pkg: vault
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
+    name: DWAPPS
+    display-name: swh-web
+    pkg: web
+    jobs:
+      - 'swh-jobs-{name}'
