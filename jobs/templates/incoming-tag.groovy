@@ -35,7 +35,7 @@ pipeline {{
         )
       }}
     }}
-    stage('Debian packaging for new release') {{
+    stage('Update Debian packaging for new release') {{
       when {{
         expression {{ params.GIT_TAG ==~ /v\d+(.\d+)+/ }}
         expression {{ jobExists('/debian/packages/{name}/update-for-release') }}
