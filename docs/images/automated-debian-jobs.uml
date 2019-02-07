@@ -71,7 +71,9 @@
   GBP -> REPO : push packages to unstable-swh
 
   create ABP
+  GBP -> ABP : when automatic backport enabled
   activate ABP
+  ABP -> GBP : acknowledge start
   deactivate GBP
 
   hnote over ABP : merge pushed tag

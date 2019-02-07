@@ -3,7 +3,8 @@
     description: |
       Build Debian package
     auth-token: 'ph4br1cat0r'
-    deb-extra-repositories: 
+    deb-extra-repositories:
+    deb-backport-on-success: unstable-swh>stretch-swh
     project-type: pipeline
     parameters:
       - string:
@@ -44,6 +45,17 @@
           name: DO_UPLOAD
           description: upload the built package
           default: false
+      - extended-choice:
+          name: BACKPORT_ON_SUCCESS
+          description: If the build is successful, which backports should we perform?
+          type: checkbox
+          value: !join:
+            - ','
+            -
+              - unstable-swh>stretch-swh
+              - unstable-swh>buster-swh
+              - buster-swh>stretch-swh
+          default-value: '{deb-backport-on-success}'
     dsl:
       !include-raw: gbp-buildpackage.groovy
 

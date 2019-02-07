@@ -240,6 +240,33 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
         }}
       }}
     }}
+    stage('Prepare backport') {{
+      when {{
+        beforeAgent true
+        expression {{ changelog_distribution != 'UNRELEASED' }}
+        expression {{ params.BACKPORT_ON_SUCCESS }}
+        expression {{ jobExists('/debian/packages/{name}/automatic-backport') }}
+      }}
+      steps {{
+        script {{
+          params.BACKPORT_ON_SUCCESS.split(',').each {{ bpo_pair ->
+            def (src_suite, dst_suite) = bpo_pair.split('>')
+
+            if (src_suite == changelog_distribution) {{
+              build(
+                job: '/debian/packages/{name}/automatic-backport',
+                parameters: [
+                  string(name: 'GIT_TAG', value: params.GIT_REVISION),
+                  string(name: 'SOURCE', value: src_suite),
+                  string(name: 'DESTINATION', value: dst_suite),
+                ],
+                wait: false,
+              )
+            }}
+          }}
+        }}
+      }}
+    }}
   }}
   post {{
     always {{
