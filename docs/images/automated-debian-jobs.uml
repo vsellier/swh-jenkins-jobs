@@ -6,9 +6,6 @@
   box "Phabricator" #LightBlue
   participant GIT as "Repository\ntags"
   participant HOOK as "post-receive\nhook"
-  participant GIT_DEBIAN_UNSTABLE as "debian/unstable-swh"
-  participant GIT_DEBIAN_BPO as "debian/<stable>-swh"
-  participant Harbormaster
   end box
 
   box "Jenkins" #LightBlue
@@ -46,70 +43,62 @@
   hnote over UFR : pull tarball from PyPI job
   hnote over UFR : run gbp import-orig
   hnote over UFR : update debian/changelog
+  hnote over UFR : tag new debian version\non unstable-swh branch
 
-  UFR -> GIT_DEBIAN_UNSTABLE : push updated branches
-  activate GIT_DEBIAN_UNSTABLE
+  UFR -> GIT : push debian version tag
   deactivate UFR
 
-  GIT_DEBIAN_UNSTABLE -> Harbormaster : on new commits
-  deactivate GIT_DEBIAN_UNSTABLE
-  activate Harbormaster
-  Harbormaster -> GBP : trigger jenkins job
+  activate GIT
+  GIT -> HOOK : run hook
+  deactivate GIT
+
+  activate HOOK
+  HOOK -> IT : trigger Jenkins job
+  deactivate HOOK
+
+  activate IT
+
+  hnote over IT : debian version\ntag detected
+
+  IT -> GBP : trigger
   activate GBP
-  deactivate Harbormaster
+  GBP -> IT : acknowledge start
+  deactivate IT
 
   hnote over GBP : checkout branches
   hnote over GBP : run gbp buildpackage
 
   GBP -> REPO : push packages to unstable-swh
-  GBP -> GIT : push debian/<unstable-swh version> tag
-  activate GIT
-  deactivate GBP
 
-  GIT -> HOOK : run hook
-  activate HOOK
-
-  HOOK -> IT : trigger Jenkins job
-  activate IT
-  deactivate HOOK
-  deactivate GIT
-
-  hnote over IT : debian unstable-swh\ntag detected
   create ABP
-  IT -> ABP : trigger
   activate ABP
-  ABP -> IT : acknowledge start
-  deactivate IT
+  deactivate GBP
 
   hnote over ABP : merge pushed tag
   hnote over ABP : update changelog\nwith backports mention
-  ABP -> GIT_DEBIAN_BPO : push updated branches
-  activate GIT_DEBIAN_BPO
+  hnote over ABP : tag new debian version\non <stable>-swh branch
+  ABP -> GIT : push debian version tag
   deactivate ABP
 
-  GIT_DEBIAN_BPO -> Harbormaster : on new commits
-  deactivate GIT_DEBIAN_BPO
-  activate Harbormaster
-  Harbormaster -> GBP : trigger jenkins job
+  activate GIT
+  GIT -> HOOK : run hook
+  deactivate GIT
+
+  activate HOOK
+  HOOK -> IT : trigger Jenkins job
+  deactivate HOOK
+
+  activate IT
+  hnote over IT : debian version\ntag detected
+  IT -> GBP : trigger
+
   activate GBP
-  deactivate Harbormaster
+  GBP -> IT : acknowledge start
+  deactivate IT
 
   hnote over GBP : checkout branches
   hnote over GBP : run gbp buildpackage
 
   GBP -> REPO : push packages to <stable>-swh
-  GBP -> GIT : push debian/<stable-swh version> tag
   deactivate GBP
-
-  GIT -> HOOK : run hook
-  activate HOOK
-
-  HOOK -> IT : trigger Jenkins job
-  activate IT
-  deactivate HOOK
-  deactivate GIT
-  hnote over IT : debian stable-swh\ntag detected
-  IT --> IT : ignoring
-  deactivate IT
-
 @enduml

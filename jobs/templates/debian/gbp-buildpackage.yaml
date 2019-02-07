@@ -44,10 +44,6 @@
           name: DO_UPLOAD
           description: upload the built package
           default: false
-      - bool:
-          name: DO_TAG
-          description: tag the repository once the package has been built
-          default: false
     dsl:
       !include-raw: gbp-buildpackage.groovy
 

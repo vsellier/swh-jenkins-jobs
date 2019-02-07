@@ -127,6 +127,7 @@ pipeline {{
               git add debian/changelog
               git commit --no-verify -m "Updated debian changelog for version ${{UPSTREAM_VERSION}}"
               git show
+              gbp buildpackage --git-tag-only
             '''
           }}
         }}

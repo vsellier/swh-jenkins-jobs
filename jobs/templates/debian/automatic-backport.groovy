@@ -105,6 +105,17 @@ pipeline {{
         }}
       }}
     }}
+    stage('Tag package') {{
+      when {{
+        beforeAgent true
+        expression {{ backport_ok }}
+      }}
+      steps {{
+        withEnv(environment) {{
+          sh 'gbp buildpackage --git-tag-only'
+        }}
+      }}
+    }}
     stage('Upload changes') {{
       when {{
         beforeAgent true

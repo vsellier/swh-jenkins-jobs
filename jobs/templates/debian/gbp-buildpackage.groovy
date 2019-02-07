@@ -240,21 +240,6 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
         }}
       }}
     }}
-    stage('Tag package') {{
-      when {{
-        beforeAgent true
-        expression {{ changelog_distribution != 'UNRELEASED' }}
-        expression {{ params.DO_TAG }}
-     }}
-      steps {{
-        dir (repo_name) {{
-          sh 'gbp buildpackage --git-tag-only'
-          sshagent (credentials: ['jenkins-public-ci-ssh']) {{
-            sh 'git push --tags'
-          }}
-        }}
-      }}
-    }}
   }}
   post {{
     always {{

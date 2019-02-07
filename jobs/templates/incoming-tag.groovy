@@ -50,18 +50,18 @@ pipeline {{
         )
       }}
     }}
-    stage('Debian automatic backport') {{
+    stage('Build Debian package') {{
       when {{
         expression {{ params.GIT_TAG ==~ /debian\/.*/ }}
         expression {{ !(params.GIT_TAG ==~ /debian\/upstream\/.*/) }}
-        expression {{ !(params.GIT_TAG =~ /_bpo/) }}
-        expression {{ jobExists('/debian/packages/{name}/automatic-backport') }}
+        expression {{ jobExists('/debian/packages/{name}/gbp-buildpackage') }}
       }}
       steps {{
         build(
-          job: '/debian/packages/{name}/automatic-backport',
+          job: '/debian/packages/{name}/gbp-buildpackage',
           parameters: [
-            string(name: 'GIT_TAG', value: params.GIT_TAG),
+            string(name: 'GIT_REVISION', value: params.GIT_TAG),
+            booleanParam(name: 'DO_UPLOAD', value: true),
           ],
           wait: false,
         )
