@@ -1,11 +1,3 @@
-import jenkins.model.Jenkins
-
-@NonCPS
-def job_exists(name) {{
-  def instance = jenkins.model.Jenkins.instance
-  return instance.getItemByFullName(name) != null
-}}
-
 pipeline {{
   agent none
   stages {{
@@ -31,7 +23,7 @@ pipeline {{
     stage('Build and upload PyPI package') {{
       when {{
         expression {{ params.GIT_TAG ==~ /v\d+(.\d+)+/ }}
-        expression {{ job_exists('/{name}/pypi-upload') }}
+        expression {{ jobExists('/{name}/pypi-upload') }}
       }}
       steps {{
         build(
@@ -46,7 +38,7 @@ pipeline {{
     stage('Debian packaging for new release') {{
       when {{
         expression {{ params.GIT_TAG ==~ /v\d+(.\d+)+/ }}
-        expression {{ job_exists('/debian/packages/{name}/update-for-release') }}
+        expression {{ jobExists('/debian/packages/{name}/update-for-release') }}
       }}
       steps {{
         build(
@@ -63,7 +55,7 @@ pipeline {{
         expression {{ params.GIT_TAG ==~ /debian\/.*/ }}
         expression {{ !(params.GIT_TAG ==~ /debian\/upstream\/.*/) }}
         expression {{ !(params.GIT_TAG =~ /_bpo/) }}
-        expression {{ job_exists('/debian/packages/{name}/automatic-backport') }}
+        expression {{ jobExists('/debian/packages/{name}/automatic-backport') }}
       }}
       steps {{
         build(
