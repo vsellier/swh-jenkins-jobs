@@ -1,0 +1,115 @@
+@startuml
+
+  skinparam BoxPadding 30
+
+  actor Developer
+  box "Phabricator" #LightBlue
+  participant GIT as "Repository\ntags"
+  participant HOOK as "post-receive\nhook"
+  participant GIT_DEBIAN_UNSTABLE as "debian/unstable-swh"
+  participant GIT_DEBIAN_BPO as "debian/<stable>-swh"
+  participant Harbormaster
+  end box
+
+  box "Jenkins" #LightBlue
+  participant IT as "Incoming tag"
+  participant UFR as "update-for-release"
+  participant GBP as "gbp-buildpackage"
+  participant ABP as "automatic-backport"
+  end box
+
+  participant REPO as "Debian\nrepo"
+
+  activate Developer
+  Developer -> GIT : "vX.Y.Z tag push"
+  activate GIT
+
+  GIT -> HOOK : run hook
+  activate HOOK
+
+  HOOK -> IT : trigger Jenkins job
+  activate IT
+
+  HOOK -> Developer : messages printed
+  deactivate HOOK
+  deactivate GIT
+  deactivate Developer
+
+  hnote over IT : upstream release\ntag detected
+
+  create UFR
+  IT -> UFR : trigger
+  activate UFR
+  UFR -> IT : acknowledge start
+  deactivate IT
+
+  hnote over UFR : pull tarball from PyPI job
+  hnote over UFR : run gbp import-orig
+  hnote over UFR : update debian/changelog
+
+  UFR -> GIT_DEBIAN_UNSTABLE : push updated branches
+  activate GIT_DEBIAN_UNSTABLE
+  deactivate UFR
+
+  GIT_DEBIAN_UNSTABLE -> Harbormaster : on new commits
+  deactivate GIT_DEBIAN_UNSTABLE
+  activate Harbormaster
+  Harbormaster -> GBP : trigger jenkins job
+  activate GBP
+  deactivate Harbormaster
+
+  hnote over GBP : checkout branches
+  hnote over GBP : run gbp buildpackage
+
+  GBP -> REPO : push packages to unstable-swh
+  GBP -> GIT : push debian/<unstable-swh version> tag
+  activate GIT
+  deactivate GBP
+
+  GIT -> HOOK : run hook
+  activate HOOK
+
+  HOOK -> IT : trigger Jenkins job
+  activate IT
+  deactivate HOOK
+  deactivate GIT
+
+  hnote over IT : debian unstable-swh\ntag detected
+  create ABP
+  IT -> ABP : trigger
+  activate ABP
+  ABP -> IT : acknowledge start
+  deactivate IT
+
+  hnote over ABP : merge pushed tag
+  hnote over ABP : update changelog\nwith backports mention
+  ABP -> GIT_DEBIAN_BPO : push updated branches
+  activate GIT_DEBIAN_BPO
+  deactivate ABP
+
+  GIT_DEBIAN_BPO -> Harbormaster : on new commits
+  deactivate GIT_DEBIAN_BPO
+  activate Harbormaster
+  Harbormaster -> GBP : trigger jenkins job
+  activate GBP
+  deactivate Harbormaster
+
+  hnote over GBP : checkout branches
+  hnote over GBP : run gbp buildpackage
+
+  GBP -> REPO : push packages to <stable>-swh
+  GBP -> GIT : push debian/<stable-swh version> tag
+  deactivate GBP
+
+  GIT -> HOOK : run hook
+  activate HOOK
+
+  HOOK -> IT : trigger Jenkins job
+  activate IT
+  deactivate HOOK
+  deactivate GIT
+  hnote over IT : debian stable-swh\ntag detected
+  IT --> IT : ignoring
+  deactivate IT
+
+@enduml
