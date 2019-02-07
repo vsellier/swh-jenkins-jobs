@@ -3,3 +3,7 @@
     project-type: folder
     display-name: '{display-name}'
 
+- job-template:
+    name: 'debian/deps/{name}'
+    project-type: folder
+    display-name: '{display-name}'

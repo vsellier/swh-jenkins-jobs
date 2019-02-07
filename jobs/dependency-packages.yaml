@@ -1,0 +1,14 @@
+- job-group:
+    name: 'dependency-jobs-{name}'
+    jobs:
+      - "debian/deps/{name}"
+      - "debian/deps/{name}/incoming-tag"
+      - "debian/deps/{name}/gbp-buildpackage"
+      - "debian/deps/{name}/automatic-backport"
+
+- project:
+    name: XPMK
+    display-name: python3-mirakuru
+    pkg: mirakuru
+    jobs:
+      - 'dependency-jobs-{name}'

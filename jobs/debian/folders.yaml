@@ -35,3 +35,15 @@
             <nonRecursive>false</nonRecursive>
           </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
         </healthMetrics>
+
+- job:
+    name: 'debian/deps'
+    display-name: 'Debian Dependency Packages'
+    project-type: folder
+    raw:
+      xml: |
+        <healthMetrics>
+          <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+            <nonRecursive>false</nonRecursive>
+          </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+        </healthMetrics>

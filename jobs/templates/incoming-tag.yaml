@@ -1,4 +1,4 @@
-- job-template:
+- job-template: &incoming_tag
     name: "{name}/incoming-tag"
     display-name: Incoming tag
     project-type: pipeline
@@ -14,3 +14,9 @@
           selectedValue: TOP
     dsl:
       !include-raw: incoming-tag.groovy
+
+- job-template:
+    name: "debian/deps/{name}/incoming-tag"
+    dsl:
+      !include-raw: dependency-incoming-tag.groovy
+    <<: *incoming_tag

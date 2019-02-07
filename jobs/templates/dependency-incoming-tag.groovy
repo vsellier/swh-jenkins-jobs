@@ -1,0 +1,41 @@
+pipeline {{
+  agent none
+  stages {{
+    stage('Refresh tag list') {{
+      agent any
+      steps {{
+        checkout([
+          $class: 'GitSCM',
+          userRemoteConfigs: [[
+            url: 'https://forge.softwareheritage.org/source/{display-name}.git',
+          ]],
+          branches: [[
+            name: params.GIT_TAG,
+          ]],
+          browser: [
+            $class: 'Phabricator',
+            repo: '{display-name}',
+            repoUrl: 'https://forge.softwareheritage.org/',
+          ],
+        ])
+      }}
+    }}
+    stage('Build Debian package') {{
+      when {{
+        expression {{ params.GIT_TAG ==~ /debian\/.*/ }}
+        expression {{ !(params.GIT_TAG ==~ /debian\/upstream\/.*/) }}
+        expression {{ jobExists('/debian/deps/{name}/gbp-buildpackage') }}
+      }}
+      steps {{
+        build(
+          job: '/debian/deps/{name}/gbp-buildpackage',
+          parameters: [
+            string(name: 'GIT_REVISION', value: params.GIT_TAG),
+            booleanParam(name: 'DO_UPLOAD', value: true),
+          ],
+          wait: false,
+        )
+      }}
+    }}
+  }}
+}}

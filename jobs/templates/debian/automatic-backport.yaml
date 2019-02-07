@@ -1,4 +1,4 @@
-- job-template:
+- job-template: &automatic_backport
     name: 'debian/packages/{name}/automatic-backport'
     description: |
       Backport Debian package to the given release
@@ -37,3 +37,7 @@
           default: false
     dsl:
       !include-raw: automatic-backport.groovy
+
+- job-template:
+    name: 'debian/deps/{name}/automatic-backport'
+    <<: *automatic_backport

@@ -9,6 +9,8 @@ def repo_path = '/srv/softwareheritage/repository'
 def upload_target = "${{repo_path}}/incoming"
 def repo_command = "umask 002; reprepro -vb ${{repo_path}} processincoming incoming"
 
+def backport_job = '/' + (currentBuild.fullProjectName.split('/')[0..-2] + ['automatic-backport']).join('/')
+
 pipeline {{
   agent {{ label 'debian' }}
   environment {{
@@ -245,7 +247,7 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
         beforeAgent true
         expression {{ changelog_distribution != 'UNRELEASED' }}
         expression {{ params.BACKPORT_ON_SUCCESS }}
-        expression {{ jobExists('/debian/packages/{name}/automatic-backport') }}
+        expression {{ jobExists(backport_job) }}
       }}
       steps {{
         script {{
@@ -254,7 +256,7 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
 
             if (src_suite == changelog_distribution) {{
               build(
-                job: '/debian/packages/{name}/automatic-backport',
+                job: backport_job,
                 parameters: [
                   string(name: 'GIT_TAG', value: params.GIT_REVISION),
                   string(name: 'SOURCE', value: src_suite),
