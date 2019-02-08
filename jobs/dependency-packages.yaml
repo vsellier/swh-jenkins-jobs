@@ -20,3 +20,10 @@
     pkg: pytest-postgresql
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PPF
+    display-name: python3-port-for
+    pkg: port-for
+    jobs:
+      - 'dependency-jobs-{name}'
