@@ -12,3 +12,10 @@
     pkg: mirakuru
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: XPTPP
+    display-name: python3-pytest-postgresql
+    pkg: pytest-postgresql
+    jobs:
+      - 'dependency-jobs-{name}'
