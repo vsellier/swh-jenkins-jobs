@@ -7,14 +7,14 @@
       - "debian/deps/{name}/automatic-backport"
 
 - project:
-    name: XPMK
+    name: PMK
     display-name: python3-mirakuru
     pkg: mirakuru
     jobs:
       - 'dependency-jobs-{name}'
 
 - project:
-    name: XPTPP
+    name: PTPP
     display-name: python3-pytest-postgresql
     deb-extra-repositories: swh
     pkg: pytest-postgresql
