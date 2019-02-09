@@ -16,7 +16,6 @@
 - project:
     name: PTPP
     display-name: python3-pytest-postgresql
-    deb-extra-repositories: swh
     pkg: pytest-postgresql
     jobs:
       - 'dependency-jobs-{name}'
