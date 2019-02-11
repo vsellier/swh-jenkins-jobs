@@ -113,7 +113,7 @@ k2vFiMwcHdLpQ1IH8ORVRgPPsiBnBOJ/kIiXG2SxPUTjjEGOVgeA
 -----END PGP PUBLIC KEY BLOCK-----
 '''
           )
-          ;; wget https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          // wget https://www.postgresql.org/media/keys/ACCC4CF8.asc
           writeFile(
             file: 'postgres.asc',
             text: '''-----BEGIN PGP PUBLIC KEY BLOCK-----
