@@ -25,6 +25,7 @@
               - backports
               - swh
               - ceph
+              - pgdg
           value-description: !join:
             - ','
             -
@@ -32,6 +33,7 @@
               - The debian backports repository (default for builds for stable-swh)
               - The Software Heritage debian repository (default for builds for swh branches)
               - The ceph repository
+              - PostgreSQL Global Dvt Group repository (for stable-swh builds requiring latest postgresql)
           default-value: '{deb-extra-repositories}'
       - choice:
           name: BUILD_DEP_RESOLVER
