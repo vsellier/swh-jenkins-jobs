@@ -139,6 +139,7 @@
 - project:
     name: DSCH
     display-name: swh-scheduler
+    deb-extra-repository: pgdg
     pkg: scheduler
     jobs:
       - 'swh-jobs-{name}'
