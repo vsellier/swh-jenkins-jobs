@@ -26,3 +26,11 @@
     pkg: port-for
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PSD
+    display-name: python3-sqlitedict
+    pkg: sqlitedict
+    jobs:
+      - 'dependency-jobs-{name}'
+
