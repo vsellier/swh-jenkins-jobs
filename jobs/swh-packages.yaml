@@ -42,6 +42,7 @@
 - project:
     name: DJNL
     display-name: swh-journal
+    docker-image: swh-kafka
     pkg: journal
     jobs:
       - 'swh-jobs-{name}'

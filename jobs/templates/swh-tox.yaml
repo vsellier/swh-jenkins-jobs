@@ -1,7 +1,8 @@
 - job-template:
     name: '{name}/tox'
     display-name: 'Phab. Diff'
-    node: swh-tox
+    docker-image: swh-tox
+    node: "{docker-image}"
     auth-token: ph4br1cat0r
     parameters:
       - string:
