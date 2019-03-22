@@ -2,6 +2,8 @@
     name: "{name}/tests"
     display-name: "master branch"
     project-type: pipeline
+    docker-image: swh-tox
+    node: "{docker-image}"
     triggers:
       - timed: '@daily'
     sandbox: true
@@ -21,7 +23,7 @@
 
     dsl: |
       pipeline {{
-        agent {{ label 'swh-tox' }}
+        agent {{ label ${{ node }} }}
         environment {{
           PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
         }}
