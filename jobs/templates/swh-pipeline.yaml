@@ -23,7 +23,7 @@
 
     dsl: |
       pipeline {{
-        agent {{ label ${node} }}
+        agent {{ label {node} }}
         environment {{
           PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
         }}
