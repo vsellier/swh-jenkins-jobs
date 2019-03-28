@@ -21,6 +21,7 @@
     wrappers:
       - phabricator-differential:
           apply-to-master: true
+          patch-with-force-flag: true
 
 
     builders:
