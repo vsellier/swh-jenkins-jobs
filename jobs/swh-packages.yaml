@@ -83,6 +83,13 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DLDNPM
+    display-name: swh-loader-npm
+    pkg: loader.npm
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DLDHG
     display-name: swh-loader-mercurial
     pkg: loader.mercurial
