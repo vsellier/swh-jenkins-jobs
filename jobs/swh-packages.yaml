@@ -12,13 +12,6 @@
       - "debian/packages/{name}/gbp-buildpackage"
 
 - project:
-    name: DARC
-    display-name: swh-archiver
-    pkg: archiver
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
     name: DCORE
     display-name: swh-core
     pkg: core
