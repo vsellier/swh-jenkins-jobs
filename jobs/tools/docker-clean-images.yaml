@@ -18,4 +18,4 @@
       - timed: "@midnight"
 
     builders:
-      - shell: docker volume ls  | tail +2 | awk '{print $2}' | xargs docker volume rm
+      - shell: docker volume ls -qf dangling=true | xargs docker volume rm
