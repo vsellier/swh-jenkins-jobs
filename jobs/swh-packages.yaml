@@ -165,5 +165,5 @@
     jobs:
       - 'swh-jobs-{name}'
       - '{name}/cypress'
-      - '{name}/cypress/diff'
+      - '{name}/cypress-diff'
 

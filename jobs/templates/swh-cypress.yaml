@@ -25,7 +25,7 @@
 
 
 - job-template:
-    name: "{name}/cypress/diff"
+    name: "{name}/cypress-diff"
     display-name: 'Phab. Diff (cypress)'
     docker-image: swh-cypress
     node: "{docker-image}"
