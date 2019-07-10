@@ -164,3 +164,6 @@
     pkg: web
     jobs:
       - 'swh-jobs-{name}'
+      - '{name}/cypress'
+      - '{name}/cypress/diff'
+

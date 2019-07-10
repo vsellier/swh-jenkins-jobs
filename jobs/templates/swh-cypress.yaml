@@ -1,0 +1,80 @@
+- job-template:
+    name: "{name}/cypress"
+    display-name: "master branch (cypress)"
+    project-type: pipeline
+    docker-image: swh-cypress
+    triggers:
+      - timed: '@daily'
+    sandbox: true
+    auth-token: 'ph4br1cat0r'
+    properties:
+      - build-discarder:
+          num-to-keep: 20
+    parameters:
+      - git-parameter:
+          name: REVISION
+          type: PT_REVISION
+          defaultValue: master
+          description: Git revision to build.
+      - string:
+          name: PHID
+          description: PHID of the Phabricator target object on which results will be reported.
+
+    dsl:
+      !include-raw: swh-cypress.groovy
+
+
+- job-template:
+    name: "{name}/cypress/diff"
+    display-name: 'Phab. Diff (cypress)'
+    docker-image: swh-cypress
+    node: "{docker-image}"
+    auth-token: ph4br1cat0r
+    parameters:
+      - string:
+          name: REPO
+          description: PHID of the Diffusion repository
+      - string:
+          name: PHID
+          description: PHID of the Target object
+      - string:
+          name: DIFF_ID
+          description: ID of the Diff patch to apply, if any
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/{display-name}.git
+
+    wrappers:
+      - phabricator-differential:
+          apply-to-master: true
+          patch-with-force-flag: true
+
+
+    builders:
+      - shell: |
+          echo "Run cypress for:"
+          echo "  REPO=$REPO"
+          echo "  PHID=$PHID"
+          echo "  DIFF_ID=$DIFF_ID"
+      - shell: |
+          #!/bin/bash
+          python3 -m venv ~/swh-web-env
+          source ~/swh-web-env/bin/activate
+          pip3 install wheel
+          pip3 install -e .[testing]
+          yarn install && yarn build-dev && yarn run cypress install
+          export PYTHONPATH=$PWD
+          python3 swh/web/manage.py migrate
+          python3 swh/web/manage.py createcachetable
+          python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
+          wait-for-it localhost:5004
+          yarn run cypress run
+
+    publishers:
+      - phabricator:
+          uberalls-enabled: false
+          comment-on-success: true
+          comment-with-console-link-on-failure: true
+          process-lint: true
+          lint-file: .phabricator-lint
+          lint-file-size: 1000000

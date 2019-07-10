@@ -32,6 +32,23 @@ pipeline {{
       }}
     }}
 
+    stage('Run cypress tests') {{
+      when {{
+        expression {{ '{display-name}' == 'swh-web' && !params.SKIP_TESTS }}
+        beforeAgent true
+      }}
+      agent none
+      steps {{
+        build(
+          job: '/{name}/cypress',
+          parameters: [
+            string(name: 'REVISION', value: params.GIT_TAG),
+          ],
+          propagate: !params.IGNORE_TESTS,
+        )
+      }}
+    }}
+
     stage('Checkout') {{
       steps {{
         checkout([$class: 'GitSCM',
