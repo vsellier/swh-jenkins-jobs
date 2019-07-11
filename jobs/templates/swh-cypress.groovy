@@ -1,8 +1,6 @@
 pipeline {{
 
-  agent {{
-    agent {{ label '{docker-image}' }}
-  }}
+  agent {{ label '{docker-image}' }}
 
   environment {{
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
@@ -35,7 +33,7 @@ pipeline {{
     stage('Setup environment') {{
       steps {{
         sh '''#!/bin/bash
-        python3 -m venv /swh-web-env
+        python3 -m venv ~/swh-web-env
         source ~/swh-web-env/bin/activate
         pip3 install wheel
         pip3 install -e .[testing]
