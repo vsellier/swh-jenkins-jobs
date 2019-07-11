@@ -248,7 +248,11 @@ Gtz3cydIohvNO9d90+29h0eGEDYti7j7maHkBKUAwlcPvMg5m3Y=
             }}
 
             if ('ceph' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {{
-              extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${{base_distribution}} main")
+              if (base_distribution == 'buster')
+                ceph_distribution = 'stretch'
+              else
+                ceph_distribution = base_distribution
+              extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${{ceph_distribution}} main")
               extra_repository_keys.add('../keys/ceph.asc')
             }}
 
