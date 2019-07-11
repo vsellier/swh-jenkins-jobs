@@ -3,4 +3,5 @@ axis:
   name: distribution
   values:
     - unstable
+    - buster
     - stretch
