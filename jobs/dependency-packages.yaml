@@ -34,3 +34,9 @@
     jobs:
       - 'dependency-jobs-{name}'
 
+- project:
+  name: PDJR
+  display-name: python3-django-js-reverse
+  pkg: django-js-reverse
+  jobs:
+    - 'dependency-jobs-{name}'
