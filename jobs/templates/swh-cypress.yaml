@@ -62,13 +62,14 @@
           source ~/swh-web-env/bin/activate
           pip3 install wheel
           pip3 install -e .[testing]
-          yarn install && yarn build-dev && yarn run cypress install
+          yarn install && yarn build-test && yarn run cypress install
           export PYTHONPATH=$PWD
           python3 swh/web/manage.py migrate
           python3 swh/web/manage.py createcachetable
           python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
           wait-for-it localhost:5004
           yarn run cypress run
+          yarn run mochawesome
 
     publishers:
       - phabricator:
@@ -78,3 +79,17 @@
           process-lint: true
           lint-file: .phabricator-lint
           lint-file-size: 1000000
+      - html-publisher:
+          name: 'Mochawesome Tests Report'
+          dir: 'cypress/mochawesome/report'
+          files: 'mochawesome.html'
+          keep-all: true
+          allow-missing: true
+          link-to-last-build: false
+      - html-publisher:
+          name: 'Istanbul Code Coverage'
+          dir: 'cypress/coverage/lcov-report'
+          files: 'index.html'
+          keep-all: true
+          allow-missing: true
+          link-to-last-build: false

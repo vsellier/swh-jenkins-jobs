@@ -37,7 +37,7 @@ pipeline {{
         source ~/swh-web-env/bin/activate
         pip3 install wheel
         pip3 install -e .[testing]
-        yarn install && yarn build-dev && yarn run cypress install
+        yarn install && yarn build-test && yarn run cypress install
         '''
       }}
     }}
@@ -52,6 +52,7 @@ pipeline {{
         python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
         wait-for-it localhost:5004
         yarn run cypress run
+        yarn run mochawesome
         '''
       }}
     }}
@@ -77,6 +78,22 @@ pipeline {{
           '''
         }}
       }}
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'cypress/mochawesome/report',
+        reportFiles: 'mochawesome.html',
+        reportName: "Mochawesome Tests Report"
+      ])
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'cypress/coverage/lcov-report',
+        reportFiles: 'index.html',
+        reportName: "Istanbul Code Coverage"
+      ])
     }}
   }}
 
