@@ -47,8 +47,9 @@ pipeline {{
         sh '''#!/bin/bash
         source ~/swh-web-env/bin/activate
         export PYTHONPATH=$PWD
-        python3 swh/web/manage.py migrate
-        python3 swh/web/manage.py createcachetable
+        python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
+        python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
+        cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
         python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
         wait-for-it localhost:5004
         yarn run cypress run
