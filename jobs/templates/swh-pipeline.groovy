@@ -14,16 +14,16 @@ pipeline {{
                     variable: 'PHAB_CONDUIT_TOKEN')]) {{
             sh '''
             if [ -n "$PHID" ]; then
-              echo "{
+              echo "{{
                 \\\"buildTargetPHID\\\": \\\"$PHID\\\",
                 \\\"artifactKey\\\": \\\"link.jenkins\\\",
                 \\\"artifactType\\\": \\\"uri\\\",
-                \\\"artifactData\\\": {
+                \\\"artifactData\\\": {{
                   \\\"uri\\\": \\\"$BUILD_URL\\\",
                   \\\"name\\\": \\\"Jenkins\\\",
                   \\\"ui.external\\\": true
-                }
-              }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
+                }}
+              }}" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
               python3 -m pyarcanist send-message work $PHID
             fi
             '''
