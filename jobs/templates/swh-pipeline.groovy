@@ -34,7 +34,8 @@ pipeline {{
                     extensions: [],
                     gitTool: 'Default',
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{display-name}.git']]
+                    userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{display-name}.git']],
+                    browser: [$class: 'Phabricator', repoUrl: 'https://forge.softwareheritage.org', repo: '{name}']
                   ])
       }}
     }}
