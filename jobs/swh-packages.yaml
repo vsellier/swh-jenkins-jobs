@@ -26,6 +26,13 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DGRPH
+    display-name: swh-graph
+    pkg: graph
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DCIDX
     display-name: swh-indexer
     pkg: indexer
