@@ -43,6 +43,8 @@
     scm:
       - git:
           url: https://forge.softwareheritage.org/source/{display-name}.git
+          branches:
+            - origin/master
 
     wrappers:
       - phabricator-differential:
