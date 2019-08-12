@@ -60,6 +60,7 @@
           echo "  DIFF_ID=$DIFF_ID"
       - shell: |
           #!/bin/bash
+          set -e
           python3 -m venv ~/swh-web-env
           source ~/swh-web-env/bin/activate
           pip3 install wheel
