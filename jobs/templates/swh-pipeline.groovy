@@ -43,7 +43,7 @@ pipeline {{
     stage('Static analysis') {{
       steps {{
         echo 'flake8'
-        sh '''python3 -m detox -e flake8'''
+        sh '''python3 -m tox -e flake8'''
 
         echo 'radon';
         sh  '''
