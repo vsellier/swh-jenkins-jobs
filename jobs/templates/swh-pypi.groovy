@@ -73,8 +73,8 @@ pipeline {{
 
           # Build java assets
           if [ -d java ]; then
-            for dir in java/*; do
-              (cd $dir; mvn compile assembly:single)
+            for pom in java/*/pom.xml; do
+              mvn -f $pom compile assembly:single
             done
           fi
 
