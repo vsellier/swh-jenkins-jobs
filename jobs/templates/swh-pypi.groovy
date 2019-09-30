@@ -65,10 +65,19 @@ pipeline {{
     stage('Build') {{
       steps {{
         sh '''
+          # Build javascript assets
           if [ -f yarn.lock ]; then
             yarn install --frozen-lockfile
             yarn build
           fi
+
+          # Build java assets
+          if [ -d java ]; then
+            for dir in java/*; do
+              (cd $dir; mvn compile assembly:single)
+            done
+          fi
+
           python3 setup.py sdist bdist_wheel
         '''
         archiveArtifacts allowEmptyArchive: true,
