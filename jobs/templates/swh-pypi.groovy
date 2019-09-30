@@ -12,7 +12,7 @@ switch (params.PYPI_HOST) {{
 }}
 
 pipeline {{
-  agent {{ label 'swh-tox' }}
+  agent {{ label '{docker-image}' }}
 
   stages {{
     stage('Run tests') {{
