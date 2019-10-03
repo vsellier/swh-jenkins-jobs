@@ -45,6 +45,9 @@ pipeline {{
         echo 'flake8'
         sh '''python3 -m tox -e flake8'''
 
+        echo 'mypy'
+        sh '''if python3 -m tox -a | grep -qx mypy ; then python3 -m tox -e mypy ; fi'''
+
         echo 'radon';
         sh  '''
         mkdir -p reports
