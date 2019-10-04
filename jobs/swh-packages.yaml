@@ -135,6 +135,13 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DSEA
+    display-name: swh-search
+    pkg: search
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: TSBX
     display-name: swh-sandbox
     pkg: sandbox
