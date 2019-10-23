@@ -81,8 +81,9 @@ pipeline {{
           sh """
             git checkout debian/${{params.DESTINATION}}
             git merge ${{params.GIT_TAG}} --no-commit --no-edit || true
-            git checkout ${{params.GIT_TAG}} -- debian/changelog
-            git add debian/changelog
+            git checkout ${{params.GIT_TAG}} -- debian/changelog debian/gbp.conf
+            sed -i 's!^debian-branch=.*\$!debian-branch=debian/${{params.DESTINATION}}!' debian/gbp.conf
+            git add debian/changelog debian/gbp.conf
             git commit --no-verify --no-edit
             git show
           """
