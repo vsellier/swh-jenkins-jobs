@@ -28,7 +28,6 @@
 - project:
     name: DGRPH
     display-name: swh-graph
-    docker-image: swh-tox-maven
     pkg: graph
     jobs:
       - 'swh-jobs-{name}'
