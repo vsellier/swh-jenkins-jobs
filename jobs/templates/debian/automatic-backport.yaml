@@ -30,7 +30,7 @@
             - buster-swh
             - bullseye-swh
             - bookworm-swh
-          default: stretch-swh
+          default: buster-swh
       - bool:
           name: DRY_RUN
           description: Don't push the resulting changes to a Debian branch

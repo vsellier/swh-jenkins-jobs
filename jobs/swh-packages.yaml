@@ -29,7 +29,6 @@
     name: DGRPH
     display-name: swh-graph
     docker-image: swh-tox-maven
-    deb-backport-on-success: unstable-swh>buster-swh
     pkg: graph
     jobs:
       - 'swh-jobs-{name}'

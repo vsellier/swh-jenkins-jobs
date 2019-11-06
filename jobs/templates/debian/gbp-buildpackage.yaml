@@ -4,7 +4,7 @@
       Build Debian package
     auth-token: 'ph4br1cat0r'
     deb-extra-repositories:
-    deb-backport-on-success: unstable-swh>stretch-swh,unstable-swh>buster-swh
+    deb-backport-on-success: unstable-swh>buster-swh
     project-type: pipeline
     parameters:
       - string:
