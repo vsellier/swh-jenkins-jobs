@@ -62,13 +62,6 @@
       - 'swh-jobs-{name}'
 
 - project:
-    name: DLDDEB
-    display-name: swh-loader-debian
-    pkg: loader.debian
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
     name: DLDDIR
     display-name: swh-loader-dir
     pkg: loader.dir
