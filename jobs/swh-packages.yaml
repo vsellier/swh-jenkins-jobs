@@ -62,23 +62,9 @@
       - 'swh-jobs-{name}'
 
 - project:
-    name: DLDDIR
-    display-name: swh-loader-dir
-    pkg: loader.dir
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
     name: DLDG
     display-name: swh-loader-git
     pkg: loader.git
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
-    name: DLDNPM
-    display-name: swh-loader-npm
-    pkg: loader.npm
     jobs:
       - 'swh-jobs-{name}'
 
@@ -90,23 +76,9 @@
       - 'swh-jobs-{name}'
 
 - project:
-    name: DLDPY
-    display-name: swh-loader-pypi
-    pkg: loader.pypi
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
     name: DLDSVN
     display-name: swh-loader-svn
     pkg: loader.svn
-    jobs:
-      - 'swh-jobs-{name}'
-
-- project:
-    name: DLDTAR
-    display-name: swh-loader-tar
-    pkg: loader.tar
     jobs:
       - 'swh-jobs-{name}'
 
