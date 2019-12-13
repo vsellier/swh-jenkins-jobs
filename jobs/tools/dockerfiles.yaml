@@ -8,10 +8,11 @@
     triggers:
       - pollscm:
           cron: "H/30 * * * *"
+      - timed: '@daily'
     build-discarder:
       num-to-keep: 50
     wrappers:
       - timestamps
       - ansicolor
     builders:
-      - shell: make all
+      - shell: make checkrebuild all
