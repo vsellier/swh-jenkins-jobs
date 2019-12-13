@@ -40,6 +40,13 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DICP
+    display-name: swh-icinga-plugins
+    pkg: icinga-plugins
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DJNL
     display-name: swh-journal
     docker-image: swh-kafka
