@@ -44,10 +44,7 @@ pipeline {{
     stage('Setup environment') {{
       steps {{
         sh '''#!/bin/bash
-        python3 -m venv ~/swh-web-env
-        source ~/swh-web-env/bin/activate
-        pip3 install wheel
-        pip3 install -e .[testing]
+        python3 -m pip install --user -e .[testing]
         yarn install && yarn build-test && yarn run cypress install
         '''
       }}
@@ -56,7 +53,6 @@ pipeline {{
     stage('Run cypress tests') {{
       steps {{
         sh '''#!/bin/bash
-        source ~/swh-web-env/bin/activate
         export PYTHONPATH=$PWD
         python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
         python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
