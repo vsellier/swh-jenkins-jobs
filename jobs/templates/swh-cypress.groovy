@@ -53,6 +53,7 @@ pipeline {{
     stage('Run cypress tests') {{
       steps {{
         sh '''#!/bin/bash
+        set -e
         export PYTHONPATH=$PWD
         python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
         python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
@@ -61,6 +62,7 @@ pipeline {{
         wait-for-it localhost:5004
         yarn run cypress run
         yarn run mochawesome
+        yarn run nyc-report
         '''
       }}
     }}
