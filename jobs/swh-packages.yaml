@@ -108,6 +108,7 @@
     name: DSEA
     display-name: swh-search
     pkg: search
+    deb-extra-repositories: elasticsearch
     jobs:
       - 'swh-jobs-{name}'
 

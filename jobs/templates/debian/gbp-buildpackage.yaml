@@ -26,6 +26,7 @@
               - swh
               - ceph
               - pgdg
+              - elasticsearch
           value-description: !join:
             - ','
             -
@@ -34,6 +35,7 @@
               - The Software Heritage debian repository (default for builds for swh branches)
               - The ceph repository
               - PostgreSQL Global Dvt Group repository (for stable-swh builds requiring latest postgresql)
+              - Elasticsearch 7.x repository (for builds requiring elasticsearch installed)
           default-value: '{deb-extra-repositories}'
       - choice:
           name: BUILD_DEP_RESOLVER
