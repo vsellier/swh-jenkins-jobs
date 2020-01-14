@@ -84,7 +84,7 @@ pipeline {{
             git checkout ${{params.GIT_TAG}} -- debian/changelog debian/gbp.conf
             sed -i 's!^debian-branch=.*\$!debian-branch=debian/${{params.DESTINATION}}!' debian/gbp.conf
             git add debian/changelog debian/gbp.conf
-            git commit --no-verify --no-edit
+            git commit --no-verify -m "Merge tag '${{params.GIT_TAG}}' into debian/${{params.DESTINATION}}"
             git show
           """
           }}
