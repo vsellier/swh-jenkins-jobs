@@ -14,6 +14,10 @@
       - string:
           name: DIFF_ID
           description: ID of the Diff patch to apply, if any
+      - string:
+          name: pytest_params
+          description: extra parameters to pass to pytest
+          default: ""
     scm:
       - git:
           url: https://forge.softwareheritage.org/source/{display-name}.git
@@ -38,7 +42,7 @@
           else
               python3 -m tox -e flake8
           fi
-      - shell: python3 -m tox --result-json tox-results.json
+      - shell: python3 -m tox --result-json tox-results.json -- $pytest_params
 
     publishers:
       - phabricator:

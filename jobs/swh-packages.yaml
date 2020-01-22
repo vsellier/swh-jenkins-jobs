@@ -136,6 +136,8 @@
     pkg: storage
     jobs:
       - 'swh-jobs-{name}'
+      - '{name}/tox':
+          pytest_params: -m cassandra -n 3
 
 - project:
     name: DVAU
