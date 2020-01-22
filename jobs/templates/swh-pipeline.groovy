@@ -66,7 +66,7 @@ pipeline {{
       }}
       steps {{
         sh '''
-        python3 -m tox -e py3 -- \
+        python3 -m tox -e $TOX_ENVIRONMENT -- \
           --cov-report=xml \
           --junit-xml=test-results.xml
         '''

@@ -3,6 +3,7 @@
     display-name: "master branch"
     project-type: pipeline
     docker-image: swh-tox
+    default-tox-environment: py3
     triggers:
       - timed: '@daily'
     sandbox: true
@@ -19,6 +20,10 @@
       - string:
           name: PHID
           description: PHID of the Phabricator target object on which results will be reported.
+      - string:
+          name: TOX_ENVIRONMENT
+          description: tox environment to use for the main tox run
+          default: "{default-tox-environment}"
 
     dsl:
       !include-raw: swh-pipeline.groovy
