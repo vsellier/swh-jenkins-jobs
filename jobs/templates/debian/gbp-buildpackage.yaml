@@ -27,6 +27,7 @@
               - ceph
               - pgdg
               - elasticsearch
+              - cassandra
           value-description: !join:
             - ','
             -
@@ -36,6 +37,7 @@
               - The ceph repository
               - PostgreSQL Global Dvt Group repository (for stable-swh builds requiring latest postgresql)
               - Elasticsearch 7.x repository (for builds requiring elasticsearch installed)
+              - Cassandra 4.x repository (for builds requiring cassandra installed)
           default-value: '{deb-extra-repositories}'
       - choice:
           name: BUILD_DEP_RESOLVER
