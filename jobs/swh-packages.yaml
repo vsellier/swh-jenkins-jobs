@@ -135,6 +135,7 @@
     name: DSTO
     display-name: swh-storage
     pkg: storage
+    deb-extra-repositories: cassandra
     jobs:
       - 'swh-jobs-{name}'
 
