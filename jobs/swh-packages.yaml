@@ -125,6 +125,13 @@
       - "{name}/tox"
 
 - project:
+    name: DTSCN
+    display-name: swh-scanner
+    pkg: scanner
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DSCH
     display-name: swh-scheduler
     pkg: scheduler
