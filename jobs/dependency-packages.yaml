@@ -40,3 +40,10 @@
     pkg: django-js-reverse
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PJOS
+    display-name: python3-jose
+    pkg: python3-jose
+    jobs:
+      - 'dependency-jobs-{name}'
