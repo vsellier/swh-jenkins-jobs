@@ -68,7 +68,8 @@ pipeline {{
         sh '''
         python3 -m tox -e $TOX_ENVIRONMENT -- \
           --cov-report=xml \
-          --junit-xml=test-results.xml
+          --junit-xml=test-results.xml \
+          -v
         '''
         }}
       post {{

@@ -43,7 +43,7 @@
           else
               python3 -m tox -e flake8
           fi
-      - shell: python3 -m tox --result-json tox-results.json -e $TOX_ENVIRONMENT
+      - shell: python3 -m tox --result-json tox-results.json -e $TOX_ENVIRONMENT -- -v
 
     publishers:
       - phabricator:
