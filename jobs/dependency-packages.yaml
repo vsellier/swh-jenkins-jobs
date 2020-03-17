@@ -47,3 +47,10 @@
     pkg: python3-jose
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PKCL
+    display-name: python3-keycloak
+    pkg: python3-keycloak
+    jobs:
+      - 'dependency-jobs-{name}'
