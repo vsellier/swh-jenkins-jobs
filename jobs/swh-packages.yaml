@@ -162,3 +162,10 @@
       - '{name}/cypress'
       - '{name}/cypress-diff'
 
+- project:
+    name: DWCLI
+    display-name: swh-web-client
+    pkg: web-client
+    jobs:
+      - 'swh-jobs-{name}'
+
