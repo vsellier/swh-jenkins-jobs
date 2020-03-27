@@ -62,6 +62,7 @@
           #!/bin/bash
           set -e
           python3 -m pip install --user -e .[testing]
+          export CYPRESS_CACHE_FOLDER=/tmp/cypress_cache/
           yarn install && yarn build-test && yarn run cypress install
           export PYTHONPATH=$PWD
           python3 swh/web/manage.py migrate --settings=swh.web.settings.tests

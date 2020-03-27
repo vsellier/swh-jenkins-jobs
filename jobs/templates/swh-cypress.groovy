@@ -4,6 +4,7 @@ pipeline {{
 
   environment {{
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
+    CYPRESS_CACHE_FOLDER = '/tmp/cypress_cache'
   }}
 
   stages {{
