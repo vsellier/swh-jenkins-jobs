@@ -1,4 +1,4 @@
-def repo_name = '{repo_name}'
+def repo_name = '{{repo_name}}'
 
 def changelog_distribution
 
@@ -6,51 +6,51 @@ def repo_host = 'pergamon.internal.softwareheritage.org'
 def repo_user = 'swhdebianrepo'
 def repo_path = '/srv/softwareheritage/repository'
 
-def upload_target = "${{repo_path}}/incoming"
-def repo_command = "umask 002; reprepro -vb ${{repo_path}} processincoming incoming"
+def upload_target = "${repo_path}/incoming"
+def repo_command = "umask 002; reprepro -vb ${repo_path} processincoming incoming"
 
 def backport_job = '/' + (currentBuild.fullProjectName.split('/')[0..-2] + ['automatic-backport']).join('/')
 
-pipeline {{
-  agent {{ label 'debian' }}
-  environment {{
+pipeline {
+  agent { label 'debian' }
+  environment {
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
-  }}
-  stages {{
-    stage('Notify Phabricator start') {{
-      when {{
+  }
+  stages {
+    stage('Notify Phabricator start') {
+      when {
         beforeAgent true
-        expression {{ params.PHID }}
-      }}
-      agent {{ label 'swh-tox' }}
-      steps {{
+        expression { params.PHID }
+      }
+      agent { label 'swh-tox' }
+      steps {
         withCredentials([
           string(credentialsId: 'swh-public-ci',
-                 variable: 'PHAB_CONDUIT_TOKEN')]) {{
+                 variable: 'PHAB_CONDUIT_TOKEN')]) {
           sh '''
             python3 -m pyarcanist send-message work $PHID
           '''
-        }}
-      }}
-    }}
-    stage('Checkout') {{
-      steps {{
+        }
+      }
+    }
+    stage('Checkout') {
+      steps {
         cleanWs()
         checkout([
           $class: 'GitSCM',
           branches: [[name: params.GIT_REVISION]],
           userRemoteConfigs: [[
-            url: "https://forge.softwareheritage.org/source/${{repo_name}}.git",
+            url: "https://forge.softwareheritage.org/source/${repo_name}.git",
           ]],
           extensions: [
             [$class: 'RelativeTargetDirectory', relativeTargetDir: repo_name],
           ],
         ])
-        script {{
-          dir(repo_name) {{
-            if(!fileExists('debian/changelog')) {{
+        script {
+          dir(repo_name) {
+            if(!fileExists('debian/changelog')) {
               error('Trying to build a debian package without a debian/changelog')
-            }}
+            }
 
             changelog_distribution = sh(
               script: 'dpkg-parsechangelog -SDistribution',
@@ -65,21 +65,21 @@ pipeline {{
             def debian_branch = parsed_gbp_config['debian-branch']
 
             sh """
-              git checkout -b ${{debian_branch}}
+              git checkout -b ${debian_branch}
               git branch -f pristine-tar origin/pristine-tar
               git branch -f debian/upstream origin/debian/upstream
             """
-          }}
-        }}
-      }}
-    }}
-    stage('Write extra keys') {{
-      when {{
+          }
+        }
+      }
+    }
+    stage('Write extra keys') {
+      when {
         beforeAgent true
-        expression {{ changelog_distribution != 'UNRELEASED' }}
-      }}
-      steps {{
-        dir('keys') {{
+        expression { changelog_distribution != 'UNRELEASED' }
+      }
+      steps {
+        dir('keys') {
           writeFile(
             file: 'ceph.asc',
             text: '''-----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -299,17 +299,17 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
 -----END PGP PUBLIC KEY BLOCK-----
 '''
          )
-        }}
-      }}
-    }}
-    stage('Build package') {{
-      when {{
+        }
+      }
+    }
+    stage('Build package') {
+      when {
         beforeAgent true
-        expression {{ changelog_distribution != 'UNRELEASED' }}
-      }}
-      steps {{
-        script {{
-          dir (repo_name) {{
+        expression { changelog_distribution != 'UNRELEASED' }
+      }
+      steps {
+        script {
+          dir (repo_name) {
             def wanted_extra_repositories = params.EXTRA_REPOSITORIES.split(',')
 
             def build_dep_resolver
@@ -321,63 +321,63 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
             def backports = changelog_distribution.endsWith('-backports')
             def swh = changelog_distribution.endsWith('-swh')
 
-            if (base_distribution in ['unstable', 'experimental'] || 'incoming' in wanted_extra_repositories) {{
+            if (base_distribution in ['unstable', 'experimental'] || 'incoming' in wanted_extra_repositories) {
               def suites = []
-              if (base_distribution == 'unstable') {{
+              if (base_distribution == 'unstable') {
                 suites = ['buildd-unstable']
-              }} else if (base_distribution == 'experimental') {{
+              } else if (base_distribution == 'experimental') {
                 suites = ['buildd-unstable', 'buildd-experimental']
-              }} else {{
-                suites = ["buildd-${{base_distribution}}-proposed-updates"]
-                if (backports || swh) {{
-                  suites.add("buildd-${{base_distribution}}-backports")
-                }}
-              }}
-              suites.each {{suite ->
-                extra_repositories.add("deb http://incoming.debian.org/debian-buildd/ ${{suite}} main")
-              }}
-            }}
+              } else {
+                suites = ["buildd-${base_distribution}-proposed-updates"]
+                if (backports || swh) {
+                  suites.add("buildd-${base_distribution}-backports")
+                }
+              }
+              suites.each {suite ->
+                extra_repositories.add("deb http://incoming.debian.org/debian-buildd/ ${suite} main")
+              }
+            }
 
-            if (swh || 'swh' in wanted_extra_repositories) {{
-              def swh_distribution = "${{base_distribution}}-swh"
-              if (base_distribution in ['unstable', 'experimental']) {{
+            if (swh || 'swh' in wanted_extra_repositories) {
+              def swh_distribution = "${base_distribution}-swh"
+              if (base_distribution in ['unstable', 'experimental']) {
                 swh_distribution = 'unstable'
-              }}
-              extra_repositories.add("deb [trusted=yes] https://debian.softwareheritage.org/ ${{swh_distribution}} main")
-            }}
+              }
+              extra_repositories.add("deb [trusted=yes] https://debian.softwareheritage.org/ ${swh_distribution} main")
+            }
 
-            if ((backports || swh || 'backports' in wanted_extra_repositories) && !(base_distribution in ['unstable', 'experimental'])) {{
-              extra_repositories.add("deb http://deb.debian.org/debian/ ${{base_distribution}}-backports main")
+            if ((backports || swh || 'backports' in wanted_extra_repositories) && !(base_distribution in ['unstable', 'experimental'])) {
+              extra_repositories.add("deb http://deb.debian.org/debian/ ${base_distribution}-backports main")
               build_dep_resolver = 'aptitude'
-            }}
+            }
 
-            if ('ceph' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {{
+            if ('ceph' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {
               if (base_distribution == 'buster')
                 ceph_distribution = 'stretch'
               else
                 ceph_distribution = base_distribution
-              extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${{ceph_distribution}} main")
+              extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${ceph_distribution} main")
               extra_repository_keys.add('../keys/ceph.asc')
-            }}
+            }
 
-            if ('pgdg' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {{
-              extra_repositories.add("deb http://apt.postgresql.org/pub/repos/apt/ ${{base_distribution}}-pgdg main")
+            if ('pgdg' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {
+              extra_repositories.add("deb http://apt.postgresql.org/pub/repos/apt/ ${base_distribution}-pgdg main")
               extra_repository_keys.add('../keys/postgres.asc')
-            }}
+            }
 
-            if ('elasticsearch' in wanted_extra_repositories) {{
+            if ('elasticsearch' in wanted_extra_repositories) {
               extra_repositories.add("deb https://artifacts.elastic.co/packages/7.x/apt stable main")
               extra_repository_keys.add('../keys/elasticsearch.asc')
-            }}
+            }
 
-            if ('cassandra' in wanted_extra_repositories) {{
+            if ('cassandra' in wanted_extra_repositories) {
               extra_repositories.add("deb http://www.apache.org/dist/cassandra/debian 40x main")
               extra_repository_keys.add('../keys/cassandra.asc')
-            }}
+            }
 
-            if (params.BUILD_DEP_RESOLVER) {{
+            if (params.BUILD_DEP_RESOLVER) {
               build_dep_resolver = params.BUILD_DEP_RESOLVER
-            }}
+            }
 
             def hostname = sh(
               script: "hostname --fqdn",
@@ -386,7 +386,7 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
 
             def short_hostname = hostname - '.internal.softwareheritage.org';
 
-            def uploader = "Software Heritage autobuilder (on ${{short_hostname}}) <jenkins@${{hostname}}>"
+            def uploader = "Software Heritage autobuilder (on ${short_hostname}) <jenkins@${hostname}>"
 
             def gbp_buildpackage = [
               'gbp buildpackage',
@@ -398,29 +398,29 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
               '--arch-all',
               '--source',
               '--force-orig-source',
-              "--uploader='${{uploader}}'",
+              "--uploader='${uploader}'",
             ]
 
-            if (build_dep_resolver != null) {{
-              gbp_buildpackage.add("--build-dep-resolver=${{build_dep_resolver}}")
-            }}
+            if (build_dep_resolver != null) {
+              gbp_buildpackage.add("--build-dep-resolver=${build_dep_resolver}")
+            }
 
-            extra_repositories.each {{ repo ->
-              gbp_buildpackage.add("--extra-repository='${{repo}}'")
-            }}
+            extra_repositories.each { repo ->
+              gbp_buildpackage.add("--extra-repository='${repo}'")
+            }
 
-            extra_repository_keys.each {{ key ->
-              gbp_buildpackage.add("--extra-repository-key='${{key}}'")
-            }}
+            extra_repository_keys.each { key ->
+              gbp_buildpackage.add("--extra-repository-key='${key}'")
+            }
 
             def gbp_buildpackage_cmd = gbp_buildpackage.join(' ')
 
             sh(script: gbp_buildpackage_cmd)
-          }}
+          }
 
-          if (params.DO_UPLOAD) {{
+          if (params.DO_UPLOAD) {
             sh(script: 'debsign *.changes')
-          }}
+          }
 
           archiveArtifacts(
             artifacts: sh(
@@ -429,37 +429,37 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
             ).split().join(','),
             fingerprint: true,
           )
-        }}
-      }}
-    }}
-    stage('Upload package') {{
-      when {{
+        }
+      }
+    }
+    stage('Upload package') {
+      when {
         beforeAgent true
-        expression {{ changelog_distribution != 'UNRELEASED' }}
-        expression {{ params.DO_UPLOAD }}
-      }}
-      steps {{
-        sshagent (credentials: ['jenkins-debian-repo-ssh']) {{
+        expression { changelog_distribution != 'UNRELEASED' }
+        expression { params.DO_UPLOAD }
+      }
+      steps {
+        sshagent (credentials: ['jenkins-debian-repo-ssh']) {
           sh """
-            dcmd rsync -v *.changes ${{repo_user}}@${{repo_host}}:${{upload_target}}
-            ssh ${{repo_user}}@${{repo_host}} '${{repo_command}}'
+            dcmd rsync -v *.changes ${repo_user}@${repo_host}:${upload_target}
+            ssh ${repo_user}@${repo_host} '${repo_command}'
           """
-        }}
-      }}
-    }}
-    stage('Prepare backport') {{
-      when {{
+        }
+      }
+    }
+    stage('Prepare backport') {
+      when {
         beforeAgent true
-        expression {{ changelog_distribution != 'UNRELEASED' }}
-        expression {{ params.BACKPORT_ON_SUCCESS }}
-        expression {{ jobExists(backport_job) }}
-      }}
-      steps {{
-        script {{
-          params.BACKPORT_ON_SUCCESS.split(',').each {{ bpo_pair ->
+        expression { changelog_distribution != 'UNRELEASED' }
+        expression { params.BACKPORT_ON_SUCCESS }
+        expression { jobExists(backport_job) }
+      }
+      steps {
+        script {
+          params.BACKPORT_ON_SUCCESS.split(',').each { bpo_pair ->
             def (src_suite, dst_suite) = bpo_pair.split('>')
 
-            if (src_suite == changelog_distribution) {{
+            if (src_suite == changelog_distribution) {
               build(
                 job: backport_job,
                 parameters: [
@@ -469,19 +469,19 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
                 ],
                 wait: false,
               )
-            }}
-          }}
-        }}
-      }}
-    }}
-  }}
-  post {{
-    always {{
-      node('swh-tox') {{
+            }
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      node('swh-tox') {
         withCredentials([
           string(credentialsId: 'swh-public-ci',
-                 variable: 'PHAB_CONDUIT_TOKEN')]) {{
-          withEnv(["JOBSTATUS=${{currentBuild.currentResult}}"]) {{
+                 variable: 'PHAB_CONDUIT_TOKEN')]) {
+          withEnv(["JOBSTATUS=${currentBuild.currentResult}"]) {
             sh '''
               if [ "$JOBSTATUS" = "SUCCESS" ]; then
                 MSGTYPE=pass
@@ -493,9 +493,9 @@ nRoO6xsmL+Y2nGo0xYY3+dp7DYQYE8W4wxtYgbFPnWvcHSSFnKg=
                 python3 -m pyarcanist send-message $MSGTYPE $PHID
               fi
             '''
-          }}
-        }}
-      }}
-    }}
-  }}
-}}
+          }
+        }
+      }
+    }
+  }
+}
