@@ -2,7 +2,7 @@
     name: "{name}/cypress"
     display-name: "master branch (cypress)"
     project-type: pipeline
-    docker-image: swh-cypress
+    docker-image: cypress
     triggers:
       - timed: '@daily'
     sandbox: true

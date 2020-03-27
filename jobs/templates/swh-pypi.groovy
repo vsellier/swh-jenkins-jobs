@@ -12,7 +12,11 @@ switch (params.PYPI_HOST) {{
 }}
 
 pipeline {{
-  agent {{ label '{docker-image}' }}
+  agent {{
+    docker {{
+      image 'swh-jenkins/{docker-image}'
+    }}
+  }}
 
   stages {{
     stage('Run tests') {{

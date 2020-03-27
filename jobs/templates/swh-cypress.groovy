@@ -1,6 +1,10 @@
 pipeline {{
 
-  agent {{ label '{docker-image}' }}
+  agent {{
+    docker {{
+      image 'swh-jenkins/{docker-image}'
+    }}
+  }}
 
   environment {{
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
