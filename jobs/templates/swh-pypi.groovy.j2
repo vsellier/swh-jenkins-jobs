@@ -1,74 +1,74 @@
-def module_name = '{repo_name}'.replace('-', '.')
+def module_name = '{{repo_name}}'.replace('-', '.')
 
 def PYPI_UPLOAD_HOST
 
-switch (params.PYPI_HOST) {{
+switch (params.PYPI_HOST) {
   case 'pypi.org':
     PYPI_UPLOAD_HOST = 'upload.pypi.org'
     break
   default:
     PYPI_UPLOAD_HOST = params.PYPI_HOST
     break
-}}
+}
 
-pipeline {{
-  agent {{
-    docker {{
-      image 'swh-jenkins/{docker_image}'
+pipeline {
+  agent {
+    docker {
+      image 'swh-jenkins/{{docker_image}}'
       args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
-    }}
-  }}
+    }
+  }
 
-  stages {{
-    stage('Run tests') {{
-      when {{
-        expression {{ return !params.SKIP_TESTS }}
+  stages {
+    stage('Run tests') {
+      when {
+        expression { return !params.SKIP_TESTS }
         beforeAgent true
-      }}
+      }
       agent none
-      steps {{
+      steps {
         build(
-          job: '/{name}/tests',
+          job: '/{{name}}/tests',
           parameters: [
             string(name: 'REVISION', value: params.GIT_TAG),
           ],
           propagate: !params.IGNORE_TESTS,
         )
-      }}
-    }}
+      }
+    }
 
-    stage('Run cypress tests') {{
-      when {{
-        expression {{ '{repo_name}' == 'swh-web' && !params.SKIP_TESTS }}
+    stage('Run cypress tests') {
+      when {
+        expression { '{{repo_name}}' == 'swh-web' && !params.SKIP_TESTS }
         beforeAgent true
-      }}
+      }
       agent none
-      steps {{
+      steps {
         build(
-          job: '/{name}/cypress',
+          job: '/{{name}}/cypress',
           parameters: [
             string(name: 'REVISION', value: params.GIT_TAG),
           ],
           propagate: !params.IGNORE_TESTS,
         )
-      }}
-    }}
+      }
+    }
 
-    stage('Checkout') {{
-      steps {{
+    stage('Checkout') {
+      steps {
         checkout([$class: 'GitSCM',
                   branches: [[name: params.GIT_TAG]],
                   doGenerateSubmoduleConfigurations: false,
                   extensions: [],
                   gitTool: 'Default',
                   submoduleCfg: [],
-                  userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{repo_name}.git']]
+                  userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{{repo_name}}.git']]
         ])
-      }}
-    }}
+      }
+    }
 
-    stage('Build') {{
-      steps {{
+    stage('Build') {
+      steps {
         sh '''
           # Build javascript assets
           if [ -f yarn.lock ]; then
@@ -88,28 +88,28 @@ pipeline {{
         archiveArtifacts allowEmptyArchive: true,
           artifacts: 'dist/*',
           fingerprint: true
-      }}
-    }}
+      }
+    }
 
-    stage('Publish') {{
-      when {{
-        anyOf {{
-          expression {{ return params.FORCE_UPLOAD }}
-          expression {{
+    stage('Publish') {
+      when {
+        anyOf {
+          expression { return params.FORCE_UPLOAD }
+          expression {
             LASTV=sh(returnStdout: true,
-                     script:"curl -s https://${{params.PYPI_HOST}}/pypi/${{module_name}}/json | jq -r .info.version || true").trim()
+                     script:"curl -s https://${params.PYPI_HOST}/pypi/${module_name}/json | jq -r .info.version || true").trim()
             return 'v'+LASTV != params.GIT_TAG
-            }}
-        }}
-      }}
-      steps {{
+            }
+        }
+      }
+      steps {
         withCredentials([
           usernamePassword(credentialsId: PYPI_UPLOAD_HOST,
                            usernameVariable: 'TWINE_USERNAME',
-                           passwordVariable: 'TWINE_PASSWORD')]) {{
-          sh "python3 -m twine upload --repository-url https://${{PYPI_UPLOAD_HOST}}/legacy/ dist/*"
-        }}
-      }}
-    }}
-  }}
-}}
+                           passwordVariable: 'TWINE_PASSWORD')]) {
+          sh "python3 -m twine upload --repository-url https://${PYPI_UPLOAD_HOST}/legacy/ dist/*"
+        }
+      }
+    }
+  }
+}

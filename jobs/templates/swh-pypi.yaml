@@ -41,4 +41,4 @@
           description: |
             Proceed even if the tests are failing on the repository.
     dsl:
-      !include-raw: swh-pypi.groovy
+      !include-jinja2: swh-pypi.groovy.j2
