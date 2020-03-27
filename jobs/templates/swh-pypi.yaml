@@ -1,7 +1,7 @@
 - job-template:
     name: "{name}/pypi-upload"
     display-name: "Upload to PyPI"
-    docker-image: swh-tox
+    docker-image: tox
     project-type: pipeline
     sandbox: true
     properties:

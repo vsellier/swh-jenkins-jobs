@@ -27,8 +27,8 @@
 - job-template:
     name: "{name}/cypress-diff"
     display-name: 'Phab. Diff (cypress)'
-    docker-image: swh-cypress
-    node: "{docker-image}"
+    docker-image: cypress
+    node: "swh-{docker-image}"
     auth-token: ph4br1cat0r
     parameters:
       - string:
