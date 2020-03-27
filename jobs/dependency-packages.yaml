@@ -9,6 +9,7 @@
 - project:
     name: PMK
     display-name: python3-mirakuru
+    repo_name: python3-mirakuru
     pkg: mirakuru
     jobs:
       - 'dependency-jobs-{name}'
@@ -16,6 +17,7 @@
 - project:
     name: PTPP
     display-name: python3-pytest-postgresql
+    repo_name: python3-pytest-postgresql
     pkg: pytest-postgresql
     jobs:
       - 'dependency-jobs-{name}'
@@ -23,6 +25,7 @@
 - project:
     name: PPF
     display-name: python3-port-for
+    repo_name: python3-port-for
     pkg: port-for
     jobs:
       - 'dependency-jobs-{name}'
@@ -30,6 +33,7 @@
 - project:
     name: PSD
     display-name: python3-sqlitedict
+    repo_name: python3-sqlitedict
     pkg: sqlitedict
     jobs:
       - 'dependency-jobs-{name}'
@@ -37,6 +41,7 @@
 - project:
     name: PDJR
     display-name: python3-django-js-reverse
+    repo_name: python3-django-js-reverse
     pkg: django-js-reverse
     jobs:
       - 'dependency-jobs-{name}'
@@ -44,6 +49,7 @@
 - project:
     name: PJOS
     display-name: python3-jose
+    repo_name: python3-jose
     pkg: python3-jose
     jobs:
       - 'dependency-jobs-{name}'
@@ -51,6 +57,7 @@
 - project:
     name: PKCL
     display-name: python3-keycloak
+    repo_name: python3-keycloak
     pkg: python3-keycloak
     jobs:
       - 'dependency-jobs-{name}'

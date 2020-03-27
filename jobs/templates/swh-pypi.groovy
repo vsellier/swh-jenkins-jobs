@@ -1,4 +1,4 @@
-def module_name = '{display-name}'.replace('-', '.')
+def module_name = '{repo_name}'.replace('-', '.')
 
 def PYPI_UPLOAD_HOST
 
@@ -39,7 +39,7 @@ pipeline {{
 
     stage('Run cypress tests') {{
       when {{
-        expression {{ '{display-name}' == 'swh-web' && !params.SKIP_TESTS }}
+        expression {{ '{repo_name}' == 'swh-web' && !params.SKIP_TESTS }}
         beforeAgent true
       }}
       agent none
@@ -62,7 +62,7 @@ pipeline {{
                   extensions: [],
                   gitTool: 'Default',
                   submoduleCfg: [],
-                  userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{display-name}.git']]
+                  userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{repo_name}.git']]
         ])
       }}
     }}

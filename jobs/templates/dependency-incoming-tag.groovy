@@ -7,14 +7,14 @@ pipeline {{
         checkout([
           $class: 'GitSCM',
           userRemoteConfigs: [[
-            url: 'https://forge.softwareheritage.org/source/{display-name}.git',
+            url: 'https://forge.softwareheritage.org/source/{repo_name}.git',
           ]],
           branches: [[
             name: params.GIT_TAG,
           ]],
           browser: [
             $class: 'Phabricator',
-            repo: '{display-name}',
+            repo: '{repo_name}',
             repoUrl: 'https://forge.softwareheritage.org/',
           ],
         ])

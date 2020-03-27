@@ -1,4 +1,4 @@
-def repo_name = '{display-name}'
+def repo_name = '{repo_name}'
 
 def changelog_distribution
 

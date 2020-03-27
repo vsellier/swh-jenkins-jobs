@@ -1,6 +1,6 @@
 def upstream_tag = params.GIT_TAG
 def version = upstream_tag.substring(1)
-def repo_name = '{display-name}'
+def repo_name = '{repo_name}'
 def python_module = repo_name.replace('-', '.')
 
 def full_environ

@@ -21,7 +21,7 @@
           default: "{default-tox-environment}"
     scm:
       - git:
-          url: https://forge.softwareheritage.org/source/{display-name}.git
+          url: https://forge.softwareheritage.org/source/{repo_name}.git
           branches:
             - origin/master
 

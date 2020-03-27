@@ -42,7 +42,7 @@
           description: ID of the Diff patch to apply, if any
     scm:
       - git:
-          url: https://forge.softwareheritage.org/source/{display-name}.git
+          url: https://forge.softwareheritage.org/source/{repo_name}.git
           branches:
             - origin/master
 

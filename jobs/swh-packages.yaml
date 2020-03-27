@@ -14,6 +14,7 @@
 - project:
     name: DCORE
     display-name: swh-core
+    repo_name: swh-core
     pkg: core
     jobs:
       - 'swh-jobs-{name}'
@@ -21,6 +22,7 @@
 - project:
     name: DDEP
     display-name: swh-deposit
+    repo_name: swh-deposit
     pkg: deposit
     jobs:
       - 'swh-jobs-{name}'
@@ -28,6 +30,7 @@
 - project:
     name: DGRPH
     display-name: swh-graph
+    repo_name: swh-graph
     pkg: graph
     jobs:
       - 'swh-jobs-{name}'
@@ -35,6 +38,7 @@
 - project:
     name: DCIDX
     display-name: swh-indexer
+    repo_name: swh-indexer
     pkg: indexer
     jobs:
       - 'swh-jobs-{name}'
@@ -42,6 +46,7 @@
 - project:
     name: DICP
     display-name: swh-icinga-plugins
+    repo_name: swh-icinga-plugins
     pkg: icinga-plugins
     jobs:
       - 'swh-jobs-{name}'
@@ -49,6 +54,7 @@
 - project:
     name: DJNL
     display-name: swh-journal
+    repo_name: swh-journal
     docker_image: kafka
     pkg: journal
     jobs:
@@ -57,6 +63,7 @@
 - project:
     name: DLS
     display-name: swh-lister
+    repo_name: swh-lister
     pkg: lister
     jobs:
       - 'swh-jobs-{name}'
@@ -64,6 +71,7 @@
 - project:
     name: DLDBASE
     display-name: swh-loader-core
+    repo_name: swh-loader-core
     pkg: loader.core
     jobs:
       - 'swh-jobs-{name}'
@@ -71,6 +79,7 @@
 - project:
     name: DLDG
     display-name: swh-loader-git
+    repo_name: swh-loader-git
     pkg: loader.git
     jobs:
       - 'swh-jobs-{name}'
@@ -78,6 +87,7 @@
 - project:
     name: DLDHG
     display-name: swh-loader-mercurial
+    repo_name: swh-loader-mercurial
     pkg: loader.mercurial
     jobs:
       - 'swh-jobs-{name}'
@@ -85,6 +95,7 @@
 - project:
     name: DLDSVN
     display-name: swh-loader-svn
+    repo_name: swh-loader-svn
     pkg: loader.svn
     jobs:
       - 'swh-jobs-{name}'
@@ -92,6 +103,7 @@
 - project:
     name: DMOD
     display-name: swh-model
+    repo_name: swh-model
     pkg: model
     jobs:
       - 'swh-jobs-{name}'
@@ -99,6 +111,7 @@
 - project:
     name: DOBJS
     display-name: swh-objstorage
+    repo_name: swh-objstorage
     pkg: objstorage
     deb-extra-repositories: ceph
     jobs:
@@ -107,6 +120,7 @@
 - project:
     name: DSEA
     display-name: swh-search
+    repo_name: swh-search
     pkg: search
     deb-extra-repositories: elasticsearch
     jobs:
@@ -115,6 +129,7 @@
 - project:
     name: TSBX
     display-name: swh-sandbox
+    repo_name: swh-sandbox
     pkg: sandbox
     incoming-tag-auto-pypi-host: test.pypi.org
     jobs:
@@ -127,6 +142,7 @@
 - project:
     name: DTSCN
     display-name: swh-scanner
+    repo_name: swh-scanner
     pkg: scanner
     jobs:
       - 'swh-jobs-{name}'
@@ -134,6 +150,7 @@
 - project:
     name: DSCH
     display-name: swh-scheduler
+    repo_name: swh-scheduler
     pkg: scheduler
     jobs:
       - 'swh-jobs-{name}'
@@ -141,6 +158,7 @@
 - project:
     name: DSTO
     display-name: swh-storage
+    repo_name: swh-storage
     pkg: storage
     deb-extra-repositories: cassandra
     jobs:
@@ -149,6 +167,7 @@
 - project:
     name: DVAU
     display-name: swh-vault
+    repo_name: swh-vault
     pkg: vault
     jobs:
       - 'swh-jobs-{name}'
@@ -156,6 +175,7 @@
 - project:
     name: DWAPPS
     display-name: swh-web
+    repo_name: swh-web
     pkg: web
     jobs:
       - 'swh-jobs-{name}'
@@ -165,6 +185,7 @@
 - project:
     name: DWCLI
     display-name: swh-web-client
+    repo_name: swh-web-client
     pkg: web-client
     jobs:
       - 'swh-jobs-{name}'
