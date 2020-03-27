@@ -13,10 +13,10 @@
           sortMode: DESCENDING_SMART
           selectedValue: TOP
     dsl:
-      !include-raw: incoming-tag.groovy
+      !include-jinja2: incoming-tag.groovy.j2
 
 - job-template:
     name: "debian/deps/{name}/incoming-tag"
     dsl:
-      !include-raw: dependency-incoming-tag.groovy
+      !include-jinja2: dependency-incoming-tag.groovy.j2
     <<: *incoming_tag
