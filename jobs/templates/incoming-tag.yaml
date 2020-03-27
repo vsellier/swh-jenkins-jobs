@@ -3,7 +3,7 @@
     display-name: Incoming tag
     project-type: pipeline
     auth-token: 'ph4br1cat0r'
-    incoming-tag-auto-pypi-host: pypi.org
+    incoming_tag_auto_pypi_host: pypi.org
     sandbox: true
     parameters:
       - git-parameter:

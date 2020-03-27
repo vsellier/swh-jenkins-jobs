@@ -131,7 +131,7 @@
     display-name: swh-sandbox
     repo_name: swh-sandbox
     pkg: sandbox
-    incoming-tag-auto-pypi-host: test.pypi.org
+    incoming_tag_auto_pypi_host: test.pypi.org
     jobs:
       - "{name}"
       - "{name}/incoming-tag"

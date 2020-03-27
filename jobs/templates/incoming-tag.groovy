@@ -30,7 +30,7 @@ pipeline {{
           job: '/{name}/pypi-upload',
           parameters: [
             string(name: 'GIT_TAG', value: params.GIT_TAG),
-            string(name: 'PYPI_HOST', value: '{incoming-tag-auto-pypi-host}'),
+            string(name: 'PYPI_HOST', value: '{incoming_tag_auto_pypi_host}'),
           ],
         )
       }}
