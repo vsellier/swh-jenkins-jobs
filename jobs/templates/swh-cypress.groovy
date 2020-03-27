@@ -3,6 +3,7 @@ pipeline {{
   agent {{
     docker {{
       image 'swh-jenkins/{docker-image}'
+      args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
     }}
   }}
 
