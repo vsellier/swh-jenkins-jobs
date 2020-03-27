@@ -26,5 +26,5 @@
           default: "{default-tox-environment}"
 
     dsl:
-      !include-raw: swh-pipeline.groovy
+      !include-jinja2: swh-pipeline.groovy.j2
 

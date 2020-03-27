@@ -1,51 +1,51 @@
-pipeline {{
-  agent {{
-    docker {{
-      image 'swh-jenkins/{docker_image}'
+pipeline {
+  agent {
+    docker {
+      image 'swh-jenkins/{{docker_image}}'
       args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
-    }}
-  }}
+    }
+  }
 
-  environment {{
+  environment {
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
-  }}
+  }
 
-  stages {{
-    stage('Checkout') {{
-      steps {{
+  stages {
+    stage('Checkout') {
+      steps {
           withCredentials([
             string(credentialsId: 'swh-public-ci',
-                    variable: 'PHAB_CONDUIT_TOKEN')]) {{
+                    variable: 'PHAB_CONDUIT_TOKEN')]) {
             sh '''
             if [ -n "$PHID" ]; then
-              echo "{{
+              echo "{
                 \\\"buildTargetPHID\\\": \\\"$PHID\\\",
                 \\\"artifactKey\\\": \\\"link.jenkins\\\",
                 \\\"artifactType\\\": \\\"uri\\\",
-                \\\"artifactData\\\": {{
+                \\\"artifactData\\\": {
                   \\\"uri\\\": \\\"$BUILD_URL\\\",
                   \\\"name\\\": \\\"Jenkins\\\",
                   \\\"ui.external\\\": true
-                }}
-              }}" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
+                }
+              }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
               python3 -m pyarcanist send-message work $PHID
             fi
             '''
-          }}
+          }
           checkout([$class: 'GitSCM',
-                    branches: [[name: "${{params.REVISION}}"]],
+                    branches: [[name: "${params.REVISION}"]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [],
                     gitTool: 'Default',
                     submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{repo_name}.git']],
-                    browser: [$class: 'Phabricator', repoUrl: 'https://forge.softwareheritage.org', repo: '{name}']
+                    userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{{repo_name}}.git']],
+                    browser: [$class: 'Phabricator', repoUrl: 'https://forge.softwareheritage.org', repo: '{{name}}']
                   ])
-      }}
-    }}
+      }
+    }
 
-    stage('Static analysis') {{
-      steps {{
+    stage('Static analysis') {
+      steps {
         echo 'flake8'
         sh '''python3 -m tox -e flake8'''
 
@@ -61,23 +61,23 @@ pipeline {{
         python3 -m radon hal --json swh/ > reports/hal_report.json
         python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
         '''
-      }}
-    }} // static analysis
+      }
+    } // static analysis
 
-    stage('Unit tests') {{
-      options {{
+    stage('Unit tests') {
+      options {
         timeout(time: 20, unit: 'MINUTES')
-      }}
-      steps {{
+      }
+      steps {
         sh '''
         python3 -m tox -e $TOX_ENVIRONMENT -- \
           --cov-report=xml \
           --junit-xml=test-results.xml \
           -v
         '''
-        }}
-      post {{
-        always {{
+        }
+      post {
+        always {
           step([$class: 'CoberturaPublisher',
                 autoUpdateHealth: false,
                 autoUpdateStability: false,
@@ -96,21 +96,21 @@ pipeline {{
           // disabled for now, requires the plugin Warning v5 (still in RC)
           //recordIssues enabledForFailure: true,
           //    tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
-        }}
-      }} // post
-    }} // unit tests
-  }} // stages
+        }
+      } // post
+    } // unit tests
+  } // stages
 
-  post {{
-    always {{
+  post {
+    always {
       // Archive a few report files
       archiveArtifacts allowEmptyArchive: true,
                         artifacts: 'reports/*,*.xml,tox*.ini',
                         fingerprint: true
       withCredentials([
             string(credentialsId: 'swh-public-ci',
-                  variable: 'PHAB_CONDUIT_TOKEN')]) {{
-            withEnv(["JOBSTATUS=${{currentBuild.currentResult}}"]) {{
+                  variable: 'PHAB_CONDUIT_TOKEN')]) {
+            withEnv(["JOBSTATUS=${currentBuild.currentResult}"]) {
               sh '''
               if [ "$JOBSTATUS" = "SUCCESS" ]; then
                 MSGTYPE=pass
@@ -122,8 +122,8 @@ pipeline {{
                 python3 -m pyarcanist send-message $MSGTYPE $PHID
               fi
               '''
-            }} // withEnv
-      }} // withCredentials
-    }} // always
-  }} // post
-}} // pipeline
+            } // withEnv
+      } // withCredentials
+    } // always
+  } // post
+} // pipeline
