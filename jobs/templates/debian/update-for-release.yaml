@@ -13,5 +13,5 @@
           description: Don't push the resulting changes to a Debian branch
           default: false
     dsl:
-      !include-raw: update-for-release.groovy
+      !include-jinja2: update-for-release.groovy.j2
 
