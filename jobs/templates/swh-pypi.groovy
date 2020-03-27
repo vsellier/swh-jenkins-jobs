@@ -14,7 +14,7 @@ switch (params.PYPI_HOST) {{
 pipeline {{
   agent {{
     docker {{
-      image 'swh-jenkins/{docker-image}'
+      image 'swh-jenkins/{docker_image}'
       args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
     }}
   }}

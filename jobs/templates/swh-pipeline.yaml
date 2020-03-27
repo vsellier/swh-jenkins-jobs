@@ -2,7 +2,7 @@
     name: "{name}/tests"
     display-name: "master branch"
     project-type: pipeline
-    docker-image: tox
+    docker_image: tox
     default-tox-environment: py3
     triggers:
       - timed: '@daily'
