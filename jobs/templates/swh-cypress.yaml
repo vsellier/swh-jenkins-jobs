@@ -21,7 +21,7 @@
           description: PHID of the Phabricator target object on which results will be reported.
 
     dsl:
-      !include-raw: swh-cypress.groovy
+      !include-jinja2: swh-cypress.groovy.j2
 
 
 - job-template:
