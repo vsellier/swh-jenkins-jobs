@@ -1,6 +1,6 @@
 - job-template:
     name: '{name}/tox'
-    display-name: 'Phab. Diff'
+    display-name: 'Phab. Diff (legacy)'
     docker_image: tox
     node: "swh-{docker_image}"
     default-tox-environment: py3
