@@ -13,36 +13,120 @@ pipeline {
   stages {
     stage('Checkout') {
       steps {
-          withCredentials([
-            string(credentialsId: 'swh-public-ci',
-                    variable: 'PHAB_CONDUIT_TOKEN')]) {
-            sh '''
+        withCredentials([
+          string(credentialsId: 'swh-public-ci',
+                 variable: 'PHAB_CONDUIT_TOKEN')]) {
+          sh '''
             if [ -n "$PHID" ]; then
               echo "{
                 \\\"buildTargetPHID\\\": \\\"$PHID\\\",
-                \\\"artifactKey\\\": \\\"link.jenkins\\\",
+                \\\"artifactKey\\\": \\\"jenkins.uri\\\",
                 \\\"artifactType\\\": \\\"uri\\\",
                 \\\"artifactData\\\": {
-                  \\\"uri\\\": \\\"$BUILD_URL\\\",
+                  \\\"uri\\\": \\\"${BUILD_URL}\\\",
                   \\\"name\\\": \\\"Jenkins\\\",
+                  \\\"ui.external\\\": true
+                }
+              }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
+              echo "{
+                \\\"buildTargetPHID\\\": \\\"$PHID\\\",
+                \\\"artifactKey\\\": \\\"jenkins.console.uri\\\",
+                \\\"artifactType\\\": \\\"uri\\\",
+                \\\"artifactData\\\": {
+                  \\\"uri\\\": \\\"${BUILD_URL}console\\\",
+                  \\\"name\\\": \\\"Jenkins console\\\",
                   \\\"ui.external\\\": true
                 }
               }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
               python3 -m pyarcanist send-message work $PHID
             fi
             '''
-          }
-          checkout([$class: 'GitSCM',
-                    branches: [[name: "${params.REVISION}"]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [],
-                    gitTool: 'Default',
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{{repo_name}}.git']],
-                    browser: [$class: 'Phabricator', repoUrl: 'https://forge.softwareheritage.org', repo: '{{name}}']
-                  ])
+        }
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: "${params.REVISION}"]],
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [],
+          gitTool: 'Default',
+          submoduleCfg: [],
+          userRemoteConfigs: [
+            [url: 'https://forge.softwareheritage.org/source/{{repo_name}}.git'],
+          ],
+          browser: [$class: 'Phabricator', repoUrl: 'https://forge.softwareheritage.org', repo: '{{name}}']
+        ])
       }
     }
+
+    {%- if phabricator_diff %}
+    stage('Apply phabricator diff') {
+      steps {
+        script {
+          comment = sh(
+            script: '''
+            #!/bin/bash
+            set -e
+
+            ORIGINAL_TAG=base-revision-${BUILD_NUMBER}-D${REV_ID}
+            ORIGINAL_COMMIT=$(git rev-parse --short=10 HEAD)
+            echo "==== Patch application report for D${REV_ID} (id=${DIFF_ID}) ===="
+            echo
+            git tag -f ${ORIGINAL_TAG} >/dev/null
+            git fetch -n ${STAGING_URI} +refs/tags/phabricator/diff/${DIFF_ID}:diff-target +refs/tags/phabricator/base/${DIFF_ID}:diff-base >/dev/null
+            rebased=0
+            if git merge-base --is-ancestor diff-base HEAD; then
+                echo "**Rebasing** onto ${ORIGINAL_COMMIT}..."
+                echo
+                echo '```'
+                git rebase --onto ${ORIGINAL_TAG} diff-base diff-target && rebased=1 || rebase_exit=$?
+                echo '```'
+                if [ $rebased -eq 0 ]; then
+                    echo
+                    echo "Rebase failed (ret=${rebase_exit})!"
+                    echo
+                    echo '```'
+                    git rebase --abort || true
+                    echo '```'
+                fi
+            fi
+
+            merged=0
+            if [ $rebased -eq 0 ]; then
+                echo "Could not rebase; Attempt **merge** onto ${ORIGINAL_COMMIT}..."
+                echo
+                echo '```'
+                git merge --no-edit diff-target && merged=1 || merge_exit=$?
+                echo '```'
+                if [ $merged -eq 0 ]; then
+                    echo
+                    echo "Merge failed (ret=${merge_exit})!"
+                    echo
+                fi
+            fi
+
+            if [ $merged -eq 1 -o $rebased -eq 1 ]; then
+                echo
+                echo "===== Changes applied before test ====="
+                echo
+                echo '```'
+                git log ${ORIGINAL_TAG}..
+                echo '```'
+            else
+                echo '**Attempts to apply the diff failed!**'
+                exit 1
+            fi
+            ''',
+            label: 'Apply patch',
+            returnStdout: true,
+          )
+
+          writeFile(
+            file: '.phabricator-comment',
+            text: comment,
+          )
+        }
+      }
+    }
+    {%- endif %}
 
     stage('Static analysis') {
       steps {
@@ -89,13 +173,20 @@ pipeline {
                 onlyStable: false,
                 sourceEncoding: 'ASCII',
                 zoomCoverageChart: false])
-          // JUnit report
-          junit allowEmptyResults: true,
-                testResults: 'test-results.xml'
 
-          // disabled for now, requires the plugin Warning v5 (still in RC)
-          //recordIssues enabledForFailure: true,
-          //    tools: [[pattern: '**/reports/cc_report.xml', tool: [$class: 'Ccm']]]
+          // JUnit report
+          junit(
+            allowEmptyResults: true,
+            testResults: 'test-results.xml',
+          )
+
+          // Warnings NG
+          recordIssues(
+            enabledForFailure: true,
+            tools: [
+              ccm(pattern: '**/reports/cc_report.xml'),
+            ],
+          )
         }
       } // post
     } // unit tests
@@ -105,25 +196,19 @@ pipeline {
     always {
       // Archive a few report files
       archiveArtifacts allowEmptyArchive: true,
-                        artifacts: 'reports/*,*.xml,tox*.ini',
-                        fingerprint: true
-      withCredentials([
-            string(credentialsId: 'swh-public-ci',
-                  variable: 'PHAB_CONDUIT_TOKEN')]) {
-            withEnv(["JOBSTATUS=${currentBuild.currentResult}"]) {
-              sh '''
-              if [ "$JOBSTATUS" = "SUCCESS" ]; then
-                MSGTYPE=pass
-              else
-                MSGTYPE=fail
-              fi
-              echo "Current job status is $JOBSTATUS -> $MGSTYPE"
-              if [ -n "$PHID" ]; then
-                python3 -m pyarcanist send-message $MSGTYPE $PHID
-              fi
-              '''
-            } // withEnv
-      } // withCredentials
+                       artifacts: 'reports/*,*.xml,tox*.ini',
+                       fingerprint: true
+
+      step([$class: 'PhabricatorNotifier',
+            commentOnSuccess: true,
+            commentWithConsoleLinkOnFailure: true,
+            commentFile: '.phabricator-comment',
+            commentSize: '1000000',
+            preserveFormatting: true,
+            processLint: true,
+            lintFile: '.phabricator-lint',
+            lintFileSize: '1000000',
+      ])
     } // always
   } // post
 } // pipeline

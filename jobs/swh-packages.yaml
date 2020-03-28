@@ -5,6 +5,7 @@
       - "{name}/incoming-tag"
       - "{name}/pypi-upload"
       - "{name}/tests"
+      - '{name}/tests-on-diff'
       - "{name}/tox"
       - "debian/packages/{name}"
       - "debian/packages/{name}/update-for-release"
@@ -137,6 +138,7 @@
       - "{name}/incoming-tag"
       - "{name}/pypi-upload"
       - "{name}/tests"
+      - '{name}/tests-on-diff'
       - "{name}/tox"
 
 - project:

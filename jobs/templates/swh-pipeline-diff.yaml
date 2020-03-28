@@ -1,6 +1,6 @@
 - job-template:
-    name: "{name}/tests"
-    display-name: "master branch"
+    name: "{name}/tests-on-diff"
+    display-name: Phab. Diff
     project-type: pipeline
     docker_image: tox
     default-tox-environment: py3
@@ -8,10 +8,7 @@
       - timed: '@daily'
     sandbox: true
     auth-token: 'ph4br1cat0r'
-    properties:
-      - build-discarder:
-          num-to-keep: 20
-    phabricator_diff: false
+    phabricator_diff: true
     parameters:
       - git-parameter:
           name: REVISION
@@ -21,6 +18,15 @@
       - string:
           name: PHID
           description: PHID of the Phabricator target object on which results will be reported.
+      - string:
+          name: DIFF_ID
+          description: ID of the Diff patch to apply, if any
+      - string:
+          name: REV_ID
+          description: ID of the Phabricator revision, if any
+      - string:
+          name: STAGING_URI
+          description: URI of the staging repository
       - string:
           name: TOX_ENVIRONMENT
           description: tox environment to use for the main tox run
