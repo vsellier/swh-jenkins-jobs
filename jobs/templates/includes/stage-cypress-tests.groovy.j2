@@ -33,18 +33,13 @@ stage('Cypress tests') {
             allowEmptyResults: true,
             testResults: 'cypress/junit/results/*.xml',
           )
-        }
-      }
-    }
 
-    stage ('Mochawesome') {
-      steps {
-        warnError('Mochawesome report failed') {
-          sh '''yarn run mochawesome'''
-        }
-      }
-      post {
-        success {
+          sh '''
+            yarn run mochawesome || true
+            npx nyc report --reporter=lcov || true
+            npx nyc report --reporter=cobertura || true
+          '''
+
           publishHTML (target: [
             allowMissing: true,
             alwaysLinkToLastBuild: false,
@@ -54,18 +49,7 @@ stage('Cypress tests') {
             includes: 'assets/**/*',
             reportName: "Mochawesome Tests Report"
           ])
-        }
-      }
-    }
-    stage ('Coverage report') {
-      steps {
-        warnError('Coverage report failed') {
-          sh '''npx nyc report --reporter=lcov'''
-          sh '''npx nyc report --reporter=cobertura'''
-        }
-      }
-      post {
-        success {
+
           publishHTML (target: [
             allowMissing: true,
             alwaysLinkToLastBuild: false,
