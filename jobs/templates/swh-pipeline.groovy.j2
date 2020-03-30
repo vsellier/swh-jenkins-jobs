@@ -32,74 +32,9 @@ pipeline {
     }
 
     {%- if phabricator_diff %}
-    stage('Apply phabricator diff') {
-      steps {
-        script {
-          comment = sh(
-            script: '''
-            #!/bin/bash
-            set -e
-
-            ORIGINAL_TAG=base-revision-${BUILD_NUMBER}-D${REV_ID}
-            ORIGINAL_COMMIT=$(git rev-parse --short=10 HEAD)
-            echo "==== Patch application report for D${REV_ID} (id=${DIFF_ID}) ===="
-            echo
-            git tag -f ${ORIGINAL_TAG} >/dev/null
-            git fetch -n ${STAGING_URI} +refs/tags/phabricator/diff/${DIFF_ID}:diff-target +refs/tags/phabricator/base/${DIFF_ID}:diff-base >/dev/null
-            rebased=0
-            if git merge-base --is-ancestor diff-base HEAD; then
-                echo "**Rebasing** onto ${ORIGINAL_COMMIT}..."
-                echo
-                echo '```'
-                git rebase --onto ${ORIGINAL_TAG} diff-base diff-target && rebased=1 || rebase_exit=$?
-                echo '```'
-                if [ $rebased -eq 0 ]; then
-                    echo
-                    echo "Rebase failed (ret=${rebase_exit})!"
-                    echo
-                    echo '```'
-                    git rebase --abort || true
-                    echo '```'
-                fi
-            fi
-
-            merged=0
-            if [ $rebased -eq 0 ]; then
-                echo "Could not rebase; Attempt **merge** onto ${ORIGINAL_COMMIT}..."
-                echo
-                echo '```'
-                git merge --no-edit diff-target && merged=1 || merge_exit=$?
-                echo '```'
-                if [ $merged -eq 0 ]; then
-                    echo
-                    echo "Merge failed (ret=${merge_exit})!"
-                    echo
-                fi
-            fi
-
-            if [ $merged -eq 1 -o $rebased -eq 1 ]; then
-                echo
-                echo "===== Changes applied before test ====="
-                echo
-                echo '```'
-                git log ${ORIGINAL_TAG}..
-                echo '```'
-            else
-                echo '**Attempts to apply the diff failed!**'
-                exit 1
-            fi
-            ''',
-            label: 'Apply patch',
-            returnStdout: true,
-          )
-
-          writeFile(
-            file: '.phabricator-comment',
-            text: comment,
-          )
-        }
-      }
-    }
+    {% filter indent(width=4) %}
+      {%- include 'includes/stage-apply-phabricator-diff.groovy.j2' -%}
+    {% endfilter %}
     {%- endif %}
 
     stage('Cleanup') {
