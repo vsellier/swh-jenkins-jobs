@@ -1,0 +1,7 @@
+agent {
+  docker {
+    reuseNode true
+    image 'swh-jenkins/{{cypress_docker_image}}'
+    args '--ipc=host --shm-size 1024M --tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
+  }
+}

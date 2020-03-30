@@ -1,52 +1,72 @@
-stage('Setup environment') {
-  agent {
-    docker {
-      image 'swh-jenkins/{{cypress_docker_image}}'
-      args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
+stage('Cypress tests') {
+  {% filter indent(width=2) %}
+    {%- include 'includes/agent-docker-cypress.groovy.j2' -%}
+  {% endfilter %}
+
+  stages {
+    stage ('Setup cypress environment') {
+      steps {
+        sh '''#!/bin/bash
+          set -e
+          python3 -m pip install --user -e .[testing]
+          yarn install && yarn build-test && yarn run cypress install
+        '''
+      }
     }
-  }
 
-  steps {
-    echo 'Setup cypress environment'
+    stage ('Run cypress tests') {
+      steps {
+        sh '''#!/bin/bash
+          set -e
+          export PYTHONPATH=$PWD
+          python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
+          python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
+          cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
+          python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
+          wait-for-it localhost:5004
+          yarn run cypress run
+        '''
+      }
+    }
 
-    sh '''#!/bin/bash
-    python3 -m pip install --user -e .[testing]
-    yarn install && yarn build-test && yarn run cypress install
-    '''
-
-    echo 'Run cypress tests'
-    sh '''#!/bin/bash
-    set -e
-    export PYTHONPATH=$PWD
-    python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
-    python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
-    cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
-    python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
-    wait-for-it localhost:5004
-    yarn run cypress run
-    yarn run mochawesome
-    yarn run nyc-report
-    '''
-  }
-
-  post {
-    always {
-      publishHTML (target: [
-        allowMissing: true,
-        alwaysLinkToLastBuild: false,
-        keepAll: true,
-        reportDir: 'cypress/mochawesome/report',
-        reportFiles: 'mochawesome.html',
-        reportName: "Mochawesome Tests Report"
-      ])
-      publishHTML (target: [
-        allowMissing: true,
-        alwaysLinkToLastBuild: false,
-        keepAll: true,
-        reportDir: 'cypress/coverage/lcov-report',
-        reportFiles: 'index.html',
-        reportName: "Istanbul Code Coverage"
-      ])
+    stage ('Mochawesome') {
+      steps {
+        warnError('Mochawesome report failed') {
+          sh '''yarn run mochawesome'''
+        }
+      }
+      post {
+        success {
+          publishHTML (target: [
+            allowMissing: true,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'cypress/mochawesome/report',
+            reportFiles: 'mochawesome.html',
+            includes: 'assets/**/*',
+            reportName: "Mochawesome Tests Report"
+          ])
+        }
+      }
+    }
+    stage ('Coverage report') {
+      steps {
+        warnError('Coverage report failed') {
+          sh '''yarn run nyc-report'''
+        }
+      }
+      post {
+        success {
+          publishHTML (target: [
+            allowMissing: true,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'cypress/coverage/lcov-report',
+            reportFiles: 'index.html',
+            reportName: "Istanbul Code Coverage"
+          ])
+        }
+      }
     }
   }
 }
