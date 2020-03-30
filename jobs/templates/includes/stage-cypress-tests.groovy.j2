@@ -27,6 +27,14 @@ stage('Cypress tests') {
           yarn run cypress run
         '''
       }
+      post {
+        always {
+          junit(
+            allowEmptyResults: true,
+            testResults: 'cypress/junit/results/*.xml',
+          )
+        }
+      }
     }
 
     stage ('Mochawesome') {
@@ -52,7 +60,8 @@ stage('Cypress tests') {
     stage ('Coverage report') {
       steps {
         warnError('Coverage report failed') {
-          sh '''yarn run nyc-report'''
+          sh '''npx nyc report --reporter=lcov'''
+          sh '''npx nyc report --reporter=cobertura'''
         }
       }
       post {
@@ -65,6 +74,13 @@ stage('Cypress tests') {
             reportFiles: 'index.html',
             reportName: "Istanbul Code Coverage"
           ])
+
+          publishCoverage(
+            adapters: [
+              coberturaAdapter(path: 'cypress/coverage/cobertura-coverage.xml'),
+            ],
+            tag: 'cypress',
+          )
         }
       }
     }
