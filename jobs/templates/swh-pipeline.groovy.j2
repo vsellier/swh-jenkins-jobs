@@ -79,12 +79,6 @@ pipeline {
           }
         }
       }
-      steps {
-        echo 'flake8'
-
-        echo 'mypy'
-
-        echo 'radon';
     } // static analysis
 
     stage('Tests') {
