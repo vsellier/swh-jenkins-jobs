@@ -1,7 +1,4 @@
-stage('Unit tests') {
-  options {
-    timeout(time: 20, unit: 'MINUTES')
-  }
+stage('Python tests') {
   steps {
     sh '''
     python3 -m tox -e $TOX_ENVIRONMENT -- \

@@ -73,6 +73,10 @@ pipeline {
     } // static analysis
 
     stage('Tests') {
+      options {
+        timeout(time: 20, unit: 'MINUTES')
+      }
+
       parallel {
         {% filter indent(width=8) %}
           {%- include 'includes/stage-python-tests.groovy.j2' -%}
