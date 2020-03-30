@@ -63,6 +63,17 @@ pipeline {
         python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
         '''
       }
+      post {
+        always {
+          // Warnings NG
+          recordIssues(
+            enabledForFailure: true,
+            tools: [
+              ccm(pattern: '**/reports/cc_report.xml'),
+            ],
+          )
+        }
+      }
     } // static analysis
 
     stage('Unit tests') {
@@ -95,14 +106,6 @@ pipeline {
           junit(
             allowEmptyResults: true,
             testResults: 'test-results.xml',
-          )
-
-          // Warnings NG
-          recordIssues(
-            enabledForFailure: true,
-            tools: [
-              ccm(pattern: '**/reports/cc_report.xml'),
-            ],
           )
         }
       } // post
