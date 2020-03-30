@@ -1,0 +1,52 @@
+stage('Setup environment') {
+  agent {
+    docker {
+      image 'swh-jenkins/{{cypress_docker_image}}'
+      args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
+    }
+  }
+
+  steps {
+    echo 'Setup cypress environment'
+
+    sh '''#!/bin/bash
+    python3 -m pip install --user -e .[testing]
+    yarn install && yarn build-test && yarn run cypress install
+    '''
+
+    echo 'Run cypress tests'
+    sh '''#!/bin/bash
+    set -e
+    export PYTHONPATH=$PWD
+    python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
+    python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
+    cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
+    python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
+    wait-for-it localhost:5004
+    yarn run cypress run
+    yarn run mochawesome
+    yarn run nyc-report
+    '''
+  }
+
+  post {
+    always {
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'cypress/mochawesome/report',
+        reportFiles: 'mochawesome.html',
+        reportName: "Mochawesome Tests Report"
+      ])
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'cypress/coverage/lcov-report',
+        reportFiles: 'index.html',
+        reportName: "Istanbul Code Coverage"
+      ])
+    }
+  }
+}

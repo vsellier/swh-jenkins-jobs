@@ -3,10 +3,12 @@
     display-name: Phab. Diff
     project-type: pipeline
     docker_image: tox
+    cypress_docker_image: cypress
     default-tox-environment: py3
     sandbox: true
     auth-token: 'ph4br1cat0r'
     phabricator_diff: true
+    do_cypress: false
     parameters:
       - git-parameter:
           name: REVISION

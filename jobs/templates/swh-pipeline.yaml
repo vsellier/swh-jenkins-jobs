@@ -3,6 +3,7 @@
     display-name: "master branch"
     project-type: pipeline
     docker_image: tox
+    cypress_docker_image: cypress
     default-tox-environment: py3
     triggers:
       - timed: '@daily'
@@ -12,6 +13,7 @@
       - build-discarder:
           num-to-keep: 20
     phabricator_diff: false
+    do_cypress: false
     parameters:
       - git-parameter:
           name: REVISION

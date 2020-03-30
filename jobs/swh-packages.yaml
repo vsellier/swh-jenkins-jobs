@@ -179,6 +179,7 @@
     display-name: swh-web
     repo_name: swh-web
     pkg: web
+    do_cypress: true
     jobs:
       - 'swh-jobs-{name}'
       - '{name}/cypress'
