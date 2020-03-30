@@ -54,6 +54,13 @@ pipeline {
       }
       post {
         always {
+          // Archive a few report files
+          archiveArtifacts(
+            allowEmptyArchive: true,
+            artifacts: 'reports/*',
+            fingerprint: true,
+          )
+
           // Warnings NG
           recordIssues(
             enabledForFailure: true,
@@ -82,11 +89,6 @@ pipeline {
 
   post {
     always {
-      // Archive a few report files
-      archiveArtifacts allowEmptyArchive: true,
-                       artifacts: 'reports/*,*.xml,tox*.ini',
-                       fingerprint: true
-
       step([$class: 'PhabricatorNotifier',
             commentOnSuccess: true,
             commentWithConsoleLinkOnFailure: true,

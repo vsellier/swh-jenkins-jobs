@@ -12,6 +12,12 @@ stage('Unit tests') {
   }
   post {
     always {
+      archiveArtifacts(
+        allowEmptyArchive: true,
+        artifacts: '*.xml',
+        fingerprint: true,
+      )
+
       publishCoverage(
         adapters: [
           coberturaAdapter(path: 'coverage.xml'),
