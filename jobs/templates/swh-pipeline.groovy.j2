@@ -1,10 +1,7 @@
 pipeline {
-  agent {
-    docker {
-      image 'swh-jenkins/{{docker_image}}'
-      args '--tmpfs /tmp:exec --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
-    }
-  }
+  {% filter indent(width=2) %}
+    {%- include 'includes/agent-docker.groovy.j2' -%}
+  {% endfilter %}
 
   environment {
     PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
