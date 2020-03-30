@@ -20,8 +20,18 @@
           name: PHID
           description: PHID of the Phabricator target object on which results will be reported.
 
-    dsl:
-      !include-jinja2: swh-cypress.groovy.j2
+    dsl: |
+      pipeline {{
+        stages {{
+          stage ('Fail unconditionally') {{
+            steps {{
+              echo 'This job has been merged into {name}/tests; it is only kept for historical purposes'
+              sh 'exit 1'
+            }}
+          }}
+        }}
+      }}
+
 
 
 - job-template:
@@ -46,53 +56,7 @@
           branches:
             - origin/master
 
-    wrappers:
-      - phabricator-differential:
-          apply-to-master: true
-          patch-with-force-flag: true
-
-
     builders:
       - shell: |
-          echo "Run cypress for:"
-          echo "  REPO=$REPO"
-          echo "  PHID=$PHID"
-          echo "  DIFF_ID=$DIFF_ID"
-      - shell: |
-          #!/bin/bash
-          set -e
-          python3 -m pip install --user -e .[testing]
-          export CYPRESS_CACHE_FOLDER=/tmp/cypress_cache/
-          yarn install && yarn build-test && yarn run cypress install
-          export PYTHONPATH=$PWD
-          python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
-          python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
-          cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
-          python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
-          wait-for-it localhost:5004
-          yarn run cypress run
-          yarn run mochawesome
-          yarn run nyc-report
-
-    publishers:
-      - phabricator:
-          uberalls-enabled: false
-          comment-on-success: true
-          comment-with-console-link-on-failure: true
-          process-lint: true
-          lint-file: .phabricator-lint
-          lint-file-size: 1000000
-      - html-publisher:
-          name: 'Mochawesome Tests Report'
-          dir: 'cypress/mochawesome/report'
-          files: 'mochawesome.html'
-          keep-all: true
-          allow-missing: true
-          link-to-last-build: false
-      - html-publisher:
-          name: 'Istanbul Code Coverage'
-          dir: 'cypress/coverage/lcov-report'
-          files: 'index.html'
-          keep-all: true
-          allow-missing: true
-          link-to-last-build: false
+          echo "This job is only kept for historical purposes; please run {name}/tests-on-diff instead"
+          exit 1
