@@ -1,0 +1,29 @@
+withCredentials([
+  string(credentialsId: 'swh-public-ci',
+         variable: 'PHAB_CONDUIT_TOKEN')]) {
+  sh '''
+    if [ -n "$PHID" ]; then
+      echo "{
+        \\\"buildTargetPHID\\\": \\\"$PHID\\\",
+        \\\"artifactKey\\\": \\\"jenkins.uri\\\",
+        \\\"artifactType\\\": \\\"uri\\\",
+        \\\"artifactData\\\": {
+          \\\"uri\\\": \\\"${BUILD_URL}\\\",
+          \\\"name\\\": \\\"Jenkins\\\",
+          \\\"ui.external\\\": true
+        }
+      }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
+      echo "{
+        \\\"buildTargetPHID\\\": \\\"$PHID\\\",
+        \\\"artifactKey\\\": \\\"jenkins.console.uri\\\",
+        \\\"artifactType\\\": \\\"uri\\\",
+        \\\"artifactData\\\": {
+          \\\"uri\\\": \\\"${BUILD_URL}console\\\",
+          \\\"name\\\": \\\"Jenkins console\\\",
+          \\\"ui.external\\\": true
+        }
+      }" | arc call-conduit --conduit-uri $PHAB_CONDUIT_URL --conduit-token $PHAB_CONDUIT_TOKEN harbormaster.createartifact
+      python3 -m pyarcanist send-message work $PHID
+    fi
+    '''
+}
