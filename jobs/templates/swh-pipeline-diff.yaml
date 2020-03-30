@@ -4,8 +4,6 @@
     project-type: pipeline
     docker_image: tox
     default-tox-environment: py3
-    triggers:
-      - timed: '@daily'
     sandbox: true
     auth-token: 'ph4br1cat0r'
     phabricator_diff: true
