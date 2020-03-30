@@ -128,6 +128,14 @@ pipeline {
     }
     {%- endif %}
 
+    stage('Cleanup') {
+      steps {
+        {% filter indent(width=8) %}
+          {%- include 'includes/cleanup-workspace.groovy.j2' -%}
+        {% endfilter %}
+      }
+    }
+
     stage('Static analysis') {
       steps {
         echo 'flake8'
@@ -209,6 +217,9 @@ pipeline {
             lintFile: '.phabricator-lint',
             lintFileSize: '1000000',
       ])
+      {% filter indent(width=6) %}
+        {%- include 'includes/cleanup-workspace.groovy.j2' -%}
+      {% endfilter %}
     } // always
   } // post
 } // pipeline
