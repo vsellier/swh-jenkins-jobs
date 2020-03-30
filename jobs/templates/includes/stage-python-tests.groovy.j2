@@ -1,0 +1,34 @@
+stage('Unit tests') {
+  options {
+    timeout(time: 20, unit: 'MINUTES')
+  }
+  steps {
+    sh '''
+    python3 -m tox -e $TOX_ENVIRONMENT -- \
+      --cov-report=xml \
+      --junit-xml=test-results.xml \
+      -v
+    '''
+  }
+  post {
+    always {
+      step([$class: 'CoberturaPublisher',
+            autoUpdateHealth: false,
+            autoUpdateStability: false,
+            coberturaReportFile: 'coverage.xml',
+            failNoReports: false,
+            failUnhealthy: false,
+            failUnstable: false,
+            maxNumberOfBuilds: 10,
+            onlyStable: false,
+            sourceEncoding: 'ASCII',
+            zoomCoverageChart: false])
+
+      // JUnit report
+      junit(
+        allowEmptyResults: true,
+        testResults: 'test-results.xml',
+      )
+    }
+  } // post
+} // unit tests
