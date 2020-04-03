@@ -61,3 +61,11 @@
     pkg: python3-keycloak
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PATS
+    display-name: python3-attr-strict
+    repo_name: python3-attr-strict
+    pkg: python3-attr-strict
+    jobs:
+      - 'dependency-jobs-{name}'
