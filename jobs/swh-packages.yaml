@@ -119,6 +119,14 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DOBJSRPL
+    display-name: swh-objstorage-replayer
+    repo_name: swh-objstorage-replayer
+    pkg: objstorage.replayer
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DSEA
     display-name: swh-search
     repo_name: swh-search
@@ -192,4 +200,3 @@
     pkg: web-client
     jobs:
       - 'swh-jobs-{name}'
-
