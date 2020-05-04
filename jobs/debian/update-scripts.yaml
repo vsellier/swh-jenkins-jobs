@@ -16,3 +16,4 @@
     builders:
       - shell: chmod go+rX -R scripts/debian/
       - shell: rsync -az --delete scripts/debian/ /usr/share/jenkins/debian-scripts/
+      - shell: rsync -az --delete keyrings/ /usr/share/keyrings/extra-repositories/

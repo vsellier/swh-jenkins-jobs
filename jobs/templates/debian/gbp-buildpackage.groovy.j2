@@ -73,40 +73,6 @@ pipeline {
         }
       }
     }
-    stage('Write extra keys') {
-      when {
-        beforeAgent true
-        expression { changelog_distribution != 'UNRELEASED' }
-      }
-      steps {
-        dir('keys') {
-          writeFile(
-            file: 'ceph.asc',
-            text: '''{%- include 'keys/ceph.asc' -%}'''
-          )
-          // wget https://www.postgresql.org/media/keys/ACCC4CF8.asc
-          writeFile(
-            file: 'postgres.asc',
-            text: '''{%- include 'keys/postgres.asc' -%}'''
-          )
-          // wget https://artifacts.elastic.co/GPG-KEY-elasticsearch
-          writeFile(
-            file: 'elasticsearch.asc',
-            text: '''{%- include 'keys/elasticsearch.asc' -%}'''
-          )
-          // wget https://www.apache.org/dist/cassandra/KEYS
-          // splitted in 4 files as there is a limit of 65k for a string...
-          // (also, only runtime complains, not tox)
-          writeFile(
-            file: 'cassandra.asc',
-            text: '''{%- include 'keys/cassandra.1.asc' -%}''' +
-                  '''{%- include 'keys/cassandra.2.asc' -%}''' +
-                  '''{%- include 'keys/cassandra.3.asc' -%}''' +
-                  '''{%- include 'keys/cassandra.4.asc' -%}'''
-          )
-        }
-      }
-    }
     stage('Build package') {
       when {
         beforeAgent true
@@ -162,22 +128,22 @@ pipeline {
               else
                 ceph_distribution = base_distribution
               extra_repositories.add("deb https://download.ceph.com/debian-luminous/ ${ceph_distribution} main")
-              extra_repository_keys.add('../keys/ceph.asc')
+              extra_repository_keys.add('ceph.asc')
             }
 
             if ('pgdg' in wanted_extra_repositories && !(base_distribution in ['unstable', 'experimental'])) {
               extra_repositories.add("deb http://apt.postgresql.org/pub/repos/apt/ ${base_distribution}-pgdg main")
-              extra_repository_keys.add('../keys/postgres.asc')
+              extra_repository_keys.add('postgres.asc')
             }
 
             if ('elasticsearch' in wanted_extra_repositories) {
               extra_repositories.add("deb https://artifacts.elastic.co/packages/7.x/apt stable main")
-              extra_repository_keys.add('../keys/elasticsearch.asc')
+              extra_repository_keys.add('elasticsearch.asc')
             }
 
             if ('cassandra' in wanted_extra_repositories) {
               extra_repositories.add("deb http://www.apache.org/dist/cassandra/debian 40x main")
-              extra_repository_keys.add('../keys/cassandra.asc')
+              extra_repository_keys.add('cassandra.asc')
             }
 
             if (params.BUILD_DEP_RESOLVER) {
@@ -215,7 +181,7 @@ pipeline {
             }
 
             extra_repository_keys.each { key ->
-              gbp_buildpackage.add("--extra-repository-key='${key}'")
+              gbp_buildpackage.add("--extra-repository-key=/usr/share/keyrings/extra-repositories/${key}")
             }
 
             def gbp_buildpackage_cmd = gbp_buildpackage.join(' ')
