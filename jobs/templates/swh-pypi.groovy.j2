@@ -44,6 +44,7 @@ pipeline {
                   submoduleCfg: [],
                   userRemoteConfigs: [[url: 'https://forge.softwareheritage.org/source/{{repo_name}}.git']]
         ])
+        sh '''rm -rf dist/'''
       }
     }
 
