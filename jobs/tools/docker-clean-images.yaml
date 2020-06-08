@@ -1,21 +1,14 @@
 - job:
-    name: jenkins-tools/clean-docker-images
-    description: Clean old Docker images
+    name: jenkins-tools/clean-docker
+    description: Clean old Docker objects
     node: master
+
+    properties:
+      - build-discarder:
+          days-to-keep: 7
 
     triggers:
       - timed: "@midnight"
 
     builders:
-      - shell: docker image prune --filter 'label!=keep' --force
-
-- job:
-    name: jenkins-tools/clean-docker-volumes
-    description: Clean old Docker volumes
-    node: master
-
-    triggers:
-      - timed: "@midnight"
-
-    builders:
-      - shell: docker volume prune --filter 'label!=keep' --force
+      - shell: docker system prune --filter 'label!=keep' --force
