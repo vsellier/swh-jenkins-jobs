@@ -13,6 +13,9 @@
           wipe-workspace: false
     triggers:
       - timed: "H * * * *"
+    properties:
+      - build-discarder:
+          days-to-keep: 7
     builders:
       - shell: chmod go+rX -R scripts/debian/
       - shell: rsync -az --delete scripts/debian/ /usr/share/jenkins/debian-scripts/

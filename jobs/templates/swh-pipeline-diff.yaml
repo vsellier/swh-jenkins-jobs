@@ -9,6 +9,9 @@
     auth-token: 'ph4br1cat0r'
     phabricator_diff: true
     do_cypress: false
+    properties:
+      - build-discarder:
+          artifact-num-to-keep: 20
     parameters:
       - git-parameter:
           name: REVISION

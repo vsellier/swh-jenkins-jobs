@@ -5,6 +5,9 @@
     auth-token: 'ph4br1cat0r'
     incoming_tag_auto_pypi_host: pypi.org
     sandbox: true
+    properties:
+      - build-discarder:
+          num-to-keep: 20
     parameters:
       - git-parameter:
           name: GIT_TAG

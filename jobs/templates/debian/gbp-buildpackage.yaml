@@ -6,6 +6,9 @@
     deb-extra-repositories:
     deb-backport-on-success: unstable-swh>buster-swh
     project-type: pipeline
+    properties:
+      - build-discarder:
+          num-to-keep: 10
     parameters:
       - string:
           name: GIT_REVISION

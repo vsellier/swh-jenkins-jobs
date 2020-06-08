@@ -11,5 +11,8 @@
       - !include: axis-architecture.yaml.inc
     triggers:
       - timed: "H */6 * * *"
+    properties:
+      - build-discarder:
+          days-to-keep: 7
     builders:
       - shell: /usr/share/jenkins/debian-scripts/schroot-maintenance.sh

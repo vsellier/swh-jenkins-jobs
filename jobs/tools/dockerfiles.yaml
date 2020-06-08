@@ -9,8 +9,9 @@
       - pollscm:
           cron: "H/30 * * * *"
       - timed: '@daily'
-    build-discarder:
-      num-to-keep: 50
+    properties:
+      - build-discarder:
+          days-to-keep: 7
     wrappers:
       - timestamps
       - ansicolor

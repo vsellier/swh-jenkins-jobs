@@ -6,7 +6,7 @@
     sandbox: true
     properties:
       - build-discarder:
-          num-to-keep: 20
+          artifact-num-to-keep: 10
     parameters:
       - git-parameter:
           name: GIT_TAG
