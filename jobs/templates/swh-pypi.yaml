@@ -7,6 +7,8 @@
     properties:
       - build-discarder:
           artifact-num-to-keep: 10
+      - copyartifact:
+          projects: '*'
     parameters:
       - git-parameter:
           name: GIT_TAG
