@@ -24,7 +24,7 @@ stage('Cypress tests') {
           cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
           python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
           wait-for-it localhost:5004
-          yarn run cypress run
+          yarn run cypress run --config numTestsKeptInMemory=0
         '''
       }
       post {
