@@ -4,13 +4,9 @@
       Backport Debian package to the given release
     project-type: pipeline
     parameters:
-      - git-parameter:
+      - string:
           name: GIT_TAG
           description: git tag to backport
-          type: PT_TAG
-          sortMode: DESCENDING_SMART
-          selectedValue: TOP
-          tagFilter: debian/.*
       - choice:
           name: SOURCE
           description: check that the source branch corresponds to this before issuing the backport
@@ -20,13 +16,11 @@
             - bookworm-swh
             - bullseye-swh
             - buster-swh
-            - stretch-swh
           default: unstable-swh
       - choice:
           name: DESTINATION
           description: the destination branch the backport targets
           choices:
-            - stretch-swh
             - buster-swh
             - bullseye-swh
             - bookworm-swh
