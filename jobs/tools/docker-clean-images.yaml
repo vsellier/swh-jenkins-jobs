@@ -11,4 +11,4 @@
       - timed: "@midnight"
 
     builders:
-      - shell: docker system prune --filter 'label!=keep' --force
+      - shell: docker system prune --filter 'label!=keep' --volumes --force
