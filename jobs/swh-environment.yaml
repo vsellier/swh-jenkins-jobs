@@ -1,0 +1,60 @@
+- project:
+    name: DENV
+    display-name: swh-environment
+    jobs:
+      - "{name}"
+
+- job:
+    name: DENV/tests
+    description: Run tests for each swh module in development version
+    node: swh-sphinx
+
+    triggers:
+      - timed: "H */6 * * *"
+
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/swh-environment.git
+          branches:
+            - "*/master"
+
+    wrappers:
+      - timeout:
+          timeout: 30
+          abort: true
+      - timestamps
+
+    builders:
+      - shell: |
+          #!/bin/bash
+          # fetch swh repositories
+          mr -j 4 -t update
+          # setup a virtualenv
+          python3 -m venv .venv
+          . .venv/bin/activate
+          # install dependencies
+          pip install wheel pytest
+          pip install $(bin/pip-swh-packages --with-testing)
+          cd swh-graph
+          make java
+          cd ..
+          # abort when some tests fail
+          set -e
+          # execute tests in each swh module
+          for module in $(./bin/ls-py-modules)
+          do
+              cd $module
+              tests_dir=$(echo $module | sed 's/-/\//g')/tests
+              pytest_opts=
+              if [[ "$module" == "swh-storage" ]]
+              then
+                # to prevent hypothesis.errors.DeadlineExceeded
+                pytest_opts="--hypothesis-profile=fast"
+              fi
+              if [ -d "$tests_dir" ]
+              then
+                python3 -m pytest $pytest_opts $tests_dir
+              fi
+              cd ..
+          done
+
