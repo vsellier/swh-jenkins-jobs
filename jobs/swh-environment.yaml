@@ -45,16 +45,9 @@
           do
               cd $module
               tests_dir=$(echo $module | sed 's/-/\//g')/tests
-              pytest_opts=
-              if [[ "$module" == "swh-storage" ]]
-              then
-                # to prevent hypothesis.errors.DeadlineExceeded
-                pytest_opts="--hypothesis-profile=fast"
-              fi
               if [ -d "$tests_dir" ]
               then
-                python3 -m pytest $pytest_opts $tests_dir
+                python3 -m pytest $tests_dir
               fi
               cd ..
           done
-
