@@ -200,3 +200,11 @@
     pkg: web-client
     jobs:
       - 'swh-jobs-{name}'
+
+- project:
+    name: DFUSE
+    display-name: swh-fuse
+    repo_name: swh-fuse
+    pkg: fuse
+    jobs:
+      - 'swh-jobs-{name}'
