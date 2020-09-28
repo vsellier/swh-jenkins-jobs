@@ -1,0 +1,30 @@
+- job:
+    name: swh-docker-dev
+    description: Build the swh/stack:latest image
+    node: master
+
+    scm:
+      - git:
+          url: https://forge.softwareheritage.org/source/swh-environment.git
+          branches:
+            - "*/master"
+
+    triggers:
+        - timed: "@midnight"
+
+    wrappers:
+      - timeout:
+          timeout: 30
+          abort: true
+      - timestamps
+
+    builders:
+      - shell: |
+            #!/bin/bash
+            cd docker
+            docker build --pull --no-cache -t swh/stack .
+            tox
+
+    publishers:
+        - archive:
+            artifacts: 'docker/**/*.logs'
