@@ -28,3 +28,4 @@
     publishers:
         - archive:
             artifacts: 'docker/**/*.logs'
+            allow-empty: true
