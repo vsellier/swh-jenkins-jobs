@@ -69,3 +69,4 @@
     publishers:
       - archive:
           artifacts: '*.log'
+          allow-empty: true
