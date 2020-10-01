@@ -9,6 +9,7 @@
       - pollscm:
           cron: "H/30 * * * *"
       - timed: '@daily'
+    auth-token: 'ph4br1cat0r'
     properties:
       - build-discarder:
           days-to-keep: 7
