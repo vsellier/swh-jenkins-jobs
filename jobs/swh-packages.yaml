@@ -206,5 +206,6 @@
     display-name: swh-fuse
     repo_name: swh-fuse
     pkg: fuse
+    docker_options: --privileged --device /dev/fuse
     jobs:
       - 'swh-jobs-{name}'

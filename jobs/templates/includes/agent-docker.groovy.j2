@@ -2,7 +2,6 @@ agent {
   docker {
     reuseNode true
     image 'swh-jenkins/{{docker_image}}'
-    args '--tmpfs /tmp:exec -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -u jenkins:docker --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
+    args '--tmpfs /tmp:exec -v /var/run/docker.sock:/var/run/docker.sock -v /usr/bin/docker:/usr/bin/docker -u jenkins:docker --mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache {{docker_options if docker_options is defined}}'
   }
 }
-
