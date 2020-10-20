@@ -17,6 +17,7 @@
     display-name: swh-core
     repo_name: swh-core
     pkg: core
+    python_module: swh.core
     jobs:
       - 'swh-jobs-{name}'
 
@@ -25,6 +26,7 @@
     display-name: swh-deposit
     repo_name: swh-deposit
     pkg: deposit
+    python_module: swh.deposit
     jobs:
       - 'swh-jobs-{name}'
 
@@ -33,6 +35,7 @@
     display-name: swh-graph
     repo_name: swh-graph
     pkg: graph
+    python_module: swh.graph
     jobs:
       - 'swh-jobs-{name}'
 
@@ -41,6 +44,7 @@
     display-name: swh-indexer
     repo_name: swh-indexer
     pkg: indexer
+    python_module: swh.indexer
     jobs:
       - 'swh-jobs-{name}'
 
@@ -49,6 +53,7 @@
     display-name: swh-icinga-plugins
     repo_name: swh-icinga-plugins
     pkg: icinga-plugins
+    python_module: swh.icinga_plugins
     jobs:
       - 'swh-jobs-{name}'
 
@@ -58,6 +63,7 @@
     repo_name: swh-journal
     docker_image: kafka
     pkg: journal
+    python_module: swh.journal
     jobs:
       - 'swh-jobs-{name}'
 
@@ -66,6 +72,7 @@
     display-name: swh-lister
     repo_name: swh-lister
     pkg: lister
+    python_module: swh.lister
     jobs:
       - 'swh-jobs-{name}'
 
@@ -74,6 +81,7 @@
     display-name: swh-loader-core
     repo_name: swh-loader-core
     pkg: loader.core
+    python_module: swh.loader.core
     jobs:
       - 'swh-jobs-{name}'
 
@@ -82,6 +90,7 @@
     display-name: swh-loader-git
     repo_name: swh-loader-git
     pkg: loader.git
+    python_module: swh.loader.git
     jobs:
       - 'swh-jobs-{name}'
 
@@ -90,6 +99,7 @@
     display-name: swh-loader-mercurial
     repo_name: swh-loader-mercurial
     pkg: loader.mercurial
+    python_module: swh.loader.mercurial
     jobs:
       - 'swh-jobs-{name}'
 
@@ -98,6 +108,7 @@
     display-name: swh-loader-svn
     repo_name: swh-loader-svn
     pkg: loader.svn
+    python_module: swh.loader.svn
     jobs:
       - 'swh-jobs-{name}'
 
@@ -106,6 +117,7 @@
     display-name: swh-model
     repo_name: swh-model
     pkg: model
+    python_module: swh.model
     jobs:
       - 'swh-jobs-{name}'
 
@@ -115,6 +127,7 @@
     repo_name: swh-objstorage
     pkg: objstorage
     deb-extra-repositories: ceph
+    python_module: swh.objstorage
     jobs:
       - 'swh-jobs-{name}'
 
@@ -123,6 +136,7 @@
     display-name: swh-objstorage-replayer
     repo_name: swh-objstorage-replayer
     pkg: objstorage.replayer
+    python_module: swh.objstorage.replayer
     jobs:
       - 'swh-jobs-{name}'
 
@@ -132,6 +146,7 @@
     repo_name: swh-search
     pkg: search
     deb-extra-repositories: elasticsearch
+    python_module: swh.search
     jobs:
       - 'swh-jobs-{name}'
 
@@ -141,6 +156,7 @@
     repo_name: swh-sandbox
     pkg: sandbox
     incoming_tag_auto_pypi_host: test.pypi.org
+    python_module: swh.sandbox
     jobs:
       - "{name}"
       - "{name}/incoming-tag"
@@ -154,6 +170,7 @@
     display-name: swh-scanner
     repo_name: swh-scanner
     pkg: scanner
+    python_module: swh.scanner
     jobs:
       - 'swh-jobs-{name}'
 
@@ -162,6 +179,7 @@
     display-name: swh-scheduler
     repo_name: swh-scheduler
     pkg: scheduler
+    python_module: swh.scheduler
     jobs:
       - 'swh-jobs-{name}'
 
@@ -171,6 +189,7 @@
     repo_name: swh-storage
     pkg: storage
     deb-extra-repositories: cassandra
+    python_module: swh.storage
     jobs:
       - 'swh-jobs-{name}'
 
@@ -179,6 +198,7 @@
     display-name: swh-vault
     repo_name: swh-vault
     pkg: vault
+    python_module: swh.vault
     jobs:
       - 'swh-jobs-{name}'
 
@@ -187,6 +207,7 @@
     display-name: swh-web
     repo_name: swh-web
     pkg: web
+    python_module: swh.web
     do_cypress: true
     jobs:
       - 'swh-jobs-{name}'
@@ -198,6 +219,7 @@
     display-name: swh-web-client
     repo_name: swh-web-client
     pkg: web-client
+    python_module: swh.web.client
     jobs:
       - 'swh-jobs-{name}'
 
@@ -206,6 +228,7 @@
     display-name: swh-fuse
     repo_name: swh-fuse
     pkg: fuse
+    python_module: swh.fuse
     docker_options: --privileged --device /dev/fuse
     jobs:
       - 'swh-jobs-{name}'
