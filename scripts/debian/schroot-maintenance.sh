@@ -12,6 +12,7 @@ debian_mirror=http://deb.debian.org/debian/
 chroot_basename="${distribution:=unstable}-${architecture:=amd64}-sbuild"
 chroot="source:${chroot_basename}"
 chroot_path="/srv/softwareheritage/sbuild/$distribution-$architecture"
+chroot_overlay_path="/srv/softwareheritage/sbuild/overlay"
 
 if ! schroot -i -c $chroot >/dev/null; then
   echo "Configuring chroot $chroot"
@@ -39,7 +40,7 @@ root-groups=root,sbuild
 source-groups=root,sbuild
 source-root-groups=root,sbuild
 union-type=overlay
-union-overlay-directory=/var/run
+union-overlay-directory=$chroot_overlay_path
 EOF
           [ $architecture = i386 ] && "echo personality=linux32"
           echo
