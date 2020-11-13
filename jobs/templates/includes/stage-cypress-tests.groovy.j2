@@ -9,8 +9,7 @@ stage('Cypress tests') {
         sh '''
           python3 -m pip install --no-use-pep517 --user -e .[testing]
           yarn install --frozen-lockfile
-          NODE_ENV=test yarn run webpack --config ./swh/web/assets/config/webpack.config.development.js --colors
-          yarn run cypress install
+          yarn build-dev
         '''
       }
     }
