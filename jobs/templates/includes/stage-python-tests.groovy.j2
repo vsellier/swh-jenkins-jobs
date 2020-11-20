@@ -20,6 +20,7 @@ stage('Python tests') {
           coberturaAdapter(path: 'coverage.xml'),
         ],
         tag: 'pytest',
+        sourceFileResolver: sourceFiles('STORE_LAST_BUILD'),
       )
 
       // JUnit report
