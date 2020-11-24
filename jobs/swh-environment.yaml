@@ -51,7 +51,7 @@
               if [ -d "$tests_dir" ]
               then
                 # pipe tests output to stdout and log file
-                python3 -m pytest $tests_dir 2>&1 | tee ../$module.log
+                make test 2>&1 | tee ../$module.log
                 tests_status=${PIPESTATUS[0]}
                 # remove log file if tests succeeded
                 if [[ "$tests_status" == "0" ]]
@@ -68,5 +68,5 @@
 
     publishers:
       - archive:
-          artifacts: '*.log'
+          artifacts: "*.log"
           allow-empty: true
