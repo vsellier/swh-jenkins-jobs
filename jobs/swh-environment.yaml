@@ -37,8 +37,13 @@
           pip install --upgrade pip
           # install dependencies
           pip install wheel pytest
-          pip install $(bin/pip-swh-packages)
-          pip install $(bin/pip-swh-packages --with-testing)
+          # temporary workaround to avoid new pip resolver to enter in a really
+          # long package backtracking process leading to build job timeout
+          # (https://github.com/pypa/pip/issues/9187)
+          # pip install $(bin/pip-swh-packages --with-testing)
+          while IFS= read -r package; do
+            pip install $package
+          done <<< $(./bin/pip-swh-packages --with-testing)
           cd swh-graph
           make java >/dev/null
           cd ..
