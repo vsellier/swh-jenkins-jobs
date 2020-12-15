@@ -122,6 +122,15 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DMFCD
+    display-name: swh-clearlydefined
+    repo_name: swh-clearlydefined
+    pkg: clearlydefined
+    python_module: swh.clearlydefined
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DOBJS
     display-name: swh-objstorage
     repo_name: swh-objstorage
