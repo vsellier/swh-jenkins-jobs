@@ -54,6 +54,7 @@ stage('Apply phabricator diff') {
             echo '**Attempts to apply the diff failed!**'
             exit 1
         fi
+        git tag -d ${ORIGINAL_TAG}
         ''',
         label: 'Apply patch',
         returnStdout: true,
