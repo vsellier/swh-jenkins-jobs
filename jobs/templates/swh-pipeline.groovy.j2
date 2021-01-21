@@ -36,15 +36,9 @@ pipeline {
 
     stage('Static analysis') {
       parallel {
-        stage ('flake8') {
+        stage ('pre-commit') {
           steps {
-            sh '''python3 -m tox -e flake8'''
-          }
-        }
-
-        stage ('mypy') {
-          steps {
-            sh '''python3 -m tox -e mypy'''
+            sh '''pre-commit run -a --show-diff-on-failure'''
           }
         }
 
