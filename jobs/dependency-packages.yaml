@@ -15,6 +15,14 @@
       - 'dependency-jobs-{name}'
 
 - project:
+    name: PPL
+    display-name: python3-plotille
+    repo_name: python3-plotille
+    pkg: plotille
+    jobs:
+      - 'dependency-jobs-{name}'
+
+- project:
     name: PTPP
     display-name: python3-pytest-postgresql
     repo_name: python3-pytest-postgresql
