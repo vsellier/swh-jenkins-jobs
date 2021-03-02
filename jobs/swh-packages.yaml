@@ -150,6 +150,15 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DPROV
+    display-name: swh-provenance
+    repo_name: swh-provenance
+    pkg: provenance
+    python_module: swh.provenance
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DSEA
     display-name: swh-search
     repo_name: swh-search
