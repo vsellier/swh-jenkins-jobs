@@ -13,6 +13,15 @@
       - "debian/packages/{name}/gbp-buildpackage"
 
 - project:
+    name: DAUTH
+    display-name: swh-auth
+    repo_name: swh-auth
+    pkg: auth
+    python_module: swh.auth
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DCORE
     display-name: swh-core
     repo_name: swh-core
