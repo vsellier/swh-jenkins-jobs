@@ -31,6 +31,15 @@
       - 'swh-jobs-{name}'
 
 - project:
+    name: DCNT
+    display-name: swh-counters
+    repo_name: swh-counters
+    pkg: counters
+    python_module: swh.counters
+    jobs:
+      - 'swh-jobs-{name}'
+
+- project:
     name: DDEP
     display-name: swh-deposit
     repo_name: swh-deposit
