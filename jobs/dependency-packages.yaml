@@ -7,6 +7,14 @@
       - "debian/deps/{name}/automatic-backport"
 
 - project:
+    name: PTDTM
+    display-name: python3-django-test-migrations
+    repo_name: python3-django-test-migrations
+    pkg: django-test-migrations
+    jobs:
+      - 'dependency-jobs-{name}'
+
+- project:
     name: PMK
     display-name: python3-mirakuru
     repo_name: python3-mirakuru
