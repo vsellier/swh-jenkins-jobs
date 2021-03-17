@@ -1,12 +1,11 @@
 - job-group:
-    name: 'swh-jobs-{name}'
+    name: "swh-jobs-{name}"
     jobs:
       - "{name}"
       - "{name}/incoming-tag"
       - "{name}/pypi-upload"
       - "{name}/tests"
-      - '{name}/tests-on-diff'
-      - "{name}/tox"
+      - "{name}/tests-on-diff"
       - "debian/packages/{name}"
       - "debian/packages/{name}/update-for-release"
       - "debian/packages/{name}/automatic-backport"
@@ -19,7 +18,7 @@
     pkg: auth
     python_module: swh.auth
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DCORE
@@ -28,7 +27,7 @@
     pkg: core
     python_module: swh.core
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DCNT
@@ -37,7 +36,7 @@
     pkg: counters
     python_module: swh.counters
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DDEP
@@ -46,7 +45,7 @@
     pkg: deposit
     python_module: swh.deposit
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DGRPH
@@ -55,7 +54,7 @@
     pkg: graph
     python_module: swh.graph
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DCIDX
@@ -64,7 +63,7 @@
     pkg: indexer
     python_module: swh.indexer
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DICP
@@ -73,7 +72,7 @@
     pkg: icinga-plugins
     python_module: swh.icinga_plugins
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DJNL
@@ -83,7 +82,7 @@
     pkg: journal
     python_module: swh.journal
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DLS
@@ -92,7 +91,7 @@
     pkg: lister
     python_module: swh.lister
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DLDBASE
@@ -101,7 +100,7 @@
     pkg: loader.core
     python_module: swh.loader.core
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DLDG
@@ -110,7 +109,7 @@
     pkg: loader.git
     python_module: swh.loader.git
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DLDHG
@@ -119,7 +118,7 @@
     pkg: loader.mercurial
     python_module: swh.loader.mercurial
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DLDSVN
@@ -128,7 +127,7 @@
     pkg: loader.svn
     python_module: swh.loader.svn
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DMOD
@@ -137,7 +136,7 @@
     pkg: model
     python_module: swh.model
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DMFCD
@@ -146,7 +145,7 @@
     pkg: clearlydefined
     python_module: swh.clearlydefined
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DOBJS
@@ -156,7 +155,7 @@
     deb-extra-repositories: ceph
     python_module: swh.objstorage
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DOBJSRPL
@@ -165,7 +164,7 @@
     pkg: objstorage.replayer
     python_module: swh.objstorage.replayer
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DPROV
@@ -174,7 +173,7 @@
     pkg: provenance
     python_module: swh.provenance
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DSEA
@@ -184,7 +183,7 @@
     deb-extra-repositories: elasticsearch
     python_module: swh.search
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: TSBX
@@ -198,8 +197,7 @@
       - "{name}/incoming-tag"
       - "{name}/pypi-upload"
       - "{name}/tests"
-      - '{name}/tests-on-diff'
-      - "{name}/tox"
+      - "{name}/tests-on-diff"
 
 - project:
     name: DTSCN
@@ -208,7 +206,7 @@
     pkg: scanner
     python_module: swh.scanner
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DSCH
@@ -217,7 +215,7 @@
     pkg: scheduler
     python_module: swh.scheduler
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DSTO
@@ -227,7 +225,7 @@
     deb-extra-repositories: cassandra
     python_module: swh.storage
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DVAU
@@ -236,7 +234,7 @@
     pkg: vault
     python_module: swh.vault
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DWAPPS
@@ -246,9 +244,7 @@
     python_module: swh.web
     do_cypress: true
     jobs:
-      - 'swh-jobs-{name}'
-      - '{name}/cypress'
-      - '{name}/cypress-diff'
+      - "swh-jobs-{name}"
 
 - project:
     name: DWCLI
@@ -257,7 +253,7 @@
     pkg: web-client
     python_module: swh.web.client
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
 
 - project:
     name: DFUSE
@@ -267,4 +263,4 @@
     python_module: swh.fuse
     docker_options: --privileged --device /dev/fuse
     jobs:
-      - 'swh-jobs-{name}'
+      - "swh-jobs-{name}"
