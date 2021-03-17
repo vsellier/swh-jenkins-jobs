@@ -85,3 +85,11 @@
     pkg: python3-attr-strict
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PPTRE
+    display-name: python3-pytest-redis
+    repo_name: python3-pytest-redis
+    pkg: pytest_redis
+    jobs:
+      - 'dependency-jobs-{name}'
