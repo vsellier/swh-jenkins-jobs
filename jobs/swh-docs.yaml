@@ -26,7 +26,7 @@
           cd swh-docs
           git checkout master
           git clean -dfx
-          tox -e sphinx
+          SPHINXOPTCOLOR='--no-color' tox -e sphinx
 
     publishers:
       - ssh:
@@ -61,7 +61,7 @@
           mr -t run sh -c 'echo -n "`basename $PWD` " && git describe' | grep -v 'mr run' > revisions.txt
           cd swh-docs
           git clean -dfx
-          SPHINXOPTS='-W -q --keep-going -w errors.log' tox -e sphinx-dev
+          SPHINXOPTS='-W -q --keep-going -w errors.log' SPHINXOPTCOLOR='--no-color' tox -e sphinx-dev
 
     publishers:
       - archive:
