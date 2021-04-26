@@ -1,0 +1,7 @@
+agent {
+  docker {
+    reuseNode true
+    image 'swh-jenkins/{{sphinx_docker_image}}'
+    args '--mount type=volume,src=shared-jenkins-cachedir,dst=/home/jenkins/.cache'
+  }
+}

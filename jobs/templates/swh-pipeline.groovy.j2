@@ -98,6 +98,23 @@ pipeline {
         {%- endif %}
       }
     }
+
+    stage('Sphinx documentation') {
+      {% filter indent(width=6) %}
+        {%- include 'includes/agent-docker-sphinx.groovy.j2' -%}
+      {% endfilter %}
+
+      steps {
+        sh '''
+        if tox -a | grep -qx sphinx
+        then
+          tox -e sphinx
+        else
+          echo WARNING: no sphinx environment in tox.ini
+        fi
+        '''
+      }
+    } // sphinx doc
   } // stages
 
   post {
