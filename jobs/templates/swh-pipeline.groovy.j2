@@ -106,7 +106,7 @@ pipeline {
 
       steps {
         sh '''
-        if tox -a | grep -qx sphinx
+        if tox -a | grep -x sphinx >/dev/null
         then
           tox -e sphinx
         else
