@@ -37,6 +37,7 @@ stage('Cypress tests') {
             yarn run mochawesome || true
             yarn run nyc report --reporter=lcov || true
             yarn run nyc report --reporter=cobertura || true
+            rm -rf node_modules
           '''
 
           publishHTML (target: [
