@@ -96,25 +96,25 @@ pipeline {
           {%- include 'includes/stage-cypress-tests.groovy.j2' -%}
         {% endfilter %}
         {%- endif %}
-      }
-    }
 
-    stage('Sphinx documentation') {
-      {% filter indent(width=6) %}
-        {%- include 'includes/agent-docker-sphinx.groovy.j2' -%}
-      {% endfilter %}
+        stage('Sphinx documentation') {
+          {% filter indent(width=6) %}
+            {%- include 'includes/agent-docker-sphinx.groovy.j2' -%}
+          {% endfilter %}
 
-      steps {
-        sh '''
-        if tox -a | grep -x sphinx >/dev/null
-        then
-          tox -e sphinx
-        else
-          echo WARNING: no sphinx environment in tox.ini
-        fi
-        '''
-      }
-    } // sphinx doc
+          steps {
+            sh '''
+            if tox -a | grep -x sphinx >/dev/null
+            then
+              tox -e sphinx
+            else
+              echo WARNING: no sphinx environment in tox.ini
+            fi
+            '''
+          }
+        } // sphinx doc
+      } // parallel
+    } // Tests stage
   } // stages
 
   post {
