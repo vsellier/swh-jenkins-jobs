@@ -20,7 +20,10 @@ stage('Cypress tests') {
           export PYTHONPATH=$PWD
           python3 swh/web/manage.py migrate --settings=swh.web.settings.tests
           python3 swh/web/manage.py createcachetable --settings=swh.web.settings.tests
-          cat swh/web/tests/create_test_admin.py | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
+          for create_users_script in swh/web/tests/create_test_*
+          do
+            cat $create_users_script | python3 swh/web/manage.py shell --settings=swh.web.settings.tests
+          done
           python3 swh/web/manage.py runserver --nostatic --settings=swh.web.settings.tests &
           wait-for-it localhost:5004
           yarn run cypress run --config numTestsKeptInMemory=0
