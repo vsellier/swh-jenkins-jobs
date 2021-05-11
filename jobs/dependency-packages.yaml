@@ -93,3 +93,11 @@
     pkg: pytest_redis
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PCASS
+    display-name: python-cassandra-driver
+    repo_name: python-cassandra-driver
+    pkg: python-cassandra-driver
+    jobs:
+      - 'dependency-jobs-{name}'
