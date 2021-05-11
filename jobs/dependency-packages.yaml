@@ -101,3 +101,11 @@
     pkg: python-cassandra-driver
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PPSASL
+    display-name: python-pure-sasl
+    repo_name: python-pure-sasl
+    pkg: python-pure-sasl
+    jobs:
+      - 'dependency-jobs-{name}'
