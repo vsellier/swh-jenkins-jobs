@@ -109,3 +109,11 @@
     pkg: python-pure-sasl
     jobs:
       - 'dependency-jobs-{name}'
+
+- project:
+    name: PDWL
+    display-name: django-webpack-loader
+    repo_name: django-webpack-loader
+    pkg: python3-django-webpack-loader
+    jobs:
+      - "dependency-jobs-{name}"
