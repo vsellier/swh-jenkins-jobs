@@ -120,7 +120,7 @@
 
 - project:
     name: PSTATIO
-    display-name: statusio-python
+    display-name: python3-statusio
     repo_name: python3-statusio
     pkg: python3-statusio
     jobs:
