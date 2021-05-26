@@ -117,3 +117,11 @@
     pkg: python3-django-webpack-loader
     jobs:
       - "dependency-jobs-{name}"
+
+- project:
+    name: PSTATIO
+    display-name: statusio-python
+    repo_name: python3-statusio
+    pkg: python3-statusio
+    jobs:
+      - "dependency-jobs-{name}"
