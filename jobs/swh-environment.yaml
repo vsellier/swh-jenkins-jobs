@@ -20,7 +20,7 @@
 
     wrappers:
       - timeout:
-          timeout: 45
+          timeout: 90
           abort: true
       - timestamps
 
