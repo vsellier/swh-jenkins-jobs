@@ -264,3 +264,12 @@
     docker_options: --privileged --device /dev/fuse
     jobs:
       - "swh-jobs-{name}"
+
+- project:
+    name: DTPL
+    display-name: swh-py-template
+    repo_name: swh-py-template
+    pkg: py-template
+    python_module: swh.foo
+    jobs:
+      - "swh-jobs-{name}"
