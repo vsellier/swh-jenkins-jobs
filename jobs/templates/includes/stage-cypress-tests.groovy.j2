@@ -9,7 +9,7 @@ stage('Cypress tests') {
         sh '''
           python3 -m pip install --no-use-pep517 --user -e .[testing]
           yarn install --frozen-lockfile
-          yarn build-dev
+          yarn build-test
         '''
       }
     }
