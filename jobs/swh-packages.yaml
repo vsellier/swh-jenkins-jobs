@@ -103,6 +103,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DLDCVS
+    display-name: swh-loader-cvs
+    repo_name: swh-loader-cvs
+    pkg: loader.cvs
+    python_module: swh.loader.cvs
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DLDG
     display-name: swh-loader-git
     repo_name: swh-loader-git
