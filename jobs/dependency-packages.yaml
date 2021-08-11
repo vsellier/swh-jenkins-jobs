@@ -119,6 +119,14 @@
       - "dependency-jobs-{name}"
 
 - project:
+    name: PPPE
+    display-name: python3-prometheus-pve-exporter
+    repo_name: python3-prometheus-pve-exporter
+    pkg: prometheus-pve-exporter
+    jobs:
+      - 'dependency-jobs-{name}'
+
+- project:
     name: PSTATIO
     display-name: python3-statusio
     repo_name: python3-statusio
