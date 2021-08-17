@@ -82,6 +82,9 @@ pipeline {
       steps {
         withEnv(environment) {
           sh """
+            if ! git show-ref --verify --quiet refs/heads/debian/${params.DESTINATION}; then
+              git checkout -b debian/${params.DESTINATION} ${params.GIT_TAG}
+            fi
             git checkout debian/${params.DESTINATION}
             git merge ${params.GIT_TAG} --no-commit --no-edit || true
             git checkout ${params.GIT_TAG} -- debian/changelog debian/gbp.conf
