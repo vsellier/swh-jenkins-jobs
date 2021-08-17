@@ -3,5 +3,6 @@ axis:
   name: distribution
   values:
     - unstable
+    - bullseye
     - buster
     - stretch
