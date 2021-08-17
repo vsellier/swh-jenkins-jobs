@@ -16,6 +16,9 @@ switch (params.DESTINATION) {
   case ~/^bookworm(-.*|)$/:
     release = 12
     break
+  case ~/^trixie(-.*|)$/:
+    release = 13
+    break
   default:
     release = 'UNKNOWN'
     break
