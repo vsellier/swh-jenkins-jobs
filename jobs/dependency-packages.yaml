@@ -133,3 +133,11 @@
     pkg: python3-statusio
     jobs:
       - "dependency-jobs-{name}"
+
+- project:
+    name: PTS
+    display-name: python3-tree-sitter
+    repo_name: python3-tree-sitter
+    pkg: tree-sitter
+    jobs:
+      - 'dependency-jobs-{name}'
