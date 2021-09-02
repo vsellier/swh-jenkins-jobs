@@ -6,6 +6,7 @@
     cypress_docker_image: cypress
     sphinx_docker_image: sphinx
     default-tox-environment: py3
+    concurrent: true
     triggers:
       - timed: '@daily'
     sandbox: true
