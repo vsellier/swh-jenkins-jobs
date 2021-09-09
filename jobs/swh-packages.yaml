@@ -39,6 +39,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DDATASET
+    display-name: swh-dataset
+    repo_name: swh-dataset
+    pkg: dataset
+    python_module: swh.dataset
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DDEP
     display-name: swh-deposit
     repo_name: swh-deposit
