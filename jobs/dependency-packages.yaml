@@ -7,6 +7,14 @@
       - "debian/deps/{name}/automatic-backport"
 
 - project:
+    name: PPDW
+    display-name: python3-dulwich
+    repo_name: python3-dulwich
+    pkg: dulwich
+    jobs:
+      - 'dependency-jobs-{name}'
+
+- project:
     name: PTDTM
     display-name: python3-django-test-migrations
     repo_name: python3-django-test-migrations
