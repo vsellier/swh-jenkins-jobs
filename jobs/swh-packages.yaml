@@ -103,6 +103,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DLDBZR
+    display-name: swh-loader-bzr
+    repo_name: swh-loader-bzr
+    pkg: loader.bzr
+    python_module: swh.loader.bzr
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DLDBASE
     display-name: swh-loader-core
     repo_name: swh-loader-core
