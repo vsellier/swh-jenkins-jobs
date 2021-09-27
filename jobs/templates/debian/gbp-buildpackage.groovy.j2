@@ -63,11 +63,13 @@ pipeline {
             )
 
             def debian_branch = parsed_gbp_config['debian-branch']
+            def pristine_tar = parsed_gbp_config['pristine-tar']
+            def upstream_branch = parsed_gbp_config['upstream-branch']
 
             sh """
               git checkout -b ${debian_branch}
-              git branch -f pristine-tar origin/pristine-tar
-              git branch -f debian/upstream origin/debian/upstream
+              [ ${pristine_tar} = "True" ] && git branch -f pristine-tar origin/pristine-tar
+              git branch -f ${upstream_branch} origin/${upstream_branch}
             """
           }
         }
