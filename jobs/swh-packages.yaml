@@ -194,6 +194,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DOPH
+    display-name: swh-perfecthash
+    repo_name: swh-perfecthash
+    pkg: perfecthash
+    python_module: swh.perfecthash
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DPROV
     display-name: swh-provenance
     repo_name: swh-provenance
