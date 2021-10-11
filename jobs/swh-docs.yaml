@@ -45,6 +45,14 @@
           remove-prefix: 'swh-docs/users/_build/html'
           fail-on-error: true
           verbose: true
+      - ssh:
+          target: 'sysadm'
+          site: 'pergamon'
+          clean-remote: true
+          source: 'swh-docs/sysadm/_build/html/**'
+          remove-prefix: 'swh-docs/sysadm/_build/html'
+          fail-on-error: true
+          verbose: true
 
 
 - job:
