@@ -88,3 +88,15 @@
           files: 'index.html'
           keep-all: false
           includes: '**/*'
+      - html-publisher:
+          name: 'SWH User Documentation (HEAD)'
+          dir: 'swh-docs/users/_build/html'
+          files: 'index.html'
+          keep-all: false
+          includes: '**/*'
+      - html-publisher:
+          name: 'SWH sysadmin Documentation (HEAD)'
+          dir: 'swh-docs/sysadm/_build/html'
+          files: 'index.html'
+          keep-all: false
+          includes: '**/*'
