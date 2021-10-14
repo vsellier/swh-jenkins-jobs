@@ -38,11 +38,11 @@
           fail-on-error: true
           verbose: true
       - ssh:
-          target: 'users'
+          target: 'user'
           site: 'pergamon'
           clean-remote: true
-          source: 'swh-docs/users/_build/html/**'
-          remove-prefix: 'swh-docs/users/_build/html'
+          source: 'swh-docs/user/_build/html/**'
+          remove-prefix: 'swh-docs/user/_build/html'
           fail-on-error: true
           verbose: true
       - ssh:
@@ -90,7 +90,7 @@
           includes: '**/*'
       - html-publisher:
           name: 'SWH User Documentation (HEAD)'
-          dir: 'swh-docs/users/_build/html'
+          dir: 'swh-docs/user/_build/html'
           files: 'index.html'
           keep-all: false
           includes: '**/*'
