@@ -32,18 +32,12 @@
           # setup a virtualenv
           python3 -m venv .venv
           . .venv/bin/activate
-          # upgrade pip or some swh modules might end up being installed
-          # in non editable mode
-          pip install --upgrade pip
+          # upgrade pip as default installed version is too outdated to properly
+          # install all swh dependencies but pin temporarily version to <21.3
+          # in order to workaround https://github.com/pypa/pip/issues/10573
+          pip install --upgrade 'pip<21.3'
           # install dependencies
-          pip install wheel pytest
-          # temporary workaround to avoid new pip resolver to enter in a really
-          # long package backtracking process leading to build job timeout
-          # (https://github.com/pypa/pip/issues/9187)
-          # pip install $(bin/pip-swh-packages --with-testing)
-          while IFS= read -r package; do
-            pip install $package
-          done <<< $(./bin/pip-swh-packages --with-testing)
+          ./bin/install
           cd swh-graph
           make java >/dev/null
           cd ..
