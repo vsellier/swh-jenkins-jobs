@@ -2,6 +2,7 @@
     name: DDOC
     display-name: swh-docs
     jobs:
+      - "{name}"
       - "{name}/publish"
       - "{name}/dev"
       - "{name}/build-on-diff"
