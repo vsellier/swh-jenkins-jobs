@@ -1,0 +1,116 @@
+pipeline {
+  {% filter indent(width=2) %}
+    {%- include 'templates/includes/agent-docker.groovy.j2' -%}
+  {% endfilter %}
+
+  environment {
+    PHAB_CONDUIT_URL = 'https://forge.softwareheritage.org/api/'
+  }
+
+  stages {
+    stage('Checkout swh environment') {
+      steps {
+        {% filter indent(width=8) %}
+          {%- include 'templates/includes/create-phabricator-artifacts.groovy.j2' -%}
+        {% endfilter %}
+        checkout([
+          $class: 'GitSCM',
+          doGenerateSubmoduleConfigurations: false,
+          extensions: [[$class: 'CloneOption', depth: 1, shallow: true]],
+          gitTool: 'Default',
+          submoduleCfg: [],
+          userRemoteConfigs: [
+            [url: 'https://forge.softwareheritage.org/source/swh-environment.git'],
+          ],
+        ])
+      }
+    }
+
+    stage('Checkout swh modules') {
+      steps {
+        script {
+          sh'''#!/bin/bash
+          crudini --del .mrconfig snippets
+          crudini --del .mrconfig swh-py-template
+          # force shallow clone of swh-repos except swh-docs
+          sed -i '/swh-docs/!s/git clone/git clone --depth 1/g' .mrconfig
+          mr -j 4 -t update
+          '''
+        }
+      }
+    }
+
+    stage('Apply phabricator diff') {
+      steps {
+        dir('swh-docs') {
+          {% filter indent(width=10) %}
+            {%- include 'templates/includes/script-apply-phabricator-diff.groovy.j2' -%}
+          {% endfilter %}
+        }
+      }
+    }
+
+    stage('Build Software Heritage documentation') {
+      steps {
+        dir('swh-docs') {
+          script {
+            sh '''#!/bin/bash
+            SPHINXOPTS='-W -q --keep-going -w errors.log' SPHINXOPTCOLOR='--no-color' tox -e sphinx-dev
+            '''
+          }
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      step([$class: 'PhabricatorNotifier',
+            commentOnSuccess: true,
+            commentWithConsoleLinkOnFailure: true,
+            commentFile: 'swh-docs/.phabricator-comment',
+            commentSize: '1000000',
+            preserveFormatting: true,
+            processLint: true,
+            lintFile: '.phabricator-lint',
+            lintFileSize: '1000000',
+      ])
+
+      archiveArtifacts(
+        allowEmptyArchive: true,
+        artifacts: 'swh-docs/docs/errors.log,swh-docs/.tox/log/*',
+        fingerprint: true,
+      )
+
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'swh-docs/docs/_build/html',
+        reportFiles: 'index.html',
+        reportName: 'SWH Documentation'
+      ])
+
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'swh-docs/user/_build/html',
+        reportFiles: 'index.html',
+        reportName: 'SWH User Documentation'
+      ])
+
+      publishHTML (target: [
+        allowMissing: true,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'swh-docs/sysadm/_build/html',
+        reportFiles: 'index.html',
+        reportName: 'SWH sysadmin Documentation'
+      ])
+    }
+    cleanup {
+      cleanWs()
+    }
+  }
+}

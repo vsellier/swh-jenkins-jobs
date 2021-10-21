@@ -2,11 +2,12 @@
     name: DDOC
     display-name: swh-docs
     jobs:
-      - "{name}"
+      - "{name}/publish"
+      - "{name}/dev"
+      - "{name}/build-on-diff"
 
-
-- job:
-    name: DDOC/publish
+- job-template:
+    name: "{name}/publish"
     description: Build the documentation and publish it
     node: swh-sphinx
     auth-token: ph4br1cat0r
@@ -30,33 +31,32 @@
 
     publishers:
       - ssh:
-          target: 'devel'
-          site: 'pergamon'
+          target: "devel"
+          site: "pergamon"
           clean-remote: true
-          source: 'swh-docs/docs/_build/html/**'
-          remove-prefix: 'swh-docs/docs/_build/html'
+          source: "swh-docs/docs/_build/html/**"
+          remove-prefix: "swh-docs/docs/_build/html"
           fail-on-error: true
           verbose: true
       - ssh:
-          target: 'user'
-          site: 'pergamon'
+          target: "user"
+          site: "pergamon"
           clean-remote: true
-          source: 'swh-docs/user/_build/html/**'
-          remove-prefix: 'swh-docs/user/_build/html'
+          source: "swh-docs/user/_build/html/**"
+          remove-prefix: "swh-docs/user/_build/html"
           fail-on-error: true
           verbose: true
       - ssh:
-          target: 'sysadm'
-          site: 'pergamon'
+          target: "sysadm"
+          site: "pergamon"
           clean-remote: true
-          source: 'swh-docs/sysadm/_build/html/**'
-          remove-prefix: 'swh-docs/sysadm/_build/html'
+          source: "swh-docs/sysadm/_build/html/**"
+          remove-prefix: "swh-docs/sysadm/_build/html"
           fail-on-error: true
           verbose: true
 
-
-- job:
-    name: DDOC/dev
+- job-template:
+    name: "{name}/dev"
     description: Build the documentation from git repos
     node: swh-sphinx
     auth-token: ph4br1cat0r
@@ -83,20 +83,52 @@
       - archive:
           artifacts: "revisions.txt,swh-docs/docs/errors.log,swh-docs/.tox/log/*"
       - html-publisher:
-          name: 'SWH Documentation (HEAD)'
-          dir: 'swh-docs/docs/_build/html'
-          files: 'index.html'
+          name: "SWH Documentation (HEAD)"
+          dir: "swh-docs/docs/_build/html"
+          files: "index.html"
           keep-all: false
-          includes: '**/*'
+          includes: "**/*"
       - html-publisher:
-          name: 'SWH User Documentation (HEAD)'
-          dir: 'swh-docs/user/_build/html'
-          files: 'index.html'
+          name: "SWH User Documentation (HEAD)"
+          dir: "swh-docs/user/_build/html"
+          files: "index.html"
           keep-all: false
-          includes: '**/*'
+          includes: "**/*"
       - html-publisher:
-          name: 'SWH sysadmin Documentation (HEAD)'
-          dir: 'swh-docs/sysadm/_build/html'
-          files: 'index.html'
+          name: "SWH sysadmin Documentation (HEAD)"
+          dir: "swh-docs/sysadm/_build/html"
+          files: "index.html"
           keep-all: false
-          includes: '**/*'
+          includes: "**/*"
+
+- job-template:
+    name: "{name}/build-on-diff"
+    display_name: Phab. diff
+    project-type: pipeline
+    docker_image: sphinx
+    concurrent: true
+    sandbox: true
+    auth-token: "ph4br1cat0r"
+    properties:
+      - build-discarder:
+          artifact-num-to-keep: 20
+    parameters:
+      - git-parameter:
+          name: REVISION
+          type: PT_REVISION
+          defaultValue: master
+          description: Git revision to build.
+      - string:
+          name: PHID
+          description: PHID of the Phabricator target object on which results will be reported.
+      - string:
+          name: DIFF_ID
+          description: ID of the Diff patch to apply, if any
+      - string:
+          name: REV_ID
+          description: ID of the Phabricator revision, if any
+      - string:
+          name: STAGING_URI
+          description: URI of the staging repository
+
+    dsl: !include-jinja2: templates/swh-docs-pipeline-diff.groovy.j2
