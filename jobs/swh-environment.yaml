@@ -33,9 +33,8 @@
           python3 -m venv .venv
           . .venv/bin/activate
           # upgrade pip as default installed version is too outdated to properly
-          # install all swh dependencies but pin temporarily version to <21.3
-          # in order to workaround https://github.com/pypa/pip/issues/10573
-          pip install --upgrade 'pip<21.3'
+          # install all swh dependencies
+          pip install --upgrade pip
           # install dependencies
           ./bin/install
           cd swh-graph
