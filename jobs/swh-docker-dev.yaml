@@ -1,7 +1,7 @@
 - job:
     name: swh-docker-dev
     description: Build the swh/stack:latest image
-    node: master
+    node: built-in
 
     scm:
       - git:
