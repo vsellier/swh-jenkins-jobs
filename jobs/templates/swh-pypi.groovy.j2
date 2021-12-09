@@ -11,6 +11,12 @@ switch (params.PYPI_HOST) {
     break
 }
 
+def BDIST_WHEEL = 'bdist_wheel'
+
+if (!params.INCLUDE_BDIST) {
+    BDIST_WHEEL = ''
+}
+
 pipeline {
   {% filter indent(width=2) %}
     {%- include 'includes/agent-docker.groovy.j2' -%}
@@ -64,7 +70,7 @@ pipeline {
             done
           fi
 
-          python3 setup.py sdist bdist_wheel
+          python3 setup.py sdist ${BDIST_WHEEL}
         '''
         archiveArtifacts allowEmptyArchive: true,
           artifacts: 'dist/*',

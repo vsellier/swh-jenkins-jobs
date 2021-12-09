@@ -2,6 +2,7 @@
     name: "{name}/pypi-upload"
     display-name: "Upload to PyPI"
     docker_image: tox
+    include_bdist: true
     project-type: pipeline
     sandbox: true
     properties:
@@ -42,5 +43,10 @@
           default: false
           description: |
             Proceed even if the tests are failing on the repository.
+      - bool:
+          name: INCLUDE_BDIST
+          default: '{include_bdist}'
+          description: |
+            Include a binary distribution in the PyPI upload.
     dsl:
       !include-jinja2: swh-pypi.groovy.j2
