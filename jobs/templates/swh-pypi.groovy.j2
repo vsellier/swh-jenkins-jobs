@@ -56,7 +56,7 @@ pipeline {
 
     stage('Build') {
       steps {
-        sh '''
+        sh """
           # Build javascript assets
           if [ -f yarn.lock ]; then
             yarn install --frozen-lockfile
@@ -65,13 +65,13 @@ pipeline {
 
           # Build java assets
           if [ -d java ]; then
-            for pom in $( find java/ -name pom.xml ) ; do
-              mvn -f $pom compile assembly:single
+            for pom in \$( find java/ -name pom.xml ) ; do
+              mvn -f \$pom compile assembly:single
             done
           fi
 
           python3 setup.py sdist ${BDIST_WHEEL}
-        '''
+        """
         archiveArtifacts allowEmptyArchive: true,
           artifacts: 'dist/*',
           fingerprint: true
