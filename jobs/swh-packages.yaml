@@ -126,6 +126,7 @@
     repo_name: swh-loader-cvs
     pkg: loader.cvs
     python_module: swh.loader.cvs
+    include_bdist: false
     jobs:
       - "swh-jobs-{name}"
 
@@ -197,9 +198,9 @@
     name: DOPH
     display-name: swh-perfecthash
     repo_name: swh-perfecthash
-    include_bdist: false
     pkg: perfecthash
     python_module: swh.perfecthash
+    include_bdist: false
     jobs:
       - "swh-jobs-{name}"
 
