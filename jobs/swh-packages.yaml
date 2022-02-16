@@ -66,6 +66,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DGQL
+    display-name: swh-graphql
+    repo_name: swh-graphql
+    pkg: graphql
+    python_module: swh.graphql
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DCIDX
     display-name: swh-indexer
     repo_name: swh-indexer
