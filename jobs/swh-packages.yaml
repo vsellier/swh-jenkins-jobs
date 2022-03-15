@@ -265,6 +265,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DSCRUB
+    display-name: swh-scrubber
+    repo_name: swh-scrubber
+    pkg: scrubber
+    python_module: swh.scrubber
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DSTO
     display-name: swh-storage
     repo_name: swh-storage
