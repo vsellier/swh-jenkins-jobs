@@ -11,6 +11,7 @@
     auth-token: 'ph4br1cat0r'
     phabricator_diff: true
     do_cypress: false
+    timeout: 20
     properties:
       - build-discarder:
           artifact-num-to-keep: 20

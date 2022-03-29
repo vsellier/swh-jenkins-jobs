@@ -87,7 +87,7 @@ pipeline {
 
     stage('Tests') {
       options {
-        timeout(time: 20, unit: 'MINUTES')
+        timeout(time: {{ timeout }}, unit: 'MINUTES')
       }
 
       parallel {

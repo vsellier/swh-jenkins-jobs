@@ -299,6 +299,7 @@
     pkg: web
     python_module: swh.web
     do_cypress: true
+    timeout: 20
     jobs:
       - "swh-jobs-{name}"
 
