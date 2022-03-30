@@ -280,6 +280,7 @@
     pkg: storage
     deb-extra-repositories: cassandra
     python_module: swh.storage
+    timeout: 15
     jobs:
       - "swh-jobs-{name}"
 
@@ -299,7 +300,7 @@
     pkg: web
     python_module: swh.web
     do_cypress: true
-    timeout: 20
+    timeout: 25
     jobs:
       - "swh-jobs-{name}"
 
