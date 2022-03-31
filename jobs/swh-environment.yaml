@@ -17,7 +17,6 @@
           url: https://forge.softwareheritage.org/source/swh-environment.git
           branches:
             - "*/master"
-
     wrappers:
       - timeout:
           timeout: 90

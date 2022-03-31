@@ -1,0 +1,53 @@
+def organization = "softwareheritage"
+def repo_name = "{{repo_name}}"
+def docker_image_name = "${organization}/${repo_name}"
+
+// Normalize to "latest" if we build from head commit (main or master)
+// Otherwise, keep the transmitted tag
+def tag = params.TAG
+def tag_name = ( tag == "origin/main" || tag == "origin/master" ) ? "latest" : tag
+
+def docker_image_with_tag = "${docker_image_name}:${tag_name}"
+
+// The following is configured in jenkins manually:
+// > Manage Jenkins > Configure System > Declarative pipeline (Docker)
+// Input the information in the form
+// Docker label: docker-io
+// Registry credentials: select the token created for the occasion in the docker hub
+// user (permissions required: Read / Write / Delete)
+// then click the 'Add' button
+def dockerCredentialsKeyID = 'docker-io'
+def registry_url = "https://registry-1.docker.io"
+
+def image_label = env.BUILD_TAG
+
+node('built-in') {
+  stage ('Pre-cleanup') {
+    cleanWs()
+  }
+  stage('Checkout Repository') {
+    checkout([
+      $class: 'GitSCM',
+      branches: [[name: tag]],
+      userRemoteConfigs: [[
+        url: "https://forge.softwareheritage.org/source/${repo_name}/",
+      ]],
+    ])
+  }
+  def dockerImage
+  stage ('Build image') {
+    dockerImage = docker.build(
+      docker_image_with_tag,
+      "--pull --no-cache -f docker/Dockerfile --label ${image_label} docker"
+    )
+  }
+  stage ('Push image') {
+    docker.withRegistry(registry_url, dockerCredentialsKeyID) {
+      dockerImage.push()
+    }
+  }
+  stage ('Clean up workspace and images') {
+    cleanWs()
+    sh "docker image ls -q --filter label=${image_label} | uniq | xargs -r -t docker rmi --force"
+  }
+}
