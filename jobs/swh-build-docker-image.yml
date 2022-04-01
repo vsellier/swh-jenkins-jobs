@@ -3,6 +3,7 @@
     description: Build the docker image and publish it to a registry
     node: built-in
     project-type: pipeline
+    auth-token: 'ph4br1cat0r'
     dsl:
       !include-jinja2: templates/swh-build-docker-image.groovy.j2
 
