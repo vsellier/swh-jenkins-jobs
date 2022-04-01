@@ -18,4 +18,5 @@
     name: DLSMAVEXP
     repo_name: maven-index-exporter
     jobs:
+      - "{name}"
       - "{name}/build-and-push"
