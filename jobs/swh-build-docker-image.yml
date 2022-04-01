@@ -16,7 +16,7 @@
 
 - project:
     name: DLSMAVEXP
-    display_name: maven-index-exporter
+    display-name: maven-index-exporter
     repo_name: maven-index-exporter
     jobs:
       - "{name}"
