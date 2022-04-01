@@ -7,12 +7,9 @@
       !include-jinja2: templates/swh-build-docker-image.groovy.j2
 
     parameters:
-      - git-parameter:
+      - string:
           name: TAG
           description: Tag to build the image and then use as name
-          type: PT_BRANCH_TAG
-          sortMode: DESCENDING_SMART
-          selectedValue: TOP
 
 - project:
     name: DLSMAVEXP
