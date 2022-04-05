@@ -12,6 +12,9 @@
     description: Build the documentation and publish it
     node: swh-sphinx
     auth-token: ph4br1cat0r
+    properties:
+      - build-discarder:
+          days-to-keep: 90
 
     triggers:
       - timed: "@midnight"
@@ -61,6 +64,9 @@
     description: Build the documentation from git repos
     node: swh-sphinx
     auth-token: ph4br1cat0r
+    properties:
+      - build-discarder:
+          days-to-keep: 90
 
     triggers:
       - timed: "H 9-22/2 * * *"
@@ -113,6 +119,7 @@
     properties:
       - build-discarder:
           artifact-num-to-keep: 20
+          days-to-keep: 90
     parameters:
       - git-parameter:
           name: REVISION

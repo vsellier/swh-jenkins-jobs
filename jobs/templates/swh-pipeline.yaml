@@ -13,6 +13,7 @@
     auth-token: 'ph4br1cat0r'
     properties:
       - build-discarder:
+          days-to-keep: 90
           artifact-num-to-keep: 20
     phabricator_diff: false
     do_cypress: false
