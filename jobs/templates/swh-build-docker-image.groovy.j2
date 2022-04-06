@@ -41,19 +41,18 @@ node('built-in') {
       "--pull --no-cache -f docker/Dockerfile --label ${image_label} docker"
     )
   }
-  stage ('Test image') {
-    sh "make -C tests test"
-  }
   stage ('Push image') {
+    // first make sure the image is ok
+    sh "make -C tests test"
+    // then publish it
     docker.withRegistry(registry_url, dockerCredentialsKeyID) {
       dockerImage.push()
     }
-  }
-  post {
     always {
+      // finally clean it up
       cleanWs()
       // Clean up local image resulting from that jenkins build
       sh "docker image ls -q --filter label=${image_label} | uniq | xargs -r -t docker rmi --force"
-      }
+    }
   }
 }
