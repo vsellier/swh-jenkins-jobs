@@ -1,13 +1,11 @@
 def organization = "softwareheritage"
 def repo_name = "{{repo_name}}"
-def docker_image_name = "${organization}/${repo_name}"
+def image_name = "${organization}/${repo_name}"
 
 // Normalize to "latest" if we build from head commit (main or master)
 // Otherwise, keep the transmitted tag
 def tag = params.TAG
 def tag_name = ( tag == "origin/main" || tag == "origin/master" ) ? "latest" : tag
-
-def docker_image_with_tag = "${docker_image_name}:${tag_name}"
 
 // The following is configured in jenkins manually:
 // > Manage Jenkins > Configure System > Declarative pipeline (Docker)
@@ -17,9 +15,19 @@ def docker_image_with_tag = "${docker_image_name}:${tag_name}"
 // user (permissions required: Read / Write / Delete)
 // then click the 'Add' button
 def dockerCredentialsKeyID = 'docker-io'
-def registry_url = "https://registry-1.docker.io"
+def registry_url = "registry-1.docker.io"
 
 def image_label = env.BUILD_TAG
+
+// The following pipeline uses a specific Makefile with the following targets:
+// - build: locally build the image out of the repository
+// IMAGE_NAME, TAG and IMAGE_LABEL must be provided
+// - test: test the locally built image
+// IMAGE_NAME, TAG must be provided
+// - clean: clean up locally built image (parametric on the jenkins build)
+// IMAGE_LABEL must be provided
+// - push: publish to the registry
+// IMAGE_NAME, TAG, REGISTRY_URL must be provided
 
 node('built-in') {
   stage ('Pre-cleanup') {
@@ -36,23 +44,20 @@ node('built-in') {
   }
   def dockerImage
   stage ('Build image') {
-    dockerImage = docker.build(
-      docker_image_with_tag,
-      "--pull --no-cache -f docker/Dockerfile --label ${image_label} docker"
-    )
+    sh "make build IMAGE_NAME=${image_name} TAG=${tag} IMAGE_LABEL=${image_label}"
   }
   stage ('Push image') {
     // first make sure the image is ok
-    sh "make -C tests test"
+    sh "make test IMAGE_NAME=${image_name} TAG=${tag}"
     // then publish it
-    docker.withRegistry(registry_url, dockerCredentialsKeyID) {
-      dockerImage.push()
+    docker.withRegistry("https://${registry_url}", dockerCredentialsKeyID) {
+      sh "make push IMAGE_NAME=${image_name} TAG=${tag} REGISTRY_URL=${registry_url}"
     }
     always {
-      // finally clean it up
+      // finally clean workspace
       cleanWs()
-      // Clean up local image resulting from that jenkins build
-      sh "docker image ls -q --filter label=${image_label} | uniq | xargs -r -t docker rmi --force"
+      // and locally built image (resulting from the current jenkins build)
+      sh "make clean IMAGE_LABEL=${image_label}"
     }
   }
 }
