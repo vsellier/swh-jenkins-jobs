@@ -1,6 +1,4 @@
-def organization = "softwareheritage"
 def repo_name = "{{repo_name}}"
-def image_name = "${organization}/${repo_name}"
 
 // Normalize to "latest" if we build from head commit (main or master)
 // Otherwise, keep the transmitted tag
@@ -21,13 +19,13 @@ def image_label = env.BUILD_TAG
 
 // The following pipeline uses a specific Makefile with the following targets:
 // - build: locally build the image out of the repository
-// IMAGE_NAME, TAG and IMAGE_LABEL must be provided
+// TAG, IMAGE_LABEL (to ease cleanup part) must be provided
 // - test: test the locally built image
-// IMAGE_NAME, TAG must be provided
+// TAG must be provided
 // - clean: clean up locally built image (parametric on the jenkins build)
 // IMAGE_LABEL must be provided
 // - push: publish to the registry
-// IMAGE_NAME, TAG, REGISTRY_URL must be provided
+// TAG, REGISTRY_URL must be provided
 
 node('built-in') {
   stage ('Pre-cleanup') {
@@ -44,14 +42,14 @@ node('built-in') {
   }
   def dockerImage
   stage ('Build image') {
-    sh "make build IMAGE_NAME=${image_name} TAG=${tag} IMAGE_LABEL=${image_label}"
+    sh "make build TAG=${tag} IMAGE_LABEL=${image_label}"
   }
   stage ('Push image') {
     // first make sure the image is ok
-    sh "make test IMAGE_NAME=${image_name} TAG=${tag}"
+    sh "make test TAG=${tag}"
     // then publish it
     docker.withRegistry("https://${registry_url}", dockerCredentialsKeyID) {
-      sh "make push IMAGE_NAME=${image_name} TAG=${tag} REGISTRY_URL=${registry_url}"
+      sh "make push TAG=${tag} REGISTRY_URL=${registry_url}"
     }
     always {
       // finally clean workspace
