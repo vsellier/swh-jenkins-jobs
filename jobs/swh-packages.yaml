@@ -149,6 +149,15 @@
       - "swh-jobs-{name}"
 
 - project:
+    name: DLDMD
+    display-name: swh-loader-metadata
+    repo_name: swh-loader-metadata
+    pkg: loader.metadata
+    python_module: swh.loader.metadata
+    jobs:
+      - "swh-jobs-{name}"
+
+- project:
     name: DLDHG
     display-name: swh-loader-mercurial
     repo_name: swh-loader-mercurial
