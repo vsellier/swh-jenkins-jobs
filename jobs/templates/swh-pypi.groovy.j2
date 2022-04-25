@@ -94,7 +94,7 @@ pipeline {
           usernamePassword(credentialsId: PYPI_UPLOAD_HOST,
                            usernameVariable: 'TWINE_USERNAME',
                            passwordVariable: 'TWINE_PASSWORD')]) {
-          sh "python3 -m twine upload --repository-url https://${PYPI_UPLOAD_HOST}/legacy/ dist/*"
+          sh "python3 -m twine upload --verbose --repository-url https://${PYPI_UPLOAD_HOST}/legacy/ dist/*"
         }
       }
     }
