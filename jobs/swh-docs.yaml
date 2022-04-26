@@ -26,6 +26,8 @@
     builders:
       - shell: |
           #!/bin/bash
+          set -ex
+
           mr -j 4 -t update
           mr -j 4 -t run sh -c 'git checkout --detach `git describe --abbrev=0 --tags`; git clean -dfx'
           cd swh-docs
@@ -78,6 +80,8 @@
     builders:
       - shell: |
           #!/bin/bash
+          set -ex
+
           crudini --del .mrconfig snippets
           crudini --del .mrconfig swh-py-template
           mr -j 4 -t update
