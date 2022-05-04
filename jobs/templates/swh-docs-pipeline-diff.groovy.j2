@@ -32,8 +32,8 @@ pipeline {
           sh'''#!/bin/bash
           crudini --del .mrconfig snippets
           crudini --del .mrconfig swh-py-template
-          # force shallow clone of swh-repos except swh-docs
-          sed -i '/swh-docs/!s/git clone/git clone --depth 1/g' .mrconfig
+          # only fetch the HEAD branch instead of all (potentially large) branches
+          sed -i '/swh-docs/!s/git clone/git clone --single-branch/g' .mrconfig
           mr -j 4 -t update
           '''
         }
