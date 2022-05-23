@@ -38,52 +38,48 @@ pipeline {
     }
     {%- endif %}
 
-    stage('Static analysis') {
-      parallel {
-        stage ('flake8') {
-          steps {
-            sh '''python3 -m tox -e flake8'''
-          }
-        }
+    stage ('flake8') {
+      steps {
+        sh '''python3 -m tox -e flake8'''
+      }
+    }
 
-        stage ('mypy') {
-          steps {
-            sh '''python3 -m tox -e mypy'''
-          }
-        }
+    stage ('mypy') {
+      steps {
+        sh '''python3 -m tox -e mypy'''
+      }
+    }
 
-        stage ('radon') {
-          steps {
-            sh  '''
-              mkdir -p reports
-              python3 -m radon raw --json swh/ > reports/raw_report.json
-              python3 -m radon cc  --json swh/ > reports/cc_report.json
-              python3 -m radon mi  --json swh/ > reports/mi_report.json
-              python3 -m radon hal --json swh/ > reports/hal_report.json
-              python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
-            '''
-          }
-          post {
-            always {
-              // Archive a few report files
-              archiveArtifacts(
-                allowEmptyArchive: true,
-                artifacts: 'reports/*',
-                fingerprint: true,
-              )
+    stage ('radon') {
+      steps {
+        sh  '''
+          mkdir -p reports
+          python3 -m radon raw --json swh/ > reports/raw_report.json
+          python3 -m radon cc  --json swh/ > reports/cc_report.json
+          python3 -m radon mi  --json swh/ > reports/mi_report.json
+          python3 -m radon hal --json swh/ > reports/hal_report.json
+          python3 -m radon cc  --xml  swh/ > reports/cc_report.xml
+        '''
+      }
+      post {
+        always {
+          // Archive a few report files
+          archiveArtifacts(
+            allowEmptyArchive: true,
+            artifacts: 'reports/*',
+            fingerprint: true,
+          )
 
-              // Warnings NG
-              recordIssues(
-                enabledForFailure: true,
-                tools: [
-                  ccm(pattern: '**/reports/cc_report.xml'),
-                ],
-              )
-            }
-          }
+          // Warnings NG
+          recordIssues(
+            enabledForFailure: true,
+            tools: [
+              ccm(pattern: '**/reports/cc_report.xml'),
+            ],
+          )
         }
       }
-    } // static analysis
+    }
 
     stage('Tests') {
       options {
