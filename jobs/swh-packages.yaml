@@ -289,7 +289,7 @@
     pkg: storage
     deb-extra-repositories: cassandra
     python_module: swh.storage
-    timeout: 15
+    timeout: 25
     jobs:
       - "swh-jobs-{name}"
 
