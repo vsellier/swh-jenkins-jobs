@@ -35,6 +35,23 @@ pipeline {
         )
       }
     }
+//    parallel {
+// TODO check parallel syntax
+//      stage ('Update swh-apps dependencies pipeline') {
+//        when {
+//          expression { params.SWHAPPS_ACTIVATED }
+//        }
+//        steps {
+//          build(
+//            job: '/swh-apps/update-dependencies',
+//            parameters: [
+//              string(name: 'project', value: params.),
+//            ],
+//            wait: false,
+//          )
+//        }
+//      }
+//    }
     stage('Update Debian packaging for new release') {
       when {
         expression { params.GIT_TAG ==~ /v\d+(.\d+)+/ }

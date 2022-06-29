@@ -1,0 +1,20 @@
+
+# incoming-tag    -> pypi-upload
+#                     |-> tests on tag -> ... -> publish
+#                 | -> create debian tag -> build debian package
+#                 | +(-> launch pip-ci pipeline pipeline)
+# 1. update dep, test and push tag
+
+# Pseudo code
+# swh-apps/update-dependencies
+#     project: swh-core
+
+#     clone swh-apps
+#     apps = grep -r swh[.]core apps/*/requirements-frozen.txt
+#     pour chaque <apps>:
+#         scripts/generate-frozen-requirements <apps>
+#         git add / commit
+#         [build docker image if any] / tests
+#         git tag <apps>-YYYYmmdd.<inc>
+#         git push
+#         docker push
