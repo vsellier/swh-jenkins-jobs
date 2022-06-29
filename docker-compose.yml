@@ -1,0 +1,20 @@
+version: '3'
+
+volumes:
+  jenkins_data:
+
+services:
+  jenkins:
+    image: swh-jenkins:latest
+    build:
+      context: docker
+      args:
+        DOCKER_GROUP: 998
+    volumes:
+      - jenkins_data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - PLUGINS_FORCE_UPGRADE=true
+    ports:
+      - 8080:8080
+    entrypoint: /docker/entrypoint.sh
